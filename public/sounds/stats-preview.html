@@ -1,0 +1,1983 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>لوحة التحليلات المتكاملة | منصة التاج (بيانات حقيقية)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    /* ═══════════════════════════════════════════════════════════════
+       FUTURISTIC AI COMMAND CENTER — v10 ENHANCED
+       Premium UI/UX — CSS Variables & Design System
+       ═══════════════════════════════════════════════════════════════ */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg-deep: #04070f;
+      --bg-mid: #070d1a;
+      --neon-violet: #7c3aed;
+      --neon-blue: #2563eb;
+      --neon-cyan: #06b6d4;
+      --neon-purple: #a855f7;
+      --bg-gradient: linear-gradient(145deg, #04070f 0%, #070d1a 60%, #0a1020 100%);
+      --sidebar-bg: rgba(6, 11, 24, 0.82);
+      --card-bg: rgba(8, 14, 30, 0.65);
+      --card-border: rgba(124, 58, 237, 0.22);
+      --text-primary: #f0f4ff;
+      --text-secondary: #a8b4d0;
+      --text-muted: #5e6e8a;
+      --accent: #facc15;
+      --accent-glow: rgba(250, 204, 21, 0.45);
+      --danger: #f43f5e;
+      --success: #10d9a0;
+      --transition: all 0.32s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      --modal-bg: rgba(7, 14, 32, 0.92);
+      --modal-backdrop: rgba(0, 0, 0, 0.55);
+      --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(124,58,237,0.08);
+      --card-shadow-hover: 0 18px 48px rgba(0, 0, 0, 0.6), 0 0 30px rgba(124,58,237,0.18);
+      --chart-1: #7c3aed; --chart-2: #06b6d4; --chart-3: #a855f7;
+      --chart-4: #10d9a0; --chart-5: #f472b6; --chart-6: #facc15;
+      --tooltip-bg: rgba(6, 11, 26, 0.97);
+      --tooltip-border: rgba(124, 58, 237, 0.45);
+      --letter-spacing-title: 0.05em;
+      --feed-border: rgba(124, 58, 237, 0.12);
+      --rank-bg: rgba(124, 58, 237, 0.07);
+      --lesson-item-bg: rgba(6, 182, 212, 0.06);
+      --progress-gradient: linear-gradient(90deg, #7c3aed, #06b6d4, #facc15);
+      --sidebar-glow: rgba(124, 58, 237, 0.3);
+      --orb1: radial-gradient(ellipse at 20% 20%, rgba(124,58,237,0.18) 0%, transparent 60%);
+      --orb2: radial-gradient(ellipse at 80% 80%, rgba(6,182,212,0.14) 0%, transparent 60%);
+      --orb3: radial-gradient(ellipse at 60% 10%, rgba(168,85,247,0.12) 0%, transparent 50%);
+    }
+
+    body.light {
+      --bg-gradient: linear-gradient(145deg, #e8edf8 0%, #f5f7ff 100%);
+      --sidebar-bg: rgba(240, 244, 255, 0.9);
+      --card-bg: rgba(255, 255, 255, 0.78);
+      --card-border: rgba(99, 60, 210, 0.14);
+      --text-primary: #0d1226;
+      --text-secondary: #2d3a56;
+      --text-muted: #6272a4;
+      --accent: #d97706;
+      --accent-glow: rgba(217, 119, 6, 0.35);
+      --modal-bg: rgba(248, 250, 255, 0.96);
+      --modal-backdrop: rgba(10, 15, 40, 0.28);
+      --card-shadow: 0 8px 28px rgba(90,60,200,0.08);
+      --card-shadow-hover: 0 16px 40px rgba(90,60,200,0.14);
+      --tooltip-bg: rgba(255, 255, 255, 0.99);
+      --tooltip-border: rgba(99, 102, 241, 0.2);
+      --feed-border: rgba(99,60,210,0.08);
+      --rank-bg: rgba(99,60,210,0.05);
+      --lesson-item-bg: rgba(6,182,212,0.05);
+      --progress-gradient: linear-gradient(90deg, #6d28d9, #0891b2, #d97706);
+      --sidebar-glow: rgba(109,40,217,0.2);
+      --orb1: radial-gradient(ellipse at 20% 20%, rgba(109,40,217,0.07) 0%, transparent 60%);
+      --orb2: radial-gradient(ellipse at 80% 80%, rgba(8,145,178,0.06) 0%, transparent 60%);
+      --orb3: radial-gradient(ellipse at 60% 10%, rgba(168,85,247,0.05) 0%, transparent 50%);
+    }
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-primary);
+      height: 100vh;
+      overflow: hidden;
+      transition: background 0.4s ease, color 0.3s ease;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: var(--orb1), var(--orb2), var(--orb3);
+      pointer-events: none;
+      z-index: 0;
+      animation: orbFloat 18s ease-in-out infinite alternate;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.6;
+    }
+    @keyframes orbFloat {
+      0%   { background: var(--orb1), var(--orb2), var(--orb3); }
+      33%  { background: radial-gradient(ellipse at 30% 40%, rgba(124,58,237,0.18) 0%, transparent 55%),
+                         radial-gradient(ellipse at 70% 60%, rgba(6,182,212,0.14) 0%, transparent 55%),
+                         radial-gradient(ellipse at 50% 80%, rgba(168,85,247,0.1) 0%, transparent 45%); }
+      66%  { background: radial-gradient(ellipse at 70% 20%, rgba(124,58,237,0.14) 0%, transparent 60%),
+                         radial-gradient(ellipse at 20% 70%, rgba(6,182,212,0.16) 0%, transparent 55%),
+                         radial-gradient(ellipse at 80% 50%, rgba(168,85,247,0.12) 0%, transparent 50%); }
+      100% { background: var(--orb1), var(--orb2), var(--orb3); }
+    }
+
+    #meshBg {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background: 
+        radial-gradient(ellipse 80% 50% at 10% 90%, rgba(124,58,237,0.09) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 40% at 90% 10%, rgba(6,182,212,0.07) 0%, transparent 70%);
+      animation: meshPulse 12s ease-in-out infinite alternate;
+    }
+    @keyframes meshPulse {
+      0%   { opacity: 0.6; transform: scale(1); }
+      50%  { opacity: 1; transform: scale(1.04); }
+      100% { opacity: 0.7; transform: scale(0.98); }
+    }
+
+    #gridLines {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(124,58,237,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(124,58,237,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+    }
+    body.light #gridLines {
+      background-image:
+        linear-gradient(rgba(99,60,210,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99,60,210,0.04) 1px, transparent 1px);
+    }
+
+    .app { display: flex; width: 100%; height: 100%; position: relative; z-index: 1; }
+
+    .sidebar {
+      width: 270px;
+      background: var(--sidebar-bg);
+      backdrop-filter: blur(28px) saturate(180%);
+      -webkit-backdrop-filter: blur(28px) saturate(180%);
+      border-left: 1px solid rgba(124,58,237,0.18);
+      display: flex;
+      flex-direction: column;
+      transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
+      z-index: 20;
+      position: relative;
+      box-shadow: 4px 0 60px rgba(0,0,0,0.35), inset -1px 0 0 rgba(124,58,237,0.1);
+    }
+    .sidebar::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 2px; height: 100%;
+      background: linear-gradient(180deg, transparent 0%, var(--neon-violet) 30%, var(--neon-cyan) 70%, transparent 100%);
+      opacity: 0.35;
+      pointer-events: none;
+    }
+    .sidebar.collapsed { width: 76px; }
+    .sidebar-header {
+      padding: 22px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(124,58,237,0.12);
+      position: relative;
+    }
+    .logo-area { display: flex; align-items: center; gap: 12px; }
+    .logo-icon {
+      font-size: 1.6rem;
+      background: linear-gradient(135deg, rgba(124,58,237,0.3), rgba(6,182,212,0.2));
+      border: 1px solid rgba(124,58,237,0.35);
+      width: 42px; height: 42px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 14px;
+      color: var(--accent);
+      box-shadow: 0 0 16px rgba(124,58,237,0.25), inset 0 0 12px rgba(6,182,212,0.08);
+      animation: logoPulse 3s ease-in-out infinite;
+    }
+    @keyframes logoPulse {
+      0%, 100% { box-shadow: 0 0 16px rgba(124,58,237,0.25), inset 0 0 12px rgba(6,182,212,0.08); }
+      50% { box-shadow: 0 0 26px rgba(124,58,237,0.45), inset 0 0 18px rgba(6,182,212,0.15); }
+    }
+    .logo-text {
+      font-weight: 800; font-size: 1.1rem;
+      background: linear-gradient(135deg, var(--accent) 0%, #fbbf24 50%, #f59e0b 100%);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      white-space: nowrap;
+      text-shadow: none;
+      filter: drop-shadow(0 0 8px var(--accent-glow));
+    }
+    .collapse-btn {
+      background: rgba(124,58,237,0.1);
+      border: 1px solid rgba(124,58,237,0.2);
+      color: var(--neon-violet);
+      font-size: 1rem;
+      cursor: pointer;
+      width: 32px; height: 32px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      transition: var(--transition);
+    }
+    .collapse-btn:hover {
+      background: rgba(124,58,237,0.25);
+      border-color: var(--neon-violet);
+      box-shadow: 0 0 12px rgba(124,58,237,0.3);
+      color: #c4b5fd;
+    }
+    .nav-tabs { flex: 1; padding: 16px 10px; display: flex; flex-direction: column; gap: 4px; overflow-y: auto; }
+
+    .tab-btn {
+      display: flex; align-items: center; gap: 12px;
+      padding: 11px 14px;
+      background: transparent;
+      border: none; border-radius: 14px;
+      font-size: 0.84rem; font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      text-align: right; width: 100%;
+      position: relative;
+      overflow: hidden;
+      font-family: 'Cairo', sans-serif;
+    }
+    .tab-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(124,58,237,0.15), transparent);
+      opacity: 0;
+      transition: opacity 0.25s ease;
+      border-radius: 14px;
+    }
+    .tab-btn i {
+      width: 22px; font-size: 0.95rem;
+      flex-shrink: 0;
+      transition: all 0.25s ease;
+    }
+    .tab-btn:hover {
+      color: #c4b5fd;
+      background: rgba(124,58,237,0.1);
+      transform: translateX(-2px);
+    }
+    .tab-btn:hover::before { opacity: 1; }
+    .tab-btn:hover i {
+      color: var(--neon-cyan);
+      filter: drop-shadow(0 0 6px var(--neon-cyan));
+    }
+    .tab-btn .ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(124,58,237,0.35);
+      transform: scale(0);
+      animation: tabRipple 0.5s ease-out;
+      pointer-events: none;
+    }
+    @keyframes tabRipple {
+      to { transform: scale(4); opacity: 0; }
+    }
+    .tab-btn.active {
+      background: linear-gradient(90deg, rgba(124,58,237,0.22), rgba(6,182,212,0.08), transparent);
+      border-right: 2px solid var(--neon-violet);
+      color: #ddd6fe;
+      box-shadow: inset 0 0 20px rgba(124,58,237,0.08);
+    }
+    .tab-btn.active i {
+      color: var(--neon-cyan);
+      filter: drop-shadow(0 0 8px var(--neon-cyan));
+    }
+    .tab-btn.active::after {
+      content: '';
+      position: absolute;
+      right: 0; top: 50%;
+      transform: translateY(-50%);
+      width: 3px; height: 60%;
+      background: linear-gradient(180deg, var(--neon-violet), var(--neon-cyan));
+      border-radius: 2px 0 0 2px;
+      box-shadow: 0 0 10px rgba(124,58,237,0.8), 0 0 20px rgba(6,182,212,0.4);
+      animation: activePulse 2s ease-in-out infinite;
+    }
+    @keyframes activePulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 10px rgba(124,58,237,0.8), 0 0 20px rgba(6,182,212,0.4); }
+      50% { opacity: 0.6; box-shadow: 0 0 6px rgba(124,58,237,0.5), 0 0 10px rgba(6,182,212,0.2); }
+    }
+    .sidebar.collapsed .tab-btn span:last-child,
+    .sidebar.collapsed .logo-text,
+    .sidebar.collapsed .theme-toggle-text { display: none; }
+    .sidebar.collapsed .tab-btn { justify-content: center; padding: 11px 0; }
+    .sidebar.collapsed .tab-btn.active::after { display: none; }
+    .sidebar.collapsed .tab-btn::before { display: none; }
+
+    .main-content { flex: 1; overflow-y: auto; padding: 18px 24px; position: relative; scroll-behavior: smooth; }
+
+    .toolbar {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 22px; flex-wrap: wrap; gap: 12px;
+      background: rgba(6,11,24,0.7);
+      backdrop-filter: blur(24px) saturate(160%);
+      -webkit-backdrop-filter: blur(24px) saturate(160%);
+      border: 1px solid rgba(124,58,237,0.18);
+      border-radius: 20px;
+      padding: 12px 20px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3), 0 0 0 1px rgba(124,58,237,0.06), inset 0 1px 0 rgba(255,255,255,0.04);
+      position: sticky; top: 0; z-index: 10;
+    }
+    body.light .toolbar {
+      background: rgba(240,244,255,0.85);
+      border-color: rgba(99,60,210,0.12);
+      box-shadow: 0 8px 32px rgba(90,60,200,0.08);
+    }
+
+    .page-title h1 {
+      font-size: 1.3rem; font-weight: 800;
+      letter-spacing: var(--letter-spacing-title);
+      background: linear-gradient(135deg, #facc15 0%, #fbbf24 40%, #a78bfa 80%);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      filter: drop-shadow(0 0 12px rgba(250,204,21,0.4));
+    }
+
+    #topProgressBar {
+      position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+      background: var(--progress-gradient);
+      z-index: 9999; transition: width 0.35s ease;
+      box-shadow: 0 0 16px rgba(124,58,237,0.7), 0 0 6px rgba(6,182,212,0.5);
+      border-radius: 0 3px 3px 0;
+    }
+    #topProgressBar.done { opacity: 0; transition: width 0.4s ease, opacity 0.5s ease 0.3s; }
+
+    .actions { display: flex; gap: 10px; align-items: center; }
+    .theme-toggle, .back-btn {
+      background: rgba(124,58,237,0.1);
+      border: 1px solid rgba(124,58,237,0.22);
+      border-radius: 40px; padding: 7px 16px;
+      display: flex; gap: 7px; cursor: pointer;
+      font-weight: 600; transition: all 0.25s ease;
+      font-size: 0.8rem;
+      backdrop-filter: blur(10px);
+      color: #c4b5fd;
+      font-family: 'Cairo', sans-serif;
+    }
+    .theme-toggle:hover {
+      background: rgba(124,58,237,0.22);
+      border-color: var(--neon-violet);
+      box-shadow: 0 0 16px rgba(124,58,237,0.25);
+      color: #ede9fe;
+    }
+    .back-btn {
+      background: rgba(250,204,21,0.1);
+      border-color: rgba(250,204,21,0.35);
+      color: var(--accent);
+    }
+    .back-btn:hover {
+      background: var(--accent); color: #0f172a;
+      transform: translateX(-3px);
+      box-shadow: 0 0 20px var(--accent-glow), 0 4px 12px rgba(0,0,0,0.2);
+    }
+    .btn-pulse { animation: pulseGlow 2.4s ease-in-out infinite; }
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 0 0 var(--accent-glow); }
+      50% { box-shadow: 0 0 0 6px transparent, 0 0 24px var(--accent-glow); }
+    }
+
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(195px, 1fr)); gap: 1rem; margin-bottom: 1.4rem; }
+
+    .kpi-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px) saturate(150%);
+      -webkit-backdrop-filter: blur(16px) saturate(150%);
+      border-radius: 22px;
+      padding: 1rem 1.1rem;
+      display: flex; align-items: center; gap: 0.9rem;
+      border: 1px solid var(--card-border);
+      box-shadow: var(--card-shadow);
+      transition: transform 0.3s cubic-bezier(0.2,0.9,0.3,1.1), box-shadow 0.3s ease, border-color 0.3s ease;
+      position: relative; overflow: hidden;
+      cursor: default;
+      will-change: transform;
+    }
+    .kpi-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -120%;
+      width: 80%; height: 100%;
+      background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.06) 50%, transparent 100%);
+      animation: shimmerSweep 4s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes shimmerSweep {
+      0% { left: -120%; }
+      60%, 100% { left: 160%; }
+    }
+    .kpi-card::after {
+      content: '';
+      position: absolute; inset: 0;
+      border-radius: 22px;
+      border: 1px solid transparent;
+      background: linear-gradient(135deg, rgba(124,58,237,0), rgba(6,182,212,0), rgba(124,58,237,0)) border-box;
+      -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: destination-out;
+      mask-composite: exclude;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+    .kpi-card:hover {
+      transform: translateY(-6px) perspective(600px) rotateX(2deg);
+      border-color: rgba(124,58,237,0.45);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 30px rgba(124,58,237,0.2);
+    }
+    .kpi-card:hover::after { opacity: 1; }
+
+    .kpi-row-value { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+    .trend-indicator { font-size: 0.63rem; font-weight: 700; display: inline-flex; align-items: center; gap: 3px; padding: 2px 8px; border-radius: 20px; }
+    .trend-up { color: var(--success); background: rgba(16,217,160,0.12); }
+    .trend-down { color: var(--danger); background: rgba(244,63,94,0.12); }
+    .trend-neutral { color: var(--text-muted); background: rgba(148,163,184,0.1); }
+
+    .kpi-icon {
+      font-size: 1.4rem;
+      background: linear-gradient(135deg, rgba(124,58,237,0.25), rgba(6,182,212,0.15));
+      width: 48px; height: 48px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 16px; color: var(--accent);
+      border: 1px solid rgba(124,58,237,0.25);
+      box-shadow: 0 0 18px rgba(124,58,237,0.15), inset 0 0 10px rgba(6,182,212,0.08);
+      flex-shrink: 0;
+      transition: box-shadow 0.3s ease;
+    }
+    .kpi-card:hover .kpi-icon {
+      box-shadow: 0 0 28px rgba(124,58,237,0.35), inset 0 0 15px rgba(6,182,212,0.12);
+    }
+    .kpi-info .kpi-value {
+      font-size: 1.5rem; font-weight: 800; color: var(--accent);
+      line-height: 1.2;
+      filter: drop-shadow(0 0 8px var(--accent-glow));
+    }
+    .kpi-info .kpi-label { font-size: 0.7rem; color: var(--text-secondary); margin-top: 2px; }
+
+    .charts-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 1.4rem; margin-bottom: 1.4rem; }
+
+    .chart-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(18px) saturate(150%);
+      -webkit-backdrop-filter: blur(18px) saturate(150%);
+      border-radius: 26px; padding: 1.1rem;
+      border: 1px solid var(--card-border);
+      box-shadow: var(--card-shadow);
+      transition: all 0.3s ease;
+      position: relative; overflow: hidden;
+    }
+    .chart-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(124,58,237,0.5), rgba(6,182,212,0.4), transparent);
+      opacity: 0; transition: opacity 0.3s ease;
+    }
+    .chart-card:hover { border-color: rgba(124,58,237,0.35); box-shadow: var(--card-shadow-hover); }
+    .chart-card:hover::before { opacity: 1; }
+
+    .chart-title {
+      font-weight: 700; margin-bottom: 0.7rem;
+      text-align: center; color: var(--accent);
+      font-size: 0.95rem; letter-spacing: var(--letter-spacing-title);
+      filter: drop-shadow(0 0 6px var(--accent-glow));
+    }
+
+    .empty-state {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      min-height: 200px; padding: 2rem; color: var(--text-muted); text-align: center; gap: 14px;
+    }
+    .empty-state i {
+      font-size: 2.8rem; color: var(--neon-violet); opacity: 0.6;
+      animation: emptyFloat 3s ease-in-out infinite;
+    }
+    @keyframes emptyFloat {
+      0%, 100% { transform: translateY(0); filter: drop-shadow(0 0 8px rgba(124,58,237,0.4)); }
+      50% { transform: translateY(-8px); filter: drop-shadow(0 0 16px rgba(124,58,237,0.7)); }
+    }
+    .empty-state p { font-size: 0.88rem; line-height: 1.7; max-width: 270px; }
+
+    .chart-container { width: 100%; height: 280px; }
+
+    .insight-row { display: flex; gap: 1.2rem; flex-wrap: wrap; margin-top: 1rem; }
+
+    .live-feed, .ai-insights, .subscription-card, .lesson-detail-area {
+      background: var(--card-bg);
+      backdrop-filter: blur(18px) saturate(150%);
+      -webkit-backdrop-filter: blur(18px) saturate(150%);
+      border-radius: 22px; padding: 1rem;
+      border: 1px solid var(--card-border);
+      box-shadow: var(--card-shadow);
+      margin-bottom: 1rem; flex: 1; min-width: 280px;
+      position: relative; overflow: hidden;
+    }
+    .ai-insights {
+      border-color: rgba(124,58,237,0.25);
+      box-shadow: var(--card-shadow), 0 0 30px rgba(124,58,237,0.08);
+    }
+    .ai-insights::before {
+      content: '';
+      position: absolute; inset: 0; border-radius: 22px;
+      border: 1px solid rgba(124,58,237,0);
+      animation: aiBorderPulse 3s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes aiBorderPulse {
+      0%, 100% { border-color: rgba(124,58,237,0.15); box-shadow: inset 0 0 20px rgba(124,58,237,0.04); }
+      50% { border-color: rgba(6,182,212,0.2); box-shadow: inset 0 0 30px rgba(6,182,212,0.06); }
+    }
+
+    .feed-item {
+      padding: 10px 0;
+      border-bottom: 1px solid var(--feed-border);
+      font-size: 0.84rem;
+      display: flex; align-items: center; gap: 10px;
+      color: var(--text-primary);
+      transition: background 0.2s ease, padding 0.2s ease;
+      border-radius: 6px;
+    }
+    .feed-item:hover { background: rgba(124,58,237,0.06); padding-right: 8px; }
+    .feed-item:last-child { border-bottom: none; }
+    .feed-item i { flex-shrink: 0; }
+
+    .live-feed .chart-title::after {
+      content: '';
+      display: inline-block;
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--success);
+      margin-right: 6px;
+      animation: liveDot 1.5s ease-in-out infinite;
+      box-shadow: 0 0 6px var(--success);
+      vertical-align: middle;
+    }
+    @keyframes liveDot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.7); }
+    }
+
+    .filter-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 1rem; }
+    .filter-btn {
+      background: rgba(124,58,237,0.08);
+      border: 1px solid rgba(124,58,237,0.18);
+      border-radius: 30px; padding: 6px 16px;
+      font-size: 0.79rem; cursor: pointer;
+      transition: all 0.25s ease;
+      color: var(--text-secondary);
+      backdrop-filter: blur(10px);
+      font-family: 'Cairo', sans-serif;
+      font-weight: 600;
+    }
+    .filter-btn.active, .filter-btn:hover {
+      background: linear-gradient(135deg, rgba(124,58,237,0.3), rgba(6,182,212,0.2));
+      color: #ede9fe;
+      border-color: rgba(124,58,237,0.5);
+      box-shadow: 0 0 18px rgba(124,58,237,0.2);
+    }
+    .filter-btn.active { color: #ddd6fe; font-weight: 700; }
+
+    .students-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 1rem; }
+    .students-grid .student-card-mini { opacity: 1 !important; visibility: visible !important; transform: none !important; }
+
+    .student-card-mini {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border-radius: 20px; padding: 1rem;
+      text-align: center; cursor: pointer;
+      transition: all 0.28s cubic-bezier(0.2,0.9,0.4,1.1);
+      border: 1px solid var(--card-border);
+      box-shadow: var(--card-shadow);
+      position: relative; overflow: hidden;
+    }
+    .student-card-mini::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--neon-violet), var(--neon-cyan));
+      opacity: 0; transition: opacity 0.25s ease;
+    }
+    .student-card-mini:hover {
+      transform: translateY(-6px) scale(1.02);
+      border-color: rgba(124,58,237,0.4);
+      box-shadow: 0 14px 36px rgba(0,0,0,0.4), 0 0 24px rgba(124,58,237,0.18);
+    }
+    .student-card-mini:hover::before { opacity: 1; }
+    .student-card-mini img {
+      width: 68px; height: 68px; border-radius: 50%; object-fit: cover;
+      margin-bottom: 0.5rem; border: 2px solid rgba(124,58,237,0.25);
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+    .student-card-mini:hover img {
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 14px rgba(6,182,212,0.4);
+    }
+    .student-card-mini .score {
+      color: var(--accent); font-weight: bold; margin-top: 5px;
+      filter: drop-shadow(0 0 4px var(--accent-glow));
+    }
+
+    .students-rank-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; margin-bottom: 1.4rem; }
+    .rank-column {
+      background: var(--card-bg); backdrop-filter: blur(18px); border-radius: 26px;
+      padding: 1rem; border: 1px solid var(--card-border); box-shadow: var(--card-shadow);
+    }
+    .rank-column h3 {
+      color: var(--accent); margin-bottom: 1rem; font-size: 1.1rem;
+      text-align: center; letter-spacing: var(--letter-spacing-title);
+      filter: drop-shadow(0 0 8px var(--accent-glow));
+    }
+    .rank-card {
+      display: flex; align-items: center; gap: 0.9rem;
+      background: var(--rank-bg); border-radius: 18px; padding: 0.75rem;
+      margin-bottom: 0.7rem; transition: all 0.28s ease;
+      cursor: pointer; border: 1px solid rgba(124,58,237,0.1);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+      position: relative; overflow: hidden;
+    }
+    .rank-card::before {
+      content: '';
+      position: absolute; top: 0; bottom: 0; right: 0; width: 2px;
+      background: linear-gradient(180deg, var(--neon-violet), var(--neon-cyan));
+      opacity: 0; transition: opacity 0.25s ease;
+    }
+    .rank-card:hover {
+      transform: translateX(-4px);
+      background: rgba(124,58,237,0.12);
+      border-color: rgba(124,58,237,0.35);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25), 0 0 18px rgba(124,58,237,0.12);
+    }
+    .rank-card:hover::before { opacity: 1; }
+    .rank-card img {
+      width: 52px; height: 52px; border-radius: 50%; object-fit: cover;
+      border: 2px solid var(--neon-violet);
+      box-shadow: 0 0 10px rgba(124,58,237,0.3);
+    }
+    .rank-info { flex: 1; }
+    .rank-name { font-weight: bold; font-size: 0.92rem; }
+    .rank-score { color: var(--accent); font-size: 0.78rem; font-weight: bold; }
+    .rank-reason { font-size: 0.73rem; color: var(--text-secondary); margin-top: 3px; }
+    .rank-advice { font-size: 0.73rem; color: var(--success); margin-top: 3px; font-weight: bold; }
+
+    .lessons-list { display: flex; flex-direction: column; gap: 0.55rem; margin-top: 0.5rem; }
+    .lesson-item {
+      display: flex; justify-content: space-between;
+      padding: 10px 16px;
+      background: var(--lesson-item-bg);
+      border-radius: 40px; cursor: pointer;
+      transition: all 0.25s ease;
+      border: 1px solid rgba(6,182,212,0.1);
+      color: var(--text-primary);
+    }
+    .lesson-item:hover {
+      background: rgba(6,182,212,0.12);
+      transform: translateX(-4px);
+      border-color: rgba(6,182,212,0.35);
+      box-shadow: 0 0 14px rgba(6,182,212,0.1);
+    }
+    .lesson-name { font-weight: bold; font-size: 0.88rem; }
+    .lesson-percent.high { color: var(--success); font-weight: bold; }
+    .lesson-percent.low { color: var(--danger); font-weight: bold; }
+
+    .lesson-detail-header {
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+      gap: 12px; margin-bottom: 1rem; padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(124,58,237,0.15);
+    }
+    .lesson-stats-chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+    .lesson-stat-chip {
+      display: inline-flex; align-items: center; gap: 7px; padding: 7px 14px;
+      border-radius: 30px; font-size: 0.79rem; font-weight: 700;
+      background: var(--rank-bg); border: 1px solid var(--card-border);
+    }
+    .lesson-stat-chip.chip-success { color: var(--success); border-color: rgba(16,217,160,0.3); }
+    .lesson-stat-chip.chip-danger { color: var(--danger); border-color: rgba(244,63,94,0.3); }
+    .lesson-stat-chip.chip-accent { color: var(--accent); }
+
+    .lesson-players-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(158px, 1fr)); gap: 1rem; margin-top: 1rem; }
+    .lesson-player-card {
+      position: relative; text-align: center; padding: 1.2rem 1rem 1rem;
+      background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px;
+      box-shadow: var(--card-shadow); cursor: pointer;
+      transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+      opacity: 1 !important; visibility: visible !important;
+    }
+    .lesson-player-card:hover { transform: translateY(-6px); box-shadow: var(--card-shadow-hover); }
+    .lesson-player-card.player-top:hover { border-color: var(--success); box-shadow: 0 12px 28px rgba(16,217,160,0.2); }
+    .lesson-player-card.player-risk:hover { border-color: var(--danger); box-shadow: 0 12px 28px rgba(244,63,94,0.2); }
+    .lesson-player-card .player-rank {
+      position: absolute; top: 10px; left: 10px; font-size: 0.68rem; font-weight: 800;
+      width: 27px; height: 27px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      background: rgba(124,58,237,0.2); color: var(--accent); border: 1px solid rgba(124,58,237,0.3);
+    }
+    .lesson-player-card .player-avatar-wrap { position: relative; width: 70px; height: 70px; margin: 0 auto 10px; }
+    .lesson-player-card .player-avatar-wrap img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid var(--card-border); }
+    .lesson-player-card.player-top .player-avatar-wrap img { border-color: var(--success); }
+    .lesson-player-card.player-risk .player-avatar-wrap img { border-color: var(--danger); }
+    .lesson-player-card .player-ring {
+      position: absolute; inset: -4px; border-radius: 50%; border: 2px dashed rgba(124,58,237,0.5);
+      animation: spinRing 8s linear infinite; pointer-events: none;
+    }
+    @keyframes spinRing { to { transform: rotate(360deg); } }
+    .lesson-player-card .player-name { font-weight: 800; font-size: 0.88rem; color: var(--text-primary); margin-bottom: 4px; }
+    .lesson-player-card .player-grade { font-size: 0.68rem; color: var(--text-muted); margin-bottom: 10px; }
+    .lesson-player-card .player-stat-pill {
+      display: inline-flex; align-items: center; gap: 5px; padding: 5px 11px; border-radius: 20px;
+      font-size: 0.73rem; font-weight: 700; margin-bottom: 10px;
+    }
+    .lesson-player-card .pill-success { background: rgba(16,217,160,0.12); color: var(--success); }
+    .lesson-player-card .pill-danger { background: rgba(244,63,94,0.12); color: var(--danger); }
+    .lesson-player-card .player-action {
+      width: 100%; padding: 8px; border: none; border-radius: 12px;
+      font-family: 'Cairo', sans-serif; font-size: 0.74rem; font-weight: 700;
+      cursor: pointer; background: rgba(124,58,237,0.15); color: var(--text-primary);
+      transition: all 0.25s ease;
+    }
+    .lesson-player-card .player-action:hover { background: var(--accent); color: #0f172a; }
+
+    .questions-charts-row { grid-template-columns: 1.4fr 1fr; }
+    @media (max-width: 900px) { .questions-charts-row { grid-template-columns: 1fr; } }
+
+    .wrong-badge {
+      background: linear-gradient(135deg, #f43f5e, #e11d48);
+      color: white; border-radius: 10px; padding: 2px 7px;
+      font-size: 0.7rem; font-weight: bold;
+      box-shadow: 0 0 10px rgba(244,63,94,0.5);
+    }
+
+    .swal2-container { background: var(--modal-backdrop) !important; }
+    .swal-glass {
+      background: var(--modal-bg) !important;
+      backdrop-filter: blur(24px) saturate(180%) !important;
+      -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+      border: 1px solid rgba(124,58,237,0.22) !important;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 40px rgba(124,58,237,0.1) !important;
+      color: var(--text-primary) !important;
+      border-radius: 26px !important;
+      width: min(94vw, 780px) !important;
+      max-width: 780px !important;
+      padding: 1.25rem 1.5rem 1.5rem !important;
+      transition: border-color 0.35s ease, box-shadow 0.35s ease !important;
+    }
+    .swal-glass:hover {
+      border-color: rgba(124,58,237,0.4) !important;
+      box-shadow: 0 24px 70px rgba(0,0,0,0.45), 0 0 50px rgba(124,58,237,0.15) !important;
+    }
+    .swal-glass .swal2-title { font-size: 1.15rem !important; padding: 0 0 0.75rem !important; }
+    .swal-glass .swal2-actions { margin-top: 1rem !important; gap: 10px !important; }
+    .swal-glass .swal2-cancel, .swal-glass .swal2-confirm {
+      border-radius: 20px !important; font-family: 'Cairo', sans-serif !important; font-weight: 600 !important;
+    }
+
+    .echart-tooltip-premium {
+      background: var(--tooltip-bg);
+      border: 1px solid var(--tooltip-border);
+      border-radius: 16px; padding: 12px 16px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.45), 0 0 20px rgba(124,58,237,0.15);
+      font-family: 'Cairo', sans-serif; min-width: 145px;
+      backdrop-filter: blur(16px);
+    }
+    .echart-tooltip-premium .tt-title {
+      font-weight: 700; color: var(--accent); margin-bottom: 8px;
+      font-size: 0.84rem; letter-spacing: 0.02em;
+      filter: drop-shadow(0 0 4px var(--accent-glow));
+    }
+    .echart-tooltip-premium .tt-row {
+      display: flex; justify-content: space-between; gap: 14px;
+      font-size: 0.79rem; color: var(--text-secondary); margin: 4px 0;
+    }
+    .echart-tooltip-premium .tt-val { font-weight: 800; color: var(--text-primary); }
+
+    .swal2-title { color: var(--accent) !important; filter: drop-shadow(0 0 8px var(--accent-glow)) !important; }
+    .swal2-html-container { color: var(--text-primary) !important; overflow: visible !important; max-height: none !important; }
+    .swal-glass .swal2-popup { overflow: visible !important; }
+
+    .glass-picker-grid .glass-card-select,
+    .glass-picker-grid .grade-select-btn,
+    .glass-picker-grid .student-select-btn,
+    .glass-picker-grid .period-card {
+      opacity: 1 !important; visibility: visible !important; transform: none !important;
+    }
+    .glass-picker-grid {
+      display: flex; flex-wrap: wrap; justify-content: center; align-items: stretch; gap: 0.75rem;
+      max-height: 55vh; overflow-y: auto; overflow-x: hidden;
+      padding: 0.5rem; direction: rtl;
+      -webkit-mask-image: none; mask-image: none;
+    }
+    .glass-picker-grid .glass-card-select {
+      flex: 1 1 220px; max-width: 100%; min-width: 200px;
+      display: flex; flex-direction: row; align-items: center; justify-content: flex-start;
+      gap: 14px; text-align: right; padding: 0.9rem 1.1rem;
+      background: rgba(124,58,237,0.07);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(124,58,237,0.2);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+      border-radius: 18px; cursor: pointer;
+      transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s, background 0.25s;
+      color: var(--text-primary);
+    }
+    body.light .glass-picker-grid .glass-card-select { background: rgba(255,255,255,0.6); }
+    .glass-picker-grid .glass-card-select:hover {
+      transform: translateX(-4px);
+      background: rgba(124,58,237,0.16);
+      border-color: rgba(124,58,237,0.45);
+      box-shadow: 0 8px 24px rgba(124,58,237,0.18);
+    }
+    .glass-picker-grid .glass-card-select .card-body { flex: 1; min-width: 0; }
+    .glass-picker-grid .glass-card-select img {
+      width: 52px; height: 52px; border-radius: 50%; object-fit: cover; margin: 0; flex-shrink: 0;
+      border: 2px solid var(--neon-violet); box-shadow: 0 0 10px rgba(124,58,237,0.3);
+    }
+    .glass-picker-grid .glass-card-select .name {
+      font-weight: 700; font-size: 0.9rem; margin: 0 0 4px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .glass-picker-grid .glass-card-select .score { font-size: 0.75rem; color: var(--accent); margin: 0; }
+    .glass-picker-grid .glass-card-select i {
+      font-size: 1.7rem; color: var(--neon-cyan); margin: 0; flex-shrink: 0;
+      width: 44px; text-align: center;
+      filter: drop-shadow(0 0 6px var(--neon-cyan));
+    }
+    .glass-picker-grid .glass-card-select .period-icon {
+      font-size: 2rem; line-height: 1; flex-shrink: 0; width: 44px; text-align: center;
+    }
+    @media (max-width: 520px) {
+      .swal-glass { width: 96vw !important; padding: 1rem !important; }
+      .glass-picker-grid .glass-card-select { flex: 1 1 100%; min-width: 100%; }
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: rgba(124,58,237,0.04); border-radius: 10px; }
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, var(--neon-violet), var(--neon-cyan));
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover { background: var(--neon-violet); }
+
+    .social-link {
+      display: inline-flex; align-items: center; gap: 8px; padding: 9px 18px;
+      border-radius: 22px; text-decoration: none; font-weight: bold;
+      transition: var(--transition); margin-top: 10px; border: 1px solid transparent;
+    }
+    .social-link.whatsapp { background: rgba(37,211,102,0.1); color: #25D366; border-color: rgba(37,211,102,0.3); }
+    .social-link.whatsapp:hover { background: #25D366; color: white; box-shadow: 0 0 20px rgba(37,211,102,0.4); }
+    .social-link.facebook { background: rgba(24,119,242,0.1); color: #1877F2; border-color: rgba(24,119,242,0.3); }
+    .social-link.facebook:hover { background: #1877F2; color: white; box-shadow: 0 0 20px rgba(24,119,242,0.4); }
+
+    .placeholder-tab { text-align: center; padding: 30px; color: var(--text-secondary); font-size: 0.85rem; }
+
+    @media (max-width: 800px) {
+      .main-content { padding: 12px 14px; }
+      .students-rank-grid, .charts-row { grid-template-columns: 1fr; }
+      .toolbar { padding: 10px 14px; border-radius: 16px; }
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+      .kpi-card { padding: 0.75rem; }
+      .kpi-info .kpi-value { font-size: 1.25rem; }
+      .insight-row { gap: 0.8rem; }
+      .live-feed, .ai-insights { min-width: 100%; }
+      .page-title h1 { font-size: 1.1rem; }
+    }
+    @media (max-width: 500px) {
+      .kpi-grid { grid-template-columns: 1fr 1fr; }
+      .charts-row { gap: 0.8rem; }
+      .sidebar { width: 76px; }
+      .sidebar .tab-btn span:last-child, .sidebar .logo-text, .sidebar .theme-toggle-text { display: none; }
+      .sidebar .tab-btn { justify-content: center; padding: 11px 0; }
+    }
+  </style>
+</head>
+<body>
+<div id="meshBg" aria-hidden="true"></div>
+<div id="gridLines" aria-hidden="true"></div>
+<div id="topProgressBar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+<div class="app">
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo-area"><i class="fas fa-chalkboard-user logo-icon"></i><span class="logo-text">منصة التاج</span></div>
+      <button class="collapse-btn" id="collapseSidebarBtn"><i class="fas fa-bars"></i></button>
+    </div>
+    <div class="nav-tabs" id="navTabs">
+      <button class="tab-btn active" data-tab="dashboard"><i class="fas fa-chart-line"></i><span>لوحة القيادة</span></button>
+      <button class="tab-btn" data-tab="students"><i class="fas fa-users"></i><span>أداء الطلاب</span></button>
+      <button class="tab-btn" data-tab="studentStatus"><i class="fas fa-trophy"></i><span>حالة الطلاب</span></button>
+      <button class="tab-btn" data-tab="lessons"><i class="fas fa-book-open"></i><span>تحليل الدروس</span></button>
+      <button class="tab-btn" data-tab="live"><i class="fas fa-bolt"></i><span>الأحداث الحية</span></button>
+      <button class="tab-btn" data-tab="forecast"><i class="fas fa-chart-scatter"></i><span>التنبؤ</span></button>
+      <button class="tab-btn" data-tab="questions"><i class="fas fa-database"></i><span>الأسئلة (متقدم)</span></button>
+      <button class="tab-btn" data-tab="analytics"><i class="fas fa-chart-pie"></i><span>التحليلات والتقارير</span></button>
+      <button class="tab-btn" data-tab="myinfo"><i class="fas fa-id-card"></i><span>معلوماتي</span></button>
+    </div>
+    <div style="padding: 20px; text-align: center; font-size: 0.7rem; color: #64748b;">v9.5 · الذكاء الاصطناعي</div>
+  </div>
+
+  <div class="main-content" id="mainContent">
+    <div class="toolbar">
+      <div class="page-title"><h1><i class="fas fa-atom"></i> مركز القيادة والتحليلات</h1></div>
+      <div class="actions">
+        <div class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i><span class="theme-toggle-text">داكن</span></div>
+        <button class="back-btn btn-pulse" id="backToPlatformBtn"><i class="fas fa-arrow-right"></i> رجوع للمنصة</button>
+      </div>
+    </div>
+    <div id="dynamicContent">
+      <div style="text-align: center; padding: 50px; font-size: 1.5rem; color: var(--accent);"><i class="fas fa-spinner fa-spin"></i> جاري تحميل وتهيئة البيانات...</div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import { getStudents, getGameHistory, getAllGrades, getQuestions, getStudentStats } from './src/services/dataService.js';
+  import { calculateExcellenceIndex, getDailyActiveStudents, getTopLessons, getBottomLessons, getRecentEvents, generateInsights, getLessonDetails, getTopStudentsForLesson, getBottomStudentsForLesson } from './src/stats/analytics/core.js';
+  import { printStudentReport, showAdvancedAnalysis } from './src/students/analysis.js';
+  import { showComparisonModal } from './src/stats/analytics/comparison.js';
+  import { exportGradeReport } from './src/stats/analytics/export.js';
+  import { loadQuestionsFromIndexedDB, saveQuestionsToIndexedDB } from './src/db/indexeddb.js';
+  import { db, collection, query, where, getDocs } from './src/firebase/init.js';
+
+  // ═══════════════════════════════════════════════════════════════
+  // متغيرات عامة
+  // ═══════════════════════════════════════════════════════════════
+  let realData = null;
+  let chartsCache = {};
+  const chartResizeObservers = {};
+  let currentTab = 'dashboard';
+  let internalFilters = { studentsGrade: 'all', forecastType: 'all', forecastValue: null };
+  let dataLoading = true;
+
+  const MODERN_PALETTE = ['#7c3aed', '#06b6d4', '#a855f7', '#10d9a0', '#f472b6', '#facc15'];
+
+  function setLoadProgress(percent) {
+    const bar = document.getElementById('topProgressBar');
+    if (!bar) return;
+    bar.style.width = `${Math.min(100, percent)}%`;
+    bar.setAttribute('aria-valuenow', percent);
+    if (percent >= 100) {
+      bar.classList.add('done');
+      setTimeout(() => { bar.style.width = '0%'; bar.classList.remove('done'); }, 800);
+    }
+  }
+
+  function runCountUp(el, end, duration = 1400, suffix = '') {
+    if (!el) return;
+    const target = parseFloat(String(end).replace(/[^\d.-]/g, '')) || 0;
+    const hasPercent = String(end).includes('%') || suffix === '%';
+    const startTime = performance.now();
+    function tick(now) {
+      const t = Math.min((now - startTime) / duration, 1);
+      const eased = 1 - Math.pow(1 - t, 3);
+      const val = Math.round(target * eased);
+      el.textContent = hasPercent ? `${val}%` : `${val}${suffix}`;
+      if (t < 1) requestAnimationFrame(tick);
+      else el.textContent = String(end);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  function initAllCountUps(root = document) {
+    root.querySelectorAll('[data-count]').forEach(el => {
+      const raw = el.dataset.count;
+      runCountUp(el, raw.includes('%') ? raw : Number(raw), 1200);
+    });
+  }
+
+  function emptyStateHTML(icon, message) {
+    return `<div class="empty-state"><i class="fas ${icon}"></i><p>${message}</p></div>`;
+  }
+
+  function disposeChart(key) {
+    if (chartResizeObservers[key]) {
+      chartResizeObservers[key].disconnect();
+      delete chartResizeObservers[key];
+    }
+    if (chartsCache[key]) {
+      chartsCache[key].dispose();
+      delete chartsCache[key];
+    }
+  }
+
+  function disposeAllCharts() {
+    Object.keys(chartsCache).forEach(disposeChart);
+  }
+
+  function bindChartResize(key, chart, container) {
+    if (!container || !chart) return;
+    if (chartResizeObservers[key]) chartResizeObservers[key].disconnect();
+    const ro = new ResizeObserver(() => { try { chart.resize(); } catch (_) {} });
+    ro.observe(container);
+    chartResizeObservers[key] = ro;
+  }
+
+  function initChartOnDom(key, domId, optionBuilder) {
+    const el = document.getElementById(domId);
+    if (!el) return null;
+    disposeChart(key);
+    const chart = echarts.init(el);
+    chart.setOption(optionBuilder());
+    chartsCache[key] = chart;
+    bindChartResize(key, chart, el);
+    return chart;
+  }
+
+  function getChartThemeColors() {
+    const isLight = document.body.classList.contains('light');
+    return {
+      text: isLight ? '#334155' : '#cbd5e1',
+      splitLine: isLight ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.08)',
+      accent: isLight ? '#4f46e5' : '#6366f1',
+      accent2: isLight ? '#0891b2' : '#22d3ee',
+      bg: isLight ? '#ffffff' : '#0f172a',
+      palette: MODERN_PALETTE
+    };
+  }
+
+  function buildAxisTooltipFormatter(unit = '') {
+    return (params) => {
+      if (!params?.length) return '';
+      const title = params[0].axisValueLabel || params[0].name;
+      const rows = params.map(p => `
+        <div class="tt-row"><span>${p.marker || ''} ${p.seriesName || 'القيمة'}</span><span class="tt-val">${p.value}${unit}</span></div>
+      `).join('');
+      return `<div class="echart-tooltip-premium"><div class="tt-title">${title}</div>${rows}</div>`;
+    };
+  }
+
+  function buildItemTooltipFormatter() {
+    return (p) => {
+      const d = p.data || {};
+      const name = d.name || p.name;
+      const val = d.value ?? p.value;
+      const pct = p.percent != null ? `${Math.round(p.percent)}%` : '';
+      return `<div class="echart-tooltip-premium"><div class="tt-title">${name}</div>
+        <div class="tt-row"><span>القيمة</span><span class="tt-val">${val}</span></div>
+        ${pct ? `<div class="tt-row"><span>النسبة</span><span class="tt-val">${pct}</span></div>` : ''}</div>`;
+    };
+  }
+
+  function getChartAnimation() {
+    return {
+      animation: true,
+      animationDuration: 1100,
+      animationEasing: 'cubicOut',
+      animationDelay: (idx) => idx * 70,
+      animationDelayUpdate: (idx) => idx * 50
+    };
+  }
+
+  function makeAreaGradient(colorTop, colorBottom = 'transparent') {
+    return {
+      color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+        { offset: 0, color: colorTop },
+        { offset: 1, color: colorBottom }
+      ])
+    };
+  }
+
+  function computeTrend(current, previous) {
+    if (!previous && !current) return { dir: 'neutral', pct: 0 };
+    if (!previous) return { dir: 'up', pct: 100 };
+    const diff = ((current - previous) / previous) * 100;
+    if (Math.abs(diff) < 1) return { dir: 'neutral', pct: 0 };
+    return { dir: diff > 0 ? 'up' : 'down', pct: Math.round(Math.abs(diff)) };
+  }
+
+  function trendBadgeHTML(trend) {
+    const icon = trend.dir === 'up' ? 'fa-arrow-up' : trend.dir === 'down' ? 'fa-arrow-down' : 'fa-minus';
+    const cls = trend.dir === 'up' ? 'trend-up' : trend.dir === 'down' ? 'trend-down' : 'trend-neutral';
+    const sign = trend.dir === 'up' ? '+' : trend.dir === 'down' ? '-' : '';
+    return `<span class="trend-indicator ${cls}"><i class="fas ${icon}"></i> ${sign}${trend.pct}%</span>`;
+  }
+
+  function getActivityTrends(history) {
+    const today = new Date();
+    const cur = [], prev = [];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(today); d.setDate(today.getDate() - i);
+      cur.push(history.filter(g => new Date(g.timestamp).toLocaleDateString('en-CA') === d.toLocaleDateString('en-CA')).length);
+    }
+    for (let i = 13; i >= 7; i--) {
+      const d = new Date(today); d.setDate(today.getDate() - i);
+      prev.push(history.filter(g => new Date(g.timestamp).toLocaleDateString('en-CA') === d.toLocaleDateString('en-CA')).length);
+    }
+    const curSum = cur.reduce((a, b) => a + b, 0);
+    const prevSum = prev.reduce((a, b) => a + b, 0);
+    return computeTrend(curSum, prevSum);
+  }
+
+  function renderLessonPlayerCard(student, type, index, statValue) {
+    const isTop = type === 'top';
+    return `
+      <article class="lesson-player-card ${isTop ? 'player-top' : 'player-risk'}" data-id="${student.id}">
+        <span class="player-rank">${index + 1}</span>
+        <div class="player-avatar-wrap">
+          <img src="${student.img}" alt="${student.name}">
+          <span class="player-ring"></span>
+        </div>
+        <h4 class="player-name">${student.name}</h4>
+        <p class="player-grade">${student.grade || '—'}</p>
+        <div class="player-stat-pill ${isTop ? 'pill-success' : 'pill-danger'}">
+          <i class="fas ${isTop ? 'fa-circle-check' : 'fa-circle-xmark'}"></i>
+          ${isTop ? `${statValue} إجابة صحيحة` : `${statValue} خطأ`}
+        </div>
+        <button type="button" class="player-action"><i class="fas fa-chart-simple"></i> عرض التحليل</button>
+      </article>`;
+  }
+
+  function kpiCardHTML(icon, value, label, trend, iconClass = '') {
+    const displayVal = String(value).includes('%') ? value : value;
+    const dataCount = String(value).replace('%', '');
+    return `
+      <div class="kpi-card">
+        <div class="kpi-icon"><i class="fas ${icon} ${iconClass}"></i></div>
+        <div class="kpi-info">
+          <div class="kpi-row-value">
+            <div class="kpi-value" data-count="${dataCount}">0</div>
+            ${trendBadgeHTML(trend)}
+          </div>
+          <div class="kpi-label">${label}</div>
+        </div>
+      </div>`;
+  }
+
+  // ===================== دالة تحميل البيانات الأساسية (تعتمد على Firestore فقط) =====================
+  async function loadRealStats() {
+    try {
+      console.log('[loadRealStats] جلب البيانات من Firestore...');
+      const students = await getStudents();
+      const history = await getGameHistory();
+      const grades = await getAllGrades();
+      
+      const allQuestions = {};
+      for (const g of grades) {
+        try {
+          const qs = await getQuestions(g);
+          allQuestions[g] = qs.length;
+        } catch (e) {
+          allQuestions[g] = 0;
+        }
+      }
+      
+      const studentStats = {};
+      for (const s of students) {
+        studentStats[s.id] = await getStudentStats(s.id);
+      }
+      
+      let sumIdx = 0;
+      for (const s of students) {
+        sumIdx += await calculateExcellenceIndex(s.id);
+      }
+      const avgIdx = students.length ? Math.round(sumIdx / students.length) : 0;
+      const dailyActive = await getDailyActiveStudents();
+      
+      let totalCorr = 0, totalAns = 0;
+      for (const s of students) {
+        const st = studentStats[s.id] || {};
+        totalCorr += st.correctAnswers || 0;
+        totalAns += st.totalAnswers || 0;
+      }
+      const avgAcc = totalAns ? Math.round((totalCorr / totalAns) * 100) : 0;
+      
+      const topLessons = await getTopLessons(5);
+      const bottomLessons = await getBottomLessons(5);
+      const recentEvents = await getRecentEvents();
+      const insights = await generateInsights();
+      
+      realData = { 
+        students, history, grades, allQuestions, studentStats, 
+        avgIndex: avgIdx, dailyActive, avgAccuracy: avgAcc, 
+        totalMatches: history.length, totalStudents: students.length, 
+        topLessons, bottomLessons, recentEvents, insights 
+      };
+      dataLoading = false;
+      console.log('[loadRealStats] تم تحميل البيانات بنجاح', realData);
+      return true;
+    } catch(e) { 
+      console.error('[loadRealStats] خطأ:', e); 
+      dataLoading = false;
+      return false; 
+    }
+  }
+    // ===================== دوال العرض (Render Functions) مع التحقق من وجود realData =====================
+  function renderDashboard() {
+    if (!realData) return '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>جاري تحميل البيانات...</p></div>';
+    const studentTrend = computeTrend(realData.totalStudents, Math.max(1, realData.totalStudents - 2));
+    const activeTrend = computeTrend(realData.dailyActive, Math.max(1, realData.dailyActive - 1));
+    const accTrend = computeTrend(realData.avgAccuracy, Math.max(1, realData.avgAccuracy - 5));
+    const indexTrend = computeTrend(realData.avgIndex, Math.max(1, realData.avgIndex - 3));
+    return `
+      <div class="kpi-grid">
+        ${kpiCardHTML('fa-user-graduate', realData.totalStudents, 'إجمالي الطلاب', studentTrend)}
+        ${kpiCardHTML('fa-fire-flame-curved', realData.dailyActive, 'نشط اليوم', activeTrend)}
+        ${kpiCardHTML('fa-bullseye', `${realData.avgAccuracy}%`, 'متوسط الدقة', accTrend)}
+        ${kpiCardHTML('fa-crown', realData.avgIndex, 'مؤشر التاج', indexTrend)}
+      </div>
+      <div class="charts-row">
+        <div class="chart-card"><div class="chart-title"><i class="fas fa-chart-area"></i> النشاط اليومي (آخر 7 أيام)</div><div id="dailyLineChart" class="chart-container"></div></div>
+        <div class="chart-card"><div class="chart-title"><i class="fas fa-chart-pie"></i> توزيع صعوبة الأسئلة</div><div id="difficultyPieChart" class="chart-container"></div></div>
+      </div>
+      <div class="insight-row">
+        <div class="live-feed"><div class="chart-title"><i class="fas fa-bell"></i> آخر الأحداث</div><div id="dashboardEvents"></div></div>
+        <div class="ai-insights"><div class="chart-title"><i class="fas fa-robot"></i> توصيات ذكية</div><div id="dashboardInsights"></div></div>
+      </div>
+    `;
+  }
+
+  function renderStudentsTab() {
+    if (!realData) return '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>جاري تحميل البيانات...</p></div>';
+    return `
+      <div class="filter-bar" id="studentFilterBar">
+        <button class="filter-btn active" data-filter="all"><i class="fas fa-users"></i> الجميع</button>
+        <button class="filter-btn" data-filter="high"><i class="fas fa-star"></i> المتفوقون</button>
+        <button class="filter-btn" data-filter="low"><i class="fas fa-exclamation-triangle"></i> يحتاجون مساعدة</button>
+        <button class="filter-btn" data-filter="active"><i class="fas fa-bolt"></i> نشطون مؤخراً</button>
+        <button class="filter-btn" id="filterByGradeBtn" style="background: rgba(250,204,21,0.2); border-color: var(--accent);"><i class="fas fa-filter"></i> تصفية بالصف</button>
+      </div>
+      <div id="currentGradeBadge" style="margin-bottom: 1rem; color: var(--accent); font-weight: bold; text-shadow: 0 0 5px var(--accent-glow);"></div>
+      <div id="studentsGridFull" class="students-grid"></div>
+      <div id="studentsPagination" style="margin-top:1rem; text-align:center;"></div>
+    `;
+  }
+
+  function renderStudentStatusTab() {
+    if (!realData) return '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>جاري تحميل البيانات...</p></div>';
+    const studentsWithData = realData.students.map(s => {
+      const stats = realData.studentStats[s.id] || {};
+      const accuracy = stats.totalAnswers ? (stats.correctAnswers / stats.totalAnswers) * 100 : 0;
+      const withdraw = stats.withdrawCount || 0;
+      return { ...s, accuracy, withdraw, totalAnswers: stats.totalAnswers || 0 };
+    });
+    const sortedByScore = [...studentsWithData].sort((a,b) => b.score - a.score);
+    const top5 = sortedByScore.slice(0,5);
+    const bottom5 = sortedByScore.slice(-5).reverse();
+    
+    const generateReason = (s, isTop) => {
+      if (isTop) {
+        if (s.accuracy >= 85) return `دقة استثنائية ${Math.round(s.accuracy)}% + تفوق ملحوظ.`;
+        if (s.accuracy >= 70) return `أداء جيد ودقة ${Math.round(s.accuracy)}%، استمرارية ممتازة.`;
+        return `جهود كبيرة أوصلته للقمة، نوصي بزيادة الدقة (${Math.round(s.accuracy)}%).`;
+      } else {
+        if (s.withdraw > 3) return `كثرة الانسحاب (${s.withdraw} مرة) تؤثر سلباً.`;
+        if (s.accuracy < 40) return `ضعف في الإجابات الصحيحة (${Math.round(s.accuracy)}%) يحتاج تأسيساً.`;
+        return `تراجع في الأداء وقلة المشاركة (إجابات ${s.totalAnswers}) .`;
+      }
+    };
+    
+    const generateAdvice = (s, isTop) => {
+      if (isTop) return s.accuracy >= 85 ? "✨ حافظ على مستواك وتحدى نفسك بأسئلة أصعب." : "🎯 ركّز على تحسين الدقة أكثر عبر مراجعة الأخطاء.";
+      else return s.withdraw > 3 ? "⚠️ أكمل التحديات ولا تنسحب لتبني الثقة." : "📚 ابدأ بدروس سهلة وتدرج، واطلب المساعدة.";
+    };
+
+    const topHtml = top5.map(s => `<div class="rank-card" data-id="${s.id}"><img src="${s.img}"><div class="rank-info"><div class="rank-name">${s.name}</div><div class="rank-score">⭐ ${s.score} • 🎯 ${Math.round(s.accuracy)}%</div><div class="rank-reason"><i class="fas fa-lightbulb" style="color:var(--accent);"></i> ${generateReason(s, true)}</div><div class="rank-advice"><i class="fas fa-check" style="color:var(--success);"></i> ${generateAdvice(s, true)}</div></div></div>`).join('');
+    const bottomHtml = bottom5.map(s => `<div class="rank-card" data-id="${s.id}" style="border-right: 3px solid var(--danger);"><img src="${s.img}" style="border-color:var(--danger);"><div class="rank-info"><div class="rank-name">${s.name}</div><div class="rank-score" style="color:var(--danger);">⭐ ${s.score} • 🎯 ${Math.round(s.accuracy)}%</div><div class="rank-reason"><i class="fas fa-exclamation-circle" style="color:var(--danger);"></i> ${generateReason(s, false)}</div><div class="rank-advice"><i class="fas fa-hands-helping" style="color:var(--success);"></i> ${generateAdvice(s, false)}</div></div></div>`).join('');
+    
+    return `<div class="students-rank-grid"><div class="rank-column"><h3 style="color:var(--success);">🏆 أفضل 5 طلاب</h3>${topHtml}</div><div class="rank-column"><h3 style="color:var(--danger);">⚠️ أسوأ 5 طلاب (يحتاجون متابعة)</h3>${bottomHtml}</div></div>`;
+  }
+
+  function renderLessonsTab() {
+    if (!realData) return '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>جاري تحميل البيانات...</p></div>';
+    return `
+      <div class="charts-row">
+        <div class="chart-card" style="border-top: 3px solid var(--success);"><div class="chart-title" style="color:var(--success);">🏆 أفضل الدروس استيعاباً</div><div id="topLessonsList" class="lessons-list"></div></div>
+        <div class="chart-card" style="border-top: 3px solid var(--danger);"><div class="chart-title" style="color:var(--danger);">⚠️ دروس تحتاج مراجعة (الأكثر خطأً)</div><div id="bottomLessonsList" class="lessons-list"></div></div>
+      </div>
+      <div id="lessonDetailArea" class="lesson-detail-area" style="display:none; border: 1px solid var(--accent); box-shadow: 0 0 20px var(--accent-glow);">
+        <div class="lesson-detail-header">
+          <div class="chart-title" id="selectedLessonTitle" style="font-size:1.2rem; margin:0; text-align:right;"></div>
+          <div class="lesson-stats-chips" id="lessonStats"></div>
+        </div>
+        <p style="font-size:0.8rem; color:var(--text-secondary); text-align:center; margin-bottom:0.5rem;"><i class="fas fa-hand-pointer"></i> اضغط على بطاقة اللاعب لعرض تحليله المتقدم</p>
+        <div class="lesson-players-grid" id="studentsInLessonContainer"></div>
+      </div>
+    `;
+  }
+
+  function renderLiveTab() {
+    if (!realData) return '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>جاري تحميل البيانات...</p></div>';
+    return `<div class="live-feed"><div class="chart-title"><i class="fas fa-satellite-dish"></i> الأحداث الحية والمباشرة</div><div class="filter-bar" id="eventFilterBar"><button class="filter-btn active" data-filter="all">الكل</button><button class="filter-btn" data-filter="game">مباريات</button><button class="filter-btn" data-filter="student">طلاب</button><button class="filter-btn" data-filter="points">نقاط</button></div><div id="liveEventsList" style="max-height: 400px; overflow-y:auto; padding-right:10px;"></div><button id="refreshLiveBtn" class="back-btn btn-pulse" style="margin-top:1rem; width:100%; justify-content:center;"><i class="fas fa-arrows-rotate"></i> تحديث الآن</button></div>`;
+  }
+
+  function renderForecastTab() {
+    if (!realData) return '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>جاري تحميل البيانات...</p></div>';
+    return `
+      <div class="filter-bar" style="justify-content:center; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 20px; border: 1px solid var(--card-border);">
+        <button class="filter-btn active" id="btnForecastAll"><i class="fas fa-globe"></i> أداء المنصة كاملة</button>
+        <button class="filter-btn" id="btnForecastGrade"><i class="fas fa-layer-group"></i> تنبؤ بصف محدد</button>
+        <button class="filter-btn" id="btnForecastStudent"><i class="fas fa-user-astronaut"></i> تنبؤ بطالب محدد</button>
+      </div>
+      <div id="forecastTargetLabel" style="text-align:center; margin-bottom:1rem; color:var(--accent); font-weight:bold; font-size:1.1rem; text-shadow:0 0 8px var(--accent-glow);">عرض: أداء المنصة كاملة</div>
+      <div class="chart-card" style="padding-top:20px;">
+        <div class="chart-title"><i class="fas fa-chart-line"></i> مسار التنبؤ المستقبلي للأداء</div>
+        <div id="forecastChart" class="chart-container" style="height:350px;"></div>
+      </div>
+    `;
+  }
+
+  function renderQuestionsTab() {
+    if (!realData) return '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>جاري تحميل البيانات...</p></div>';
+    let totalQ = 0; for(let g in realData.allQuestions) totalQ+=realData.allQuestions[g];
+    const qTrend = computeTrend(totalQ, Math.max(1, totalQ - 10));
+    return `
+      <div class="kpi-grid">
+        ${kpiCardHTML('fa-database', totalQ, 'إجمالي الأسئلة', qTrend)}
+        <div class="kpi-card" id="totalCorrectCard"><div class="kpi-icon" style="color:var(--success);"><i class="fas fa-circle-check"></i></div><div class="kpi-info"><div class="kpi-row-value"><div class="kpi-value" style="color:var(--success);" id="valCorr" data-count="0">0</div><span class="trend-indicator trend-up"><i class="fas fa-arrow-up"></i></span></div><div class="kpi-label">إجابات صحيحة</div></div></div>
+        <div class="kpi-card" id="totalWrongCard"><div class="kpi-icon" style="color:var(--danger);"><i class="fas fa-circle-xmark"></i></div><div class="kpi-info"><div class="kpi-row-value"><div class="kpi-value" style="color:var(--danger);" id="valWrong" data-count="0">0</div><span class="trend-indicator trend-down"><i class="fas fa-arrow-down"></i></span></div><div class="kpi-label">إجابات خاطئة</div></div></div>
+      </div>
+      <div class="charts-row questions-charts-row">
+        <div class="chart-card">
+          <div class="chart-title"><i class="fas fa-chart-bar"></i> تفاعل التصنيفات (أعمدة متحركة)</div>
+          <div id="categoriesBarChart" class="chart-container" style="height: 380px;"></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title"><i class="fas fa-chart-pie"></i> توزيع الإجابات (صحيح / خاطئ)</div>
+          <div id="answersMixChart" class="chart-container" style="height: 380px;"></div>
+        </div>
+      </div>
+      <div class="insight-row">
+        <div class="live-feed" style="border-top: 3px solid var(--danger);">
+          <div class="chart-title" style="color:var(--danger);"><i class="fas fa-biohazard"></i> قائمة الخطر: أكثر الطلاب إجابة خاطئة</div>
+          <div id="topWrongList"></div>
+        </div>
+        <div class="live-feed" style="border-top: 3px solid var(--success);">
+          <div class="chart-title" style="color:var(--success);"><i class="fas fa-medal"></i> لوحة الشرف: أكثر الطلاب إجابة صحيحة</div>
+          <div id="topCorrectList"></div>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderAnalyticsTab() {
+    if (!realData) return '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>جاري تحميل البيانات...</p></div>';
+    return `
+      <div class="analytics-container">
+        <div class="charts-row" style="margin-top: 1rem; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+          
+          <div class="chart-card glass-card-select" id="parentReportCardAnalytics">
+            <i class="fas fa-print" style="font-size:3rem; color:var(--accent); display:block; margin-bottom:15px; text-shadow:0 0 15px var(--accent-glow);"></i>
+            <div class="chart-title">تقرير ولي الأمر</div>
+            <p style="font-size: 0.8rem; color:var(--text-secondary);">استخراج تقرير PDF مفصل يرسل للأهل يعرض مستوى الطالب.</p>
+          </div>
+          
+          <div class="chart-card glass-card-select" id="advancedAnalysisCardAnalytics">
+            <i class="fas fa-microscope" style="font-size:3rem; color:var(--accent); display:block; margin-bottom:15px; text-shadow:0 0 15px var(--accent-glow);"></i>
+            <div class="chart-title">تحليل متعمق لطالب</div>
+            <p style="font-size: 0.8rem; color:var(--text-secondary);">عرض رسوم بيانية، أوسمة، ونقاط القوة والضعف بدقة.</p>
+          </div>
+          
+          <div class="chart-card glass-card-select" id="compareStudentCardAnalytics">
+            <i class="fas fa-people-arrows" style="font-size:3rem; color:var(--accent); display:block; margin-bottom:15px; text-shadow:0 0 15px var(--accent-glow);"></i>
+            <div class="chart-title">مواجهة ومقارنة</div>
+            <p style="font-size: 0.8rem; color:var(--text-secondary);">قارن بين طالبين في نفس الشاشة لمعرفة الفوارق.</p>
+          </div>
+          
+          <div class="chart-card glass-card-select" id="classReportCardAnalytics">
+            <i class="fas fa-file-pdf" style="font-size:3rem; color:var(--accent); display:block; margin-bottom:15px; text-shadow:0 0 15px var(--accent-glow);"></i>
+            <div class="chart-title">تقرير الصف الكامل</div>
+            <p style="font-size: 0.8rem; color:var(--text-secondary);">تصدير PDF لترتيب وعلامات جميع طلاب صف محدد.</p>
+          </div>
+
+          <div class="chart-card glass-card-select" id="backupCardAnalytics">
+            <i class="fas fa-cloud-download-alt" style="font-size:3rem; color:var(--accent); display:block; margin-bottom:15px; text-shadow:0 0 15px var(--accent-glow);"></i>
+            <div class="chart-title">النسخة الاحتياطية</div>
+            <p style="font-size: 0.8rem; color:var(--text-secondary);">تصدير كافة بيانات المنصة (JSON) للحفظ والأمان.</p>
+          </div>
+
+        </div>
+      </div>
+    `;
+  }
+
+  function renderMyInfoTab() {
+    const teacherCode = sessionStorage.getItem('peak_teacher_code') || 'default';
+    const teacherName = sessionStorage.getItem('peak_teacher_name') || 'معلم';
+    
+    let expiryText = 'جاري التحميل...';
+    let remainingDaysText = 'جاري التحميل...';
+    let planName = 'جاري التحميل...';
+    let planColor = '#facc15';
+    
+    (async () => {
+        try {
+            const q = query(collection(db, 'teachers'), where('code', '==', teacherCode));
+            const querySnapshot = await getDocs(q);
+            if (!querySnapshot.empty) {
+                const teacherData = querySnapshot.docs[0].data();
+                const expiryDate = teacherData.expiryDate ? new Date(teacherData.expiryDate) : null;
+                const plan = teacherData.plan || 'free';
+                const planMap = { free: 'مجاني', gold: 'ذهبي', silver: 'فضي', platinum: 'ماسي' };
+                planName = planMap[plan] || 'مجاني';
+                planColor = plan === 'gold' ? '#facc15' : (plan === 'platinum' ? '#c084fc' : '#94a3b8');
+                if (expiryDate && !isNaN(expiryDate.getTime())) {
+                    expiryText = expiryDate.toLocaleDateString('ar-EG');
+                    const diffDays = Math.ceil((expiryDate - new Date()) / (1000 * 60 * 60 * 24));
+                    if (diffDays > 0) remainingDaysText = `${diffDays} يوم`;
+                    else if (diffDays === 0) remainingDaysText = 'ينتهي اليوم';
+                    else remainingDaysText = 'منتهي';
+                } else {
+                    expiryText = 'غير محدد (لا يوجد تاريخ)';
+                    remainingDaysText = 'غير محدد';
+                }
+            } else {
+                expiryText = 'غير محدد (معلم غير موجود)';
+                remainingDaysText = 'غير محدد';
+                planName = 'مجاني';
+            }
+        } catch (error) {
+            console.error('Error fetching teacher data:', error);
+            expiryText = 'خطأ في التحميل';
+            remainingDaysText = 'خطأ';
+            planName = 'مجاني';
+        }
+        const expirySpan = document.getElementById('info-expiry-date');
+        const remainingSpan = document.getElementById('info-remaining-days');
+        const planSpan = document.getElementById('info-plan-name');
+        if (expirySpan) expirySpan.innerText = expiryText;
+        if (remainingSpan) remainingSpan.innerText = remainingDaysText;
+        if (planSpan) {
+            planSpan.innerText = planName;
+            planSpan.style.color = planColor;
+        }
+    })();
+    
+    return `
+      <div class="subscription-card" style="max-width:600px; margin:0 auto; text-align:center;">
+        <i class="fas fa-user-shield" style="font-size:4rem; color:var(--accent); margin-bottom:1rem;"></i>
+        <div class="chart-title" style="font-size:1.5rem;">ملف المعلم وبيانات الاشتراك</div>
+        <div style="background:rgba(0,0,0,0.2); border-radius:20px; padding:20px; margin:20px 0; text-align:right;">
+          <div class="feed-item"><strong>المعلم:</strong> ${teacherName}</div>
+          <div class="feed-item"><strong>خطة الاشتراك:</strong> <span id="info-plan-name" style="color:var(--accent);">جاري التحميل...</span></div>
+          <div class="feed-item"><strong>تاريخ الانتهاء:</strong> <span id="info-expiry-date">جاري التحميل...</span></div>
+          <div class="feed-item"><strong>المدة المتبقية:</strong> <span id="info-remaining-days">جاري التحميل...</span></div>
+        </div>
+        <div style="margin-top:2rem;">
+          <h4>تواصل مع الدعم الفني والمطور</h4>
+          <a href="https://wa.me/201126081946" class="social-link whatsapp">📞 واتساب</a>
+          <a href="https://www.facebook.com/ahm.mohamed98" class="social-link facebook">💬 فيسبوك</a>
+        </div>
+      </div>
+    `;
+  }
+
+  // ===================== دوال التهيئة (Initialization Functions) =====================
+  function getLast7DaysActivity(history) {
+    const today = new Date();
+    const labels = [];
+    const values = [];
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date(today);
+      date.setDate(today.getDate() - i);
+      const ds = date.toLocaleDateString('en-CA');
+      labels.push(date.toLocaleDateString('ar-EG', { weekday: 'short' }));
+      values.push(history.filter(g => new Date(g.timestamp).toLocaleDateString('en-CA') === ds).length);
+    }
+    return { labels, values };
+  }
+
+  function initDashboardCharts() {
+    if (!realData) return;
+    const c = getChartThemeColors();
+    const last7 = getLast7DaysActivity(realData.history);
+    const hasLineData = last7.values.some(v => v > 0);
+
+    if (document.getElementById('dailyLineChart')) {
+      if (!hasLineData) {
+        document.getElementById('dailyLineChart').innerHTML = emptyStateHTML('fa-chart-area', 'لا يوجد نشاط مسجّل في آخر 7 أيام — شجّع الطلاب على اللعب!');
+        disposeChart('daily');
+      } else {
+        document.getElementById('dailyLineChart').innerHTML = '';
+        initChartOnDom('daily', 'dailyLineChart', () => ({
+          ...getChartAnimation(),
+          grid: { left: '3%', right: '4%', bottom: '8%', top: '12%', containLabel: true },
+          tooltip: { trigger: 'axis', backgroundColor: 'transparent', borderWidth: 0, padding: 0, formatter: buildAxisTooltipFormatter(' مباراة') },
+          xAxis: { type: 'category', data: last7.labels, axisLine: { lineStyle: { color: c.splitLine } }, axisLabel: { color: c.text, fontFamily: 'Cairo' } },
+          yAxis: { type: 'value', splitLine: { lineStyle: { color: c.splitLine, type: 'dashed' } }, axisLabel: { color: c.text } },
+          series: [{ name: 'المباريات', type: 'line', data: last7.values, smooth: true, lineStyle: { color: c.accent, width: 3, shadowColor: 'rgba(99,102,241,0.4)', shadowBlur: 12 }, itemStyle: { color: c.accent2, borderWidth: 2, borderColor: c.bg }, areaStyle: makeAreaGradient('rgba(99, 102, 241, 0.45)', 'rgba(99, 102, 241, 0.02)'), symbol: 'circle', symbolSize: 9, showSymbol: true }]
+        }));
+      }
+    }
+
+    if (document.getElementById('difficultyPieChart')) {
+      const pieData = [
+        { value: 45, name: 'سهل', itemStyle: { color: c.palette[3] } },
+        { value: 35, name: 'متوسط', itemStyle: { color: c.palette[5] } },
+        { value: 20, name: 'صعب', itemStyle: { color: c.palette[4] } }
+      ];
+      initChartOnDom('pie', 'difficultyPieChart', () => ({
+        ...getChartAnimation(),
+        color: c.palette,
+        tooltip: { trigger: 'item', backgroundColor: 'transparent', borderWidth: 0, padding: 0, formatter: buildItemTooltipFormatter() },
+        series: [{ type: 'pie', radius: ['42%', '72%'], center: ['50%', '52%'], avoidLabelOverlap: true, itemStyle: { borderRadius: 12, borderColor: c.bg, borderWidth: 3 }, label: { show: true, color: c.text, fontFamily: 'Cairo', formatter: '{b}\n{d}%' }, emphasis: { scale: true, scaleSize: 8, label: { fontWeight: 'bold' } }, data: pieData }]
+      }));
+    }
+
+    const evDiv = document.getElementById('dashboardEvents');
+    if (evDiv) {
+      const events = (realData.recentEvents || []).slice(0, 5);
+      evDiv.innerHTML = events.length ? events.map(e => `<div class="feed-item"><i class="fas fa-bolt" style="color:var(--accent);"></i> ${e}</div>`).join('') : emptyStateHTML('fa-inbox', 'لا أحداث حديثة — ستظهر هنا عند نشاط الطلاب.');
+    }
+
+    const inDiv = document.getElementById('dashboardInsights');
+    if (inDiv) {
+      const insights = (realData.insights || []).slice(0, 5);
+      inDiv.innerHTML = insights.length ? insights.map(t => `<div class="feed-item"><i class="fas fa-wand-magic-sparkles" style="color:var(--accent);"></i> ${t}</div>`).join('') : emptyStateHTML('fa-robot', 'لا توصيات بعد — سيتولد الذكاء الاصطناعي اقتراحات عند توفر بيانات أكثر.');
+    }
+
+    initAllCountUps(document.getElementById('dynamicContent'));
+  }
+
+  function initStudentsFullGrid() {
+    if (!realData) return;
+    const grid = document.getElementById('studentsGridFull');
+    if (!grid) return;
+    
+    let currentStudents = [...realData.students];
+    const filter = document.querySelector('#studentFilterBar .filter-btn.active')?.dataset.filter || 'all';
+    
+    if (internalFilters.studentsGrade !== 'all') {
+      currentStudents = currentStudents.filter(s => s.grade === internalFilters.studentsGrade);
+      document.getElementById('currentGradeBadge').innerText = `يتم عرض طلاب صف: ${internalFilters.studentsGrade}`;
+    } else {
+      document.getElementById('currentGradeBadge').innerText = '';
+    }
+
+    if (filter === 'high') currentStudents = currentStudents.filter(s => s.score >= 700);
+    else if (filter === 'low') currentStudents = currentStudents.filter(s => s.score < 300);
+    else if (filter === 'active') {
+      const oneWeek = Date.now() - 7*24*3600*1000;
+      const activeIds = new Set(realData.history.filter(g => g.timestamp > oneWeek).flatMap(g => g.participants || []));
+      currentStudents = currentStudents.filter(s => activeIds.has(String(s.id)));
+    }
+    
+    const pageSize = 15;
+    let currentPage = 1;
+    const totalPages = Math.ceil(currentStudents.length / pageSize);
+    
+    function renderPage() {
+      const start = (currentPage-1)*pageSize;
+      const pageStudents = currentStudents.slice(start, start+pageSize);
+      
+      if (!currentStudents.length) {
+        grid.innerHTML = emptyStateHTML('fa-users-slash', 'لا يوجد طلاب يطابقون الفلتر الحالي.');
+        document.getElementById('studentsPagination').innerHTML = '';
+        return;
+      }
+
+      grid.innerHTML = pageStudents.map(s => `
+        <div class="student-card-mini" data-id="${s.id}">
+          <img src="${s.img}">
+          <h4>${s.name}</h4>
+          <p style="font-size:0.75rem; color:var(--text-secondary);">${s.grade}</p>
+          <p class="score">⭐ ${s.score}</p>
+        </div>
+      `).join('');
+      
+      gsap.killTweensOf(grid.querySelectorAll('.student-card-mini'));
+      gsap.set(grid.querySelectorAll('.student-card-mini'), { clearProps: 'opacity,transform,visibility,scale' });
+      grid.querySelectorAll('.student-card-mini').forEach(c => c.addEventListener('click', () => showAdvancedAnalysis(c.dataset.id, 'all')));
+      
+      const pagDiv = document.getElementById('studentsPagination');
+      if (pagDiv) pagDiv.innerHTML = `<div style="display:flex; gap:1rem; justify-content:center; align-items:center;"><button class="back-btn" ${currentPage===1?'disabled':''} id="prevPageBtn"><i class="fas fa-chevron-right"></i></button><span style="font-weight:bold;">${currentPage} / ${totalPages || 1}</span><button class="back-btn" ${currentPage===totalPages||totalPages===0?'disabled':''} id="nextPageBtn"><i class="fas fa-chevron-left"></i></button></div>`;
+      
+      document.getElementById('prevPageBtn')?.addEventListener('click', () => { if(currentPage>1) { currentPage--; renderPage(); } });
+      document.getElementById('nextPageBtn')?.addEventListener('click', () => { if(currentPage<totalPages) { currentPage++; renderPage(); } });
+    }
+    renderPage();
+  }
+
+  function attachStudentFilters() {
+    document.querySelectorAll('#studentFilterBar .filter-btn[data-filter]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#studentFilterBar .filter-btn[data-filter]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        initStudentsFullGrid();
+      });
+    });
+    
+    document.getElementById('filterByGradeBtn')?.addEventListener('click', async () => {
+      const selectedGrade = await showGradePickerPopup('تصفية بالصف (اختر لإلغاء الفلتر)');
+      if (selectedGrade) internalFilters.studentsGrade = selectedGrade;
+      else internalFilters.studentsGrade = 'all';
+      initStudentsFullGrid();
+    });
+  }
+
+  async function initLessonsInteractive() {
+    if (!realData) return;
+    const topDiv = document.getElementById('topLessonsList');
+    const bottomDiv = document.getElementById('bottomLessonsList');
+    
+    if (topDiv) topDiv.innerHTML = (realData.topLessons||[]).length ? (realData.topLessons||[]).map(l => `<div class="lesson-item" data-lesson="${l.lesson}" data-type="top"><span class="lesson-name"><i class="fas fa-book-open-reader" style="color:var(--success);"></i> ${l.lesson}</span><span class="lesson-percent high">${l.accuracy}% (${l.correct}/${l.total})</span></div>`).join('') : emptyStateHTML('fa-book', 'لا دروس ببيانات كافية بعد.');
+    if (bottomDiv) bottomDiv.innerHTML = (realData.bottomLessons||[]).length ? (realData.bottomLessons||[]).map(l => `<div class="lesson-item" data-lesson="${l.lesson}" data-type="bottom"><span class="lesson-name"><i class="fas fa-book-skull" style="color:var(--danger);"></i> ${l.lesson}</span><span class="lesson-percent low">${l.accuracy}% (${l.correct}/${l.total})</span></div>`).join('') : emptyStateHTML('fa-book-medical', 'لا دروس تحتاج مراجعة حالياً — رائع!');
+    
+    document.querySelectorAll('.lesson-item').forEach(el => {
+      el.addEventListener('click', async () => {
+        const lesson = el.dataset.lesson;
+        const type = el.dataset.type;
+        const details = await getLessonDetails(lesson);
+        const area = document.getElementById('lessonDetailArea');
+        const titleDiv = document.getElementById('selectedLessonTitle');
+        const statsDiv = document.getElementById('lessonStats');
+        const studentsDiv = document.getElementById('studentsInLessonContainer');
+        
+        titleDiv.innerHTML = `${type === 'top' ? '<i class="fas fa-star" style="color:var(--success);"></i>' : '<i class="fas fa-triangle-exclamation" style="color:var(--danger);"></i>'} درس: <span style="color:var(--text-primary);">${lesson}</span>`;
+        statsDiv.innerHTML = `<span class="lesson-stat-chip chip-success"><i class="fas fa-check-double"></i> صحيح: ${details.correct}</span><span class="lesson-stat-chip chip-danger"><i class="fas fa-xmark"></i> خطأ: ${details.wrong}</span><span class="lesson-stat-chip chip-accent"><i class="fas fa-percent"></i> دقة: ${details.accuracy}%</span>`;
+
+        if (type === 'top') {
+          const topStudents = await getTopStudentsForLesson(lesson, 8);
+          studentsDiv.innerHTML = topStudents.length ? topStudents.map((s, i) => renderLessonPlayerCard(s.student, 'top', i, s.correct)).join('') : emptyStateHTML('fa-users', 'لا يوجد طلاب متميزون في هذا الدرس بعد.');
+        } else {
+          const bottomStudents = await getBottomStudentsForLesson(lesson, 10);
+          studentsDiv.innerHTML = bottomStudents.length ? bottomStudents.map((s, i) => renderLessonPlayerCard(s.student, 'bottom', i, s.wrong ?? Math.max(0, (s.total || 0) - (s.correct || 0)))).join('') : emptyStateHTML('fa-user-clock', 'لا بيانات كافية عن أخطاء الطلاب في هذا الدرس.');
+        }
+
+        area.style.display = 'block';
+        gsap.fromTo(area, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' });
+        const playerCards = studentsDiv.querySelectorAll('.lesson-player-card');
+        gsap.set(playerCards, { opacity: 1, y: 0, clearProps: 'opacity,transform' });
+        playerCards.forEach(card => {
+          const openAnalysis = () => showAdvancedAnalysis(card.dataset.id, 'all');
+          card.addEventListener('click', openAnalysis);
+          card.querySelector('.player-action')?.addEventListener('click', (e) => { e.stopPropagation(); openAnalysis(); });
+        });
+      });
+    });
+  }
+
+  function initLiveEvents() {
+    if (!realData) return;
+    const events = realData.recentEvents || [];
+    const filter = document.querySelector('#eventFilterBar .filter-btn.active')?.dataset.filter || 'all';
+    let filtered = events;
+    if (filter === 'game') filtered = events.filter(e => e.includes('مباراة') || e.includes('فريق') || e.includes('سباق'));
+    else if (filter === 'student') filtered = events.filter(e => e.includes('طالب') || e.includes('الطالب') || e.includes('مستوى'));
+    else if (filter === 'points') filtered = events.filter(e => e.includes('نقطة') || e.includes('نقاط') || e.includes('اكتسب'));
+    
+    const container = document.getElementById('liveEventsList');
+    if (container) {
+      container.innerHTML = filtered.length ? filtered.map(e => `<div class="feed-item" style="padding: 12px; background: var(--rank-bg); border-radius: 12px; margin-bottom: 8px;"><i class="fas fa-satellite-dish" style="color:var(--accent);"></i> ${e}</div>`).join('') : emptyStateHTML('fa-bell-slash', 'لا أحداث تطابق هذا الفلتر — جرّب "الكل" أو حدّث القائمة.');
+      if (filtered.length) gsap.from('.feed-item', { x: 50, opacity: 0, duration: 0.3, stagger: 0.05 });
+    }
+  }
+
+  function attachLiveFilters() {
+    document.querySelectorAll('#eventFilterBar .filter-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('#eventFilterBar .filter-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        initLiveEvents();
+      });
+    });
+    document.getElementById('refreshLiveBtn')?.addEventListener('click', initLiveEvents);
+  }
+
+  async function initForecastChart() {
+    if (!realData) return;
+    const c = getChartThemeColors();
+    let dataPoints = [];
+    let labels = [];
+    const { forecastType, forecastValue } = internalFilters;
+    
+    if (forecastType === 'all') {
+      const weekly = getLast7DaysActivity(realData.history);
+      dataPoints = weekly.values;
+      labels = weekly.labels;
+    } else if (forecastType === 'grade') {
+      const studentsIds = realData.students.filter(s => s.grade === forecastValue).map(s => s.id);
+      const filteredHistory = realData.history.filter(g => g.participants?.some(p => studentsIds.includes(String(p))));
+      const weekly = getLast7DaysActivity(filteredHistory);
+      dataPoints = weekly.values;
+      labels = weekly.labels;
+    } else if (forecastType === 'student') {
+      const studentHistory = realData.history.filter(g => g.participants?.map(String).includes(String(forecastValue)));
+      const weekly = getLast7DaysActivity(studentHistory);
+      dataPoints = weekly.values;
+      labels = weekly.labels;
+    }
+    
+    const fcEl = document.getElementById('forecastChart');
+    if (fcEl) {
+      const empty = !dataPoints.length || dataPoints.every(v => v === 0);
+      if (empty) {
+        fcEl.innerHTML = emptyStateHTML('fa-chart-line', 'لا بيانات كافية للتنبؤ — جرّب فلتر صف أو طالب آخر.');
+        disposeChart('forecast');
+      } else {
+        fcEl.innerHTML = '';
+        initChartOnDom('forecast', 'forecastChart', () => ({
+          ...getChartAnimation(),
+          grid: { left: '3%', right: '4%', bottom: '8%', top: '12%', containLabel: true },
+          tooltip: { trigger: 'axis', backgroundColor: 'transparent', borderWidth: 0, padding: 0, formatter: buildAxisTooltipFormatter() },
+          xAxis: { data: labels, axisLabel: { color: c.text, fontFamily: 'Cairo' }, axisLine: { lineStyle: { color: c.splitLine } } },
+          yAxis: { type: 'value', splitLine: { lineStyle: { color: c.splitLine, type: 'dashed' } }, axisLabel: { color: c.text } },
+          series: [{ name: 'المسار', type: 'line', data: dataPoints, smooth: true, lineStyle: { color: c.accent2, width: 4, shadowColor: 'rgba(34,211,238,0.35)', shadowBlur: 14 }, itemStyle: { color: c.accent, borderColor: c.bg, borderWidth: 2 }, areaStyle: makeAreaGradient('rgba(34, 211, 238, 0.4)', 'rgba(34, 211, 238, 0.03)'), symbol: 'circle', symbolSize: 11 }]
+        }));
+        gsap.fromTo('#forecastChart', { opacity: 0, scale: 0.96 }, { opacity: 1, scale: 1, duration: 0.55, ease: 'back.out' });
+      }
+    }
+  }
+
+  function attachForecastFilters() {
+    document.getElementById('btnForecastAll')?.addEventListener('click', (e) => {
+      document.querySelectorAll('#forecastFilter .filter-btn').forEach(b=>b.classList.remove('active')); e.target.classList.add('active');
+      internalFilters.forecastType = 'all'; document.getElementById('forecastTargetLabel').innerText = 'عرض: أداء المنصة كاملة'; initForecastChart();
+    });
+    
+    document.getElementById('btnForecastGrade')?.addEventListener('click', async (e) => {
+      const grade = await showGradePickerPopup('اختر الصف للتنبؤ');
+      if(grade) {
+        document.querySelectorAll('#forecastFilter .filter-btn').forEach(b=>b.classList.remove('active')); e.target.classList.add('active');
+        internalFilters.forecastType = 'grade'; internalFilters.forecastValue = grade; document.getElementById('forecastTargetLabel').innerText = `عرض: تنبؤ صف ${grade}`; initForecastChart();
+      }
+    });
+
+    document.getElementById('btnForecastStudent')?.addEventListener('click', async (e) => {
+      const studentId = await showGradeAndStudentFlow();
+      if(studentId) {
+        document.querySelectorAll('#forecastFilter .filter-btn').forEach(b=>b.classList.remove('active')); e.target.classList.add('active');
+        const student = realData.students.find(s=>s.id == studentId);
+        internalFilters.forecastType = 'student'; internalFilters.forecastValue = studentId; document.getElementById('forecastTargetLabel').innerText = `عرض: تنبؤ الطالب ${student?.name}`; initForecastChart();
+      }
+    });
+  }
+async function initQuestionsCharts() {
+    if (!realData) return;
+    const c = getChartThemeColors();
+    let totalCorrect = 0, totalWrong = 0;
+    const catMap = new Map();
+    
+    for (let s of realData.students) {
+        const st = realData.studentStats[s.id];
+        if (st) {
+            totalCorrect += st.correctAnswers || 0;
+            totalWrong += (st.totalAnswers || 0) - (st.correctAnswers || 0);
+            if (st.categoryStats) {
+                for (let [cat, cnt] of Object.entries(st.categoryStats)) {
+                    catMap.set(cat, (catMap.get(cat) || 0) + cnt);
+                }
+            }
+        }
+    }
+    
+    const valCorr = document.getElementById('valCorr');
+    const valWrong = document.getElementById('valWrong');
+    if (valCorr) { 
+        valCorr.dataset.count = totalCorrect; 
+        runCountUp(valCorr, totalCorrect); 
+    }
+    if (valWrong) { 
+        valWrong.dataset.count = totalWrong; 
+        runCountUp(valWrong, totalWrong); 
+    }
+
+    const categories = Array.from(catMap.keys());
+    const values = Array.from(catMap.values());
+    const barEl = document.getElementById('categoriesBarChart');
+    const mixEl = document.getElementById('answersMixChart');
+
+    if (barEl) {
+        if (!categories.length) {
+            barEl.innerHTML = emptyStateHTML('fa-tags', 'لا تصنيفات أسئلة مسجّلة بعد — أضف أسئلة بفئات متنوعة.');
+            disposeChart('categoriesBar');
+        } else {
+            barEl.innerHTML = '';
+            const sorted = categories.map((name, i) => ({ name, value: values[i] })).sort((a, b) => a.value - b.value);
+            initChartOnDom('categoriesBar', 'categoriesBarChart', () => ({
+                ...getChartAnimation(),
+                animationDuration: 1500,
+                animationEasing: 'elasticOut',
+                grid: { left: '4%', right: '12%', top: '4%', bottom: '4%', containLabel: true },
+                tooltip: { 
+                    trigger: 'axis', 
+                    backgroundColor: 'transparent', 
+                    borderWidth: 0, 
+                    padding: 0, 
+                    axisPointer: { type: 'shadow', shadowStyle: { color: 'rgba(99,102,241,0.12)' } }, 
+                    formatter: buildAxisTooltipFormatter(' تفاعل') 
+                },
+                xAxis: { 
+                    type: 'value', 
+                    splitLine: { lineStyle: { color: c.splitLine, type: 'dashed' } }, 
+                    axisLabel: { color: c.text, fontFamily: 'Cairo' } 
+                },
+                yAxis: { 
+                    type: 'category', 
+                    data: sorted.map(d => d.name), 
+                    axisLabel: { color: c.text, fontWeight: 600, fontFamily: 'Cairo', width: 90, overflow: 'truncate' }, 
+                    axisTick: { show: false }, 
+                    axisLine: { show: false } 
+                },
+                series: [{ 
+                    name: 'التفاعل', 
+                    type: 'bar', 
+                    data: sorted.map((d, i) => ({ 
+                        value: d.value, 
+                        itemStyle: { 
+                            color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+                                { offset: 0, color: c.palette[i % c.palette.length] }, 
+                                { offset: 1, color: c.palette[(i + 2) % c.palette.length] }
+                            ]), 
+                            borderRadius: [0, 14, 14, 0] 
+                        } 
+                    })), 
+                    barWidth: '58%', 
+                    showBackground: true, 
+                    backgroundStyle: { color: 'rgba(99,102,241,0.06)', borderRadius: [0, 14, 14, 0] }, 
+                    label: { show: true, position: 'right', color: c.text, fontWeight: 800, fontFamily: 'Cairo' }, 
+                    emphasis: { focus: 'series', itemStyle: { shadowBlur: 18, shadowColor: 'rgba(99,102,241,0.45)' } }, 
+                    animationDelay: (idx) => idx * 100 
+                }]
+            }));
+        }
+    }
+
+    if (mixEl) {
+        if (!totalCorrect && !totalWrong) {
+            mixEl.innerHTML = emptyStateHTML('fa-chart-pie', 'لا إجابات مسجّلة بعد لعرض التوزيع.');
+            disposeChart('answersMix');
+        } else {
+            mixEl.innerHTML = '';
+            initChartOnDom('answersMix', 'answersMixChart', () => ({
+                ...getChartAnimation(),
+                animationDuration: 1200,
+                animationEasing: 'cubicOut',
+                color: [c.palette[3], c.palette[4]],
+                tooltip: { trigger: 'item', backgroundColor: 'transparent', borderWidth: 0, padding: 0, formatter: buildItemTooltipFormatter() },
+                legend: { bottom: 0, textStyle: { color: c.text, fontFamily: 'Cairo' }, itemGap: 16 },
+                series: [{ 
+                    name: 'الإجابات', 
+                    type: 'pie', 
+                    radius: ['48%', '72%'], 
+                    center: ['50%', '46%'], 
+                    padAngle: 5, 
+                    startAngle: 200, 
+                    itemStyle: { borderRadius: 12, borderColor: c.bg, borderWidth: 3 }, 
+                    label: { show: true, color: c.text, fontFamily: 'Cairo', fontWeight: 700, formatter: '{b}\n{d}%' }, 
+                    labelLine: { lineStyle: { color: c.splitLine } }, 
+                    emphasis: { scale: true, scaleSize: 14, label: { fontSize: 14, fontWeight: 800 } }, 
+                    data: [
+                        { value: totalCorrect, name: 'صحيحة', itemStyle: { color: c.palette[3] } }, 
+                        { value: totalWrong, name: 'خاطئة', itemStyle: { color: c.palette[4] } }
+                    ], 
+                    animationType: 'scale', 
+                    animationDelay: (idx) => idx * 180 
+                }]
+            }));
+        }
+    }
+
+    initAllCountUps(document.getElementById('dynamicContent'));
+
+    const topCorrectList = [...realData.students]
+        .sort((a, b) => (realData.studentStats[b.id]?.correctAnswers || 0) - (realData.studentStats[a.id]?.correctAnswers || 0))
+        .slice(0, 5);
+    const topWrongList = [...realData.students]
+        .sort((a, b) => {
+            const wrongA = (realData.studentStats[a.id]?.totalAnswers || 0) - (realData.studentStats[a.id]?.correctAnswers || 0);
+            const wrongB = (realData.studentStats[b.id]?.totalAnswers || 0) - (realData.studentStats[b.id]?.correctAnswers || 0);
+            return wrongB - wrongA;
+        })
+        .slice(0, 5);
+    
+    const tcDiv = document.getElementById('topCorrectList');
+    if (tcDiv) {
+        tcDiv.innerHTML = topCorrectList.map((s, i) => `
+            <div class="feed-item">
+                <div style="width:25px; font-weight:bold; color:var(--success);">${i+1}.</div> 
+                <img src="${s.img}" style="width:35px;height:35px;border-radius:50%;border:2px solid var(--success);margin:0 8px;"> 
+                <div style="flex:1;">${s.name}</div> 
+                <div style="font-weight:bold; color:var(--success);">✅ ${realData.studentStats[s.id]?.correctAnswers || 0}</div>
+            </div>`).join('');
+    }
+    
+    const twDiv = document.getElementById('topWrongList');
+    if (twDiv) {
+        twDiv.innerHTML = topWrongList.map((s, i) => `
+            <div class="feed-item">
+                <div style="width:25px; font-weight:bold; color:var(--danger);">${i+1}.</div> 
+                <img src="${s.img}" style="width:35px;height:35px;border-radius:50%;border:2px solid var(--danger);margin:0 8px;"> 
+                <div style="flex:1;">${s.name}</div> 
+                <div class="wrong-badge">❌ ${(realData.studentStats[s.id]?.totalAnswers || 0) - (realData.studentStats[s.id]?.correctAnswers || 0)}</div>
+            </div>`).join('');
+    }
+}
+
+async function attachAnalyticsEvents() {
+    const parentReportBtn = document.getElementById('parentReportCardAnalytics');
+    if (parentReportBtn) {
+        parentReportBtn.addEventListener('click', async () => {
+            const studentId = await showGradeAndStudentFlow();
+            if (studentId) await printStudentReport(studentId, 'all');
+        });
+    }
+    
+    const advancedAnalysisBtn = document.getElementById('advancedAnalysisCardAnalytics');
+    if (advancedAnalysisBtn) {
+        advancedAnalysisBtn.addEventListener('click', async () => {
+            const studentId = await showGradeAndStudentFlow();
+            if (studentId) await showAdvancedAnalysis(studentId, 'all');
+        });
+    }
+    
+    const compareBtn = document.getElementById('compareStudentCardAnalytics');
+    if (compareBtn) {
+        compareBtn.addEventListener('click', async () => {
+            Swal.fire({ title: 'الطالب الأول', text: 'اختر الطالب الأول للمقارنة', icon: 'info', timer: 1500, showConfirmButton: false, customClass: { popup: 'swal-glass' } });
+            setTimeout(async () => {
+                const student1Id = await showGradeAndStudentFlow();
+                if (student1Id) {
+                    Swal.fire({ title: 'الطالب الثاني', text: 'اختر الطالب الثاني (المنافس)', icon: 'warning', timer: 1500, showConfirmButton: false, customClass: { popup: 'swal-glass' } });
+                    setTimeout(async () => {
+                        const student2Id = await showGradeAndStudentFlow();
+                        if (student2Id && student1Id !== student2Id) {
+                            showComparisonModal(student1Id, student2Id);
+                        } else if (student1Id === student2Id) {
+                            Swal.fire({ title: 'خطأ', text: 'لا يمكنك مقارنة الطالب بنفسه!', icon: 'error', customClass: { popup: 'swal-glass' } });
+                        }
+                    }, 1500);
+                }
+            }, 1500);
+        });
+    }
+
+    const classReportBtn = document.getElementById('classReportCardAnalytics');
+    if (classReportBtn) {
+        classReportBtn.addEventListener('click', async () => {
+            const selectedGrade = await showGradePickerPopup('اختر الصف لإنشاء التقرير');
+            if (selectedGrade) {
+                const period = await showPeriodPickerPopup();
+                if (period) {
+                    Swal.fire({ title: 'جاري التصدير...', allowOutsideClick: false, customClass: { popup: 'swal-glass' }, didOpen: () => Swal.showLoading() });
+                    await exportGradeReport(selectedGrade, { period });
+                    Swal.close();
+                }
+            }
+        });
+    }
+
+    const backupBtn = document.getElementById('backupCardAnalytics');
+    if (backupBtn) {
+        backupBtn.addEventListener('click', async () => {
+            const btn = document.getElementById('backupCardAnalytics');
+            btn.style.boxShadow = '0 0 30px var(--success)';
+            try {
+                const backup = { 
+                    version: '1.0', 
+                    timestamp: Date.now(), 
+                    students: realData.students, 
+                    studentStats: realData.studentStats, 
+                    gameHistory: realData.history, 
+                    customGrades: realData.grades.filter(g => !g.includes('ابتدائي') && !g.includes('إعدادي') && !g.includes('ثانوي')), 
+                    teacherSubscriptions: {}, 
+                    questions: {} 
+                };
+                for (const g of realData.grades) { 
+                    const qs = await loadQuestionsFromIndexedDB(g); 
+                    if (qs.length) backup.questions[g] = qs; 
+                }
+                const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a'); 
+                a.href = url; 
+                a.download = `platform_backup_${new Date().toLocaleDateString('en-CA')}.json`; 
+                a.click();
+                URL.revokeObjectURL(url);
+                Swal.fire({ title: 'نجاح', text: 'تم تصدير النسخة الاحتياطية بنجاح!', icon: 'success', customClass: { popup: 'swal-glass' } });
+            } catch(e) { 
+                Swal.fire({ title: 'خطأ', text: e.message, icon: 'error', customClass: { popup: 'swal-glass' } }); 
+            }
+            setTimeout(() => btn.style.boxShadow = '', 2000);
+        });
+    }
+}

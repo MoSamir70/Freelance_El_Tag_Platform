@@ -1,0 +1,1916 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>منصة التاج V1 </title>
+    <link rel="icon" href="data:,">
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="src/styles/main.css">
+    <link rel="stylesheet" href="src/styles/themes/themes.css">
+    <link rel="stylesheet" href="src/styles/pages/questions-bank.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- Font Awesome 6 -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<!-- ECharts -->
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="text-white min-h-screen flex flex-col">
+
+    <!-- ========== نافذة انتهاء الاشتراك ========== -->
+    <div id="expired-subscription-modal" class="fixed inset-0 z-[200000] hidden items-center justify-center bg-black/90 backdrop-blur-md" onclick="if(event.target===this) document.getElementById('expired-subscription-modal').classList.add('hidden')">
+        <div class="glass-panel p-8 text-center max-w-md rounded-[64px] border-2 border-red-500">
+            <div class="text-6xl mb-4">⛔</div>
+            <h2 class="text-3xl font-bold text-red-400 mb-3">انتهت صلاحية الاشتراك</h2>
+            <p class="text-gray-300 mb-4">عذراً، انتهت صلاحية اشتراكك في المنصة. يرجى التواصل مع المطور لتجديد الاشتراك.</p>
+            <button id="expired-logout-btn" class="bg-red-600 px-6 py-2 rounded-full font-bold">تسجيل الخروج</button>
+        </div>
+    </div>
+
+    <!-- ========== نافذة إنشاء غرفة ========== -->
+    <div id="create-room-modal" class="lessons-modal hidden">
+        <div class="lessons-modal-content" style="max-width: 750px;">
+            <h3 class="text-2xl font-bold text-yellow-400 mb-5 text-center">⚙️ إعدادات الغرفة</h3>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <div><label class="text-purple-300 block mb-1 text-sm">نوع الغرفة</label><select id="room-type-select" class="setting-input text-sm"><option value="public">عامة</option><option value="private">خاصة (برمز دخول)</option></select></div>
+                <div id="room-access-code-group"><label class="text-purple-300 block mb-1 text-sm">رمز الدخول (4 أرقام)</label><input type="text" id="room-access-code" class="setting-input text-sm" maxlength="4" placeholder="1234"></div>
+                <div><label class="text-purple-300 block mb-1 text-sm">الصف الدراسي</label><select id="room-grade-select" class="setting-input text-sm"></select></div>
+                <div><label class="text-purple-300 block mb-1 text-sm">المادة</label><select id="room-subject-select" class="setting-input text-sm"><option value="">اختر صفاً أولاً</option></select></div>
+                <div><label class="text-purple-300 block mb-1 text-sm">نظام اللعب</label><select id="room-game-system" class="setting-input text-sm"><option value="individual">فردي</option><option value="teams">فرق</option></select></div>
+                <div><label class="text-purple-300 block mb-1 text-sm">وضع اللعب</label><select id="room-game-mode" class="setting-input text-sm"><option value="normal">⚡ كلاسيكي</option><option value="solo_memory">🧠 الذاكرة</option><option value="solo_mined">💣 ملغوم</option><option value="solo_bet">🎲 مراهنة</option><option value="solo_speedrun">⏱️ سرعة</option><option value="solo_marathon">🏃 ماراثون</option><option value="solo_survival">🛡️ بقاء</option><option value="solo_quizrush">💥 هجمة</option></select></div>
+                <div><label class="text-purple-300 block mb-1 text-sm">خطوات الفوز</label><input type="number" id="room-goal" class="setting-input text-sm" value="10" min="3" max="30"></div>
+                <div><label class="text-purple-300 block mb-1 text-sm">وقت الإجابة (ث)</label><input type="number" id="room-timer" class="setting-input text-sm" value="12" min="5" max="45"></div>
+            </div>
+            <div class="flex gap-3 justify-center mt-6">
+                <button id="confirm-create-room-btn" class="lobby-btn">🚀 إنشاء الغرفة</button>
+                <button id="cancel-create-room-btn" class="lobby-btn" style="background:#ef4444; color:white; box-shadow:0 4px 0 #991b1b;">❌ إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- ========== الخلفية والتحميل ========== -->
+    <div id="star-bg" class="star-background"></div>
+    
+    <div id="countdown-overlay" class="countdown-overlay" style="display: none;">3</div>
+
+    <!-- ========== نافذة الرهان ========== -->
+    <div id="bet-overlay" class="bet-overlay" style="display: none;">
+        <div class="bet-modal"><h3 class="text-3xl font-bold text-yellow-400 mb-2">🎲 راهن على خطواتك!</h3><p class="text-lg mb-3">كم خطوة تريد المخاطرة؟</p><div class="bet-options"></div><button class="bet-skip mt-2">تخطي (بدون مخاطرة)</button></div>
+    </div>
+
+    
+    <!-- ========== نافذة الفوز المخصصة ========== -->
+    <div id="custom-win-popup" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); backdrop-filter:blur(16px); z-index:100000; display:none; align-items:center; justify-content:center;">
+        <div class="winner-card-enhanced" style="background:linear-gradient(145deg,#1e293b,#0f172a); border:4px solid #facc15; border-radius:80px; padding:2.5rem 3rem; text-align:center; max-width:650px; width:90%; box-shadow:0 0 80px rgba(250,204,21,0.7), inset 0 0 20px rgba(255,215,0,0.3);">
+            <div class="text-7xl mb-4 drop-shadow-lg">🏆👑🏆</div>
+            <img id="popup-winner-img" src="" style="width:180px;height:180px;border-radius:50%;border:6px solid gold;margin:0 auto 1.5rem; object-fit:cover; box-shadow:0 0 50px gold, inset 0 0 15px #fff3b0;">
+            <h2 id="popup-winner-name" style="font-size:3.2rem; font-weight:900; color:#facc15; margin-bottom:0.5rem; text-shadow:0 0 25px gold, 0 0 40px #ffd700; letter-spacing:1px;"></h2>
+            <p id="popup-winner-message" style="color:#fff; font-size:1.7rem; margin-bottom:1.5rem; font-weight:700; text-shadow:0 2px 10px rgba(0,0,0,0.5);"></p>
+            <p id="popup-winner-reward" style="color:#fff; margin-bottom:2rem; font-size:1.3rem; background:rgba(250,204,21,0.15); display:inline-block; padding:0.5rem 2rem; border-radius:60px;">⭐ +0 نقطة</p>
+            <div><button id="close-popup-btn" style="background:#facc15; color:#000; border:none; border-radius:60px; padding:1.2rem 3rem; font-weight:bold; font-size:1.5rem; cursor:pointer; transition:0.3s; box-shadow:0 8px 0 #b45309; transform:translateY(-2px);">🏅 العودة إلى المنصة</button></div>
+        </div>
+    </div>
+
+    <!-- ========== نافذة الفوز الجماعي ========== -->
+    <div id="team-win-popup" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); backdrop-filter:blur(20px); z-index:100001; display:none; align-items:center; justify-content:center; overflow-y:auto; padding:20px;">
+        <div class="team-winner-container" style="background:linear-gradient(145deg,#1e293b,#0f172a); border:4px solid #facc15; border-radius:60px; padding:2rem; max-width:800px; width:90%; text-align:center; box-shadow:0 0 80px rgba(250,204,21,0.7);">
+            <div class="text-7xl mb-4">🏆👑🏆</div>
+            <h2 class="text-3xl font-bold text-yellow-400 mb-2">فوز فريق <span id="team-win-name"></span></h2>
+            <div id="team-winners-list" style="display:flex; flex-wrap:wrap; justify-content:center; gap:1.5rem; margin:1.5rem 0;"></div>
+            <button id="close-team-win-btn" style="background:#facc15; color:#000; border:none; border-radius:60px; padding:0.8rem 2rem; font-weight:bold; font-size:1.2rem; cursor:pointer; transition:0.2s; box-shadow:0 5px 0 #b45309;">🏅 العودة إلى المنصة</button>
+        </div>
+    </div>
+
+    <!-- ========== شاشة استعد (Turn Overlay) ========== -->
+    <div id="turn-overlay" class="fixed inset-0 z-[9999] hidden bg-black/90 flex-col items-center justify-center">
+        <img id="overlay-img" class="w-40 h-40 rounded-full border-[8px] border-purple-500 object-cover mb-3 animate-pulse">
+        <div id="overlay-player-name" class="text-5xl font-black text-yellow-400 mb-2"></div>
+        <div id="overlay-team-name" class="text-2xl text-purple-300 mb-4"></div>
+        <div class="text-3xl font-bold text-white mb-2">🔥 استعد 🔥</div>
+        <div class="text-xl text-gray-300">جاء دورك!</div>
+    </div>
+
+    <!-- ========== شريط التنقل ========== -->
+    <nav id="navbar" class="sticky top-0 z-50 glass-panel flex justify-center gap-3 p-2 overflow-x-auto mt-2 mx-2 hidden">
+        <button data-nav="home" class="nav-main-btn font-bold px-5 py-2 rounded-xl hover:bg-purple-700/40">🏠 الرئيسية</button>
+        <button data-nav="st-page" class="nav-main-btn font-bold px-5 py-2 rounded-xl hover:bg-purple-700/40 admin-only">👥 الطلاب</button>
+        <button data-nav="hall-page" class="nav-main-btn font-bold px-5 py-2 rounded-xl hover:bg-purple-700/40">🏆 لوحة الشرف</button>
+        <button data-nav="q-page" class="nav-main-btn font-bold px-5 py-2 rounded-xl hover:bg-purple-700/40 admin-only">📚 بنك الأسئلة</button>
+        <button data-nav="stats-page" class="nav-main-btn font-bold px-5 py-2 rounded-xl hover:bg-purple-700/40">📊 إحصائيات</button>
+        <button data-nav="admin-page" class="nav-main-btn font-bold px-5 py-2 rounded-xl hover:bg-purple-700/40 hidden" id="admin-tab-btn">👑 إدارة المنصة</button>
+        <button data-nav="grades-page" class="nav-main-btn font-bold px-5 py-2 rounded-xl hover:bg-purple-700/40 admin-only">🎓 إدارة الصفوف</button>
+        <button id="notifications-btn" class="nav-main-btn font-bold px-3 py-2 rounded-xl hover:bg-purple-700/40 relative" title="الإشعارات">
+    🔔 <span id="notif-badge" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5 hidden">0</span>
+</button>
+        <button id="messages-inbox-btn" class="nav-main-btn font-bold px-3 py-2 rounded-xl hover:bg-purple-700/40 relative" title="الرسائل">
+    📨 <span id="unread-badge" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5 hidden">0</span>
+</button>
+
+        <button id="settings-audio-btn" class="nav-main-btn font-bold px-3 py-2 rounded-xl hover:bg-purple-700/40" title="إعدادات الصوت">⚙️</button>
+        <button id="theme-btn" class="nav-main-btn font-bold px-3 py-2 rounded-xl hover:bg-purple-700/40" title=" الثيم">🎨</button>
+        <button id="fullscreenBtn" class="nav-main-btn font-bold px-5 py-2 rounded-xl bg-gray-700/50 hover:bg-gray-600/60" title="ملء الشاشة">⛶</button>
+        <button id="logout-btn" class="nav-main-btn font-bold px-5 py-2 rounded-xl bg-red-700/40 hover:bg-red-600/60 hidden" title="تسجيل الخروج">🚪 خروج</button>
+    </nav>
+
+
+    <!-- الصفحة الرئيسية -->
+<div id="home" class="page active-block text-center py-10">
+    <!-- ========== واجهة المعلم المُحسَّنة ========== -->
+    <div id="teacher-home" class="hidden" style="height: calc(100vh - 70px); display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 1rem 2rem; overflow: visible;">
+        
+        <!-- رأس دعائي محسن لمنصة التاج -->
+        <div class="platform-branding text-center mb-6 w-full">
+            <div class="brand-icon animate-bounce-soft inline-block text-7xl mb-2 drop-shadow-glow">👑</div>
+            <h1 id="main-platform-title" class="text-6xl md:text-8xl font-black bg-gradient-to-l from-yellow-400 via-amber-500 to-yellow-600 bg-clip-text text-transparent tracking-tighter drop-shadow-xl leading-tight" style="font-family: 'Tajawal', 'Cairo', sans-serif; font-weight: 900;">
+                منصة التاج
+            </h1>
+            <div class="tagline-container mt-2">
+                <p class="text-xl md:text-2xl font-bold text-yellow-400/90 neon-gold">🎓 حيث يتعلم الأبطال 🎓</p>
+                <div class="floating-tagline text-sm md:text-base text-purple-300 mt-1 flex items-center justify-center gap-2 flex-wrap">
+                    <span class="inline-block w-6 h-0.5 bg-gradient-to-r from-transparent to-yellow-500"></span>
+                    <span>✨ تعليم تفاعلي | تنافس عالمي | متعة لا تنتهي ✨</span>
+                    <span class="inline-block w-6 h-0.5 bg-gradient-to-l from-transparent to-yellow-500"></span>
+                </div>
+            </div>
+        </div>
+        <div id="teacher-display-name" class="teacher-greeting text-lg text-cyan-300 font-semibold mt-1">أستاذ: ---</div>
+        
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 2.5rem; width: 100%; max-width: 850px; margin-top: 1.5rem; margin-bottom: 2rem;">
+            
+            <!-- زر المبارزة (فردي / جماعي مباشر) -->
+            <button data-race-prep="versus" class="glass-panel big-action-btn" style="flex: 1 1 280px; max-width: 380px; padding: 2rem 1rem; border: none; border-bottom: 6px solid #8b5cf6; text-align: center; overflow: visible; transition: all 0.3s ease;">
+                <div style="font-size: 3rem; margin-bottom: 0.5rem;">⚔️</div>
+                <div style="font-size: 1.6rem; font-weight: 900;">مبارزة</div>
+                <div style="font-size: 0.85rem; color: #cbd5e1; margin-top: 0.3rem;">فردي - جماعي</div>
+            </button>
+
+            <!-- زر البطولات (جديد) – بدلاً من البيئة العالمية -->
+   
+<button id="global-arena-btn" class="glass-panel big-action-btn" style="flex: 1 1 280px; max-width: 380px; padding: 2rem 1rem; border: none; border-bottom: 6px solid #facc15; text-align: center;">
+    <div style="font-size: 3rem; margin-bottom: 0.5rem;">🌍</div>
+    <div style="font-size: 1.6rem; font-weight: 900;">الساحة العالمية</div>
+    <div style="font-size: 0.85rem; color: #cbd5e1; margin-top: 0.3rem;">غرف وبطولات مباشرة</div>
+</button>
+        </div>
+        <!-- ملاحظة: تم إزالة زر "البيئة العالمية" القديم ودمج فكرته ضمن البطولات -->
+    </div>
+</div><!-- ========== واجهة الطالب ========== -->
+<div id="student-home" class="hidden">
+    <div class="student-dashboard-grid">
+        <div class="student-main-col">
+            <div class="student-tabs-nav glass-panel p-2 rounded-[48px]">
+                <button class="student-tab-btn active" data-tab="profile">👤 الملف الشخصي</button>
+                <button class="student-tab-btn" data-tab="rooms">🌐 الغرف والأونلاين</button>
+                <button class="student-tab-btn" data-tab="global">📊 الإحصائيات العالمية</button>
+            </div>
+            <div id="student-tab-profile" class="student-tab-panel">
+                <div class="glass-panel p-6 rounded-[48px] text-center">
+                    <img id="student-dashboard-img" src="" class="w-32 h-32 rounded-full border-4 border-yellow-500 object-cover shadow-lg mx-auto">
+                    <h2 class="text-3xl font-black text-yellow-400 mt-3" id="student-dashboard-name"></h2>
+                    <p class="text-lg text-purple-300" id="student-dashboard-grade"></p>
+                    <p class="text-sm text-gray-400" id="student-dashboard-id"></p>
+                    <p class="text-2xl font-bold">⭐ <span id="student-dashboard-score"></span> نقطة</p>
+                    <p class="text-sm text-gray-400" id="student-dashboard-level"></p>
+                    <p class="text-sm text-yellow-300 mt-2" id="student-teacher-greeting"></p>
+                    <div class="grid grid-cols-3 gap-4 mt-4">
+                        <div class="glass-panel p-3 text-center"><div class="text-green-400 font-bold" id="student-correct">0</div><div class="text-xs">✅ صحيحة</div></div>
+                        <div class="glass-panel p-3 text-center"><div class="text-red-400 font-bold" id="student-wrong">0</div><div class="text-xs">❌ خاطئة</div></div>
+                        <div class="glass-panel p-3 text-center"><div class="text-yellow-400 font-bold" id="student-wins">0</div><div class="text-xs">🏆 فوز</div></div>
+                    </div>
+                    <!-- زر إنشاء لعبة أونلاين مع دعم القفل والترقية -->
+                    <button id="createOnlineGameStudentBtn" class="mt-4 w-full glass-panel p-3 border-b-4 border-green-500 hover:border-yellow-500 transition-colors">
+                        <span class="text-2xl">🌐</span> إنشاء لعبة أونلاين
+                        <i class="fa-solid fa-lock mr-2 hidden" id="createGameLockIcon"></i>
+                    </button>
+                </div>
+            </div>
+            <div id="student-tab-rooms" class="student-tab-panel hidden">
+                <div class="glass-panel p-6 rounded-[48px] mb-4">
+                    <h3 class="text-xl font-bold text-yellow-400 mb-4">🌐 الغرف العامة المتاحة</h3>
+                    <div id="public-rooms-list" class="space-y-3 text-right"></div>
+                    <button id="refresh-public-rooms-btn" class="bg-purple-600 px-4 py-2 rounded-full mt-3 text-sm">🔄 تحديث القائمة</button>
+                </div>
+            </div>
+            <div id="student-tab-global" class="student-tab-panel hidden">
+                <div id="student-global-stats" class="space-y-4"></div>
+            </div>
+        </div>
+        <div class="student-side-col">
+            <div class="glass-panel p-6 rounded-[48px]">
+                <h3 class="text-xl font-bold text-yellow-400 mb-3">🟢 المتصلون الآن</h3>
+                <div id="online-users-list" class="space-y-2 text-right"></div>
+                <button id="refresh-online-users-btn" class="bg-purple-600 px-4 py-2 rounded-full mt-3 text-sm w-full">🔄 تحديث</button>
+            </div>
+            <div class="glass-panel p-6 rounded-[48px]">
+                <h3 class="text-xl font-bold text-yellow-400 mb-4">🔑 انضم إلى غرفة خاصة</h3>
+                <div class="flex justify-center gap-4">
+                    <input type="text" id="join-private-code-input" class="setting-input w-40 text-center" placeholder="رمز الدخول">
+                    <button onclick="joinPrivateRoom()" class="lobby-btn">انضمام</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="join-pin-input">
+</div>
+         <!-- صفحة اختيار الصف -->
+        <div id="grade-choice-page" class="page hidden text-center">
+            <h2 class="text-4xl font-bold text-purple-400 mb-2">اختر المرحلة الدراسية</h2>
+            <p class="text-gray-400 mb-8">حدد الصف الذي ترغب في المنافسة فيه</p>
+            <div id="grades-grid" class="grid grid-cols-2 md:grid-cols-4 gap-5 mt-8 max-w-4xl mx-auto"></div>
+            <div class="nav-buttons"><button class="nav-btn back" data-nav-back="home">🔙 رجوع</button></div>
+        </div>
+        <!-- صفحة المنافسة الجماعية -->
+        <div id="team-competition-type-screen" class="page hidden text-center">
+            <div class="glass-panel p-8 rounded-[64px] max-w-4xl mx-auto">
+                <h2 class="text-4xl font-bold text-yellow-400 mb-8">⚔️ اختر نوع المنافسة</h2>
+                <div class="flex flex-wrap justify-center gap-8">
+                    <div data-competition="individual" class="challenge-card glass-panel p-8 w-72 cursor-pointer transition-all duration-300 hover:scale-105"><div class="text-7xl mb-4">🎖️</div><div class="text-3xl font-bold">تنافسي فردي</div><p class="text-gray-300 mt-2">كل طالب يتنافس بمفرده</p></div>
+                    <div data-competition="teams" class="challenge-card glass-panel p-8 w-72 cursor-pointer transition-all duration-300 hover:scale-105"><div class="text-7xl mb-4">👥</div><div class="text-3xl font-bold">فرق</div><p class="text-gray-300 mt-2">تحدي بين فرق متساوية</p></div>
+                </div>
+                <div class="nav-buttons mt-8"><button class="nav-btn back" data-nav-back="grade-choice-page">🔙 رجوع</button></div>
+            </div>
+        </div>
+
+        <!-- صفحة اختيار الطلاب -->
+        <div id="student-select-page" class="page hidden">
+            <h2 id="studentSelectTitle" class="text-4xl font-bold text-center text-yellow-400 mb-6">👥 اختر الطلاب</h2>
+            <div id="student-select-grid" class="student-select-grid"></div>
+            <div class="nav-buttons"><button id="backFromStudentSelect" class="nav-btn back">🔙 رجوع</button><button id="studentSelectNextBtn" class="nav-btn next" disabled>التالي ➡️</button></div>
+        </div>
+<!-- صفحة إعداد الفرق الاحترافية المحدثة -->
+<div id="team-setup-screen" class="page hidden px-4 py-6 select-none" style="direction: rtl;">
+    <div class="glass-panel p-6 md:p-8 rounded-[32px] max-w-7xl mx-auto backdrop-blur-xl bg-slate-950/40 border border-white/5 shadow-2xl">
+        
+        <!-- عنوان الصفحة الفاخر -->
+        <h2 class="text-3xl md:text-4xl font-black text-center mb-8 bg-gradient-to-r from-yellow-300 via-amber-400 to-amber-500 bg-clip-text text-transparent filter drop-shadow-[0_2px_10px_rgba(251,191,36,0.2)]">
+            👥 إعداد المجموعات والفرق
+        </h2>
+        
+        <!-- صف أدوات التحكم العلوية -->
+        <div class="flex flex-wrap items-center justify-between gap-4 bg-black/30 p-4 rounded-2xl border border-white/[0.03] mb-6">
+            <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-start">
+                <label class="text-base md:text-lg font-bold text-gray-300">عدد الفرق:</label>
+                <select id="num-teams-select" class="bg-slate-900 border border-amber-500/40 rounded-full px-4 py-2 text-center text-amber-400 font-bold focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 cursor-pointer w-32 transition">
+                    <option value="2">2 فرق</option>
+                    <option value="3">3 فرق</option>
+                    <option value="4">4 فرق</option>
+                    <option value="5">5 فرق</option>
+                    <option value="6">6 فرق</option>
+                    <option value="7">7 فرق</option>
+                    <option value="8">8 فرق</option>
+                    <option value="9">9 فرق</option>
+                    <option value="10">10 فرق</option>
+                </select>
+            </div>
+
+            <!-- أزرار العمليات والتوزيع التلقائي -->
+            <div class="flex flex-wrap gap-2 w-full sm:w-auto justify-end">
+                <button id="shuffleTeamsBtn" class="bg-purple-600/20 hover:bg-purple-600 text-purple-300 hover:text-white border border-purple-500/30 px-5 py-2 rounded-full text-sm font-bold flex items-center gap-1.5 transition-all duration-200 shadow-md transform hover:-translate-y-0.5">
+                    🎲 توزيع عشوائي
+                </button>
+                <button id="balancedTeamsBtn" class="bg-emerald-600/20 hover:bg-emerald-600 text-emerald-300 hover:text-white border border-emerald-500/30 px-5 py-2 rounded-full text-sm font-bold flex items-center gap-1.5 transition-all duration-200 shadow-md transform hover:-translate-y-0.5">
+                    ⚖️ توزيع متوازن
+                </button>
+                <button id="addStudentFromTeamBtn" class="bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white border border-blue-500/30 px-5 py-2 rounded-full text-sm font-bold flex items-center gap-1.5 transition-all duration-200 shadow-md transform hover:-translate-y-0.5">
+                    ➕ إضافة طالب
+                </button>
+            </div>
+        </div>
+
+        <!-- حاوية عرض الفرق الديناميكية -->
+        <div id="teams-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <!-- يتم توليد كروت الفرق برمجياً هنا بتنسيقات مذهلة داخل الجافا سكريبت -->
+        </div>
+        
+        <!-- قسم الطلاب بانتظار التوزيع -->
+        <div class="unassigned-section bg-gradient-to-b from-slate-900/40 to-slate-950/60 rounded-2xl p-5 border border-white/[0.03] mb-8">
+            <div class="unassigned-title text-base font-extrabold text-cyan-400 mb-4 flex items-center gap-2">
+                <span class="inline-block w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                👤 طلاب بانتظار التوزيع والمقاعد
+            </div>
+            <div id="unassigned-students-list" class="flex flex-wrap gap-3 min-h-[50px] p-2 bg-black/10 rounded-xl border border-white/[0.01]">
+                <!-- كروت الطلاب المعلقين تظهر هنا -->
+            </div>
+        </div>
+        
+        <!-- أزرار الإجراءات السفلية وإدارة القوالب -->
+        <div class="flex flex-col gap-6 border-t border-white/5 pt-6">
+            
+            <!-- زر الاعتماد الفوري (الرئيسي المبرز) -->
+            <div class="team-actions-row text-center">
+                <button id="confirmTeamsBtn" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white px-12 py-3.5 rounded-full text-lg font-black shadow-[0_4px_20px_rgba(16,185,129,0.2)] hover:shadow-[0_4px_25px_rgba(16,185,129,0.4)] transform hover:-translate-y-0.5 transition-all duration-300">
+                    ✅ تأكيد الفرق والمتابعة للمبارزة
+                </button>
+            </div>
+            
+            <!-- أزرار حفظ وإدارة القوالب (صغيرة وغير مشتتة) -->
+            <div class="template-buttons flex justify-center gap-4">
+                <button id="saveTeamTemplateBtn" class="template-btn text-xs font-bold text-gray-400 hover:text-amber-400 bg-white/[0.02] hover:bg-amber-500/10 border border-white/5 hover:border-amber-500/30 px-4 py-2 rounded-xl transition duration-200">
+                    💾 حفظ هذا التشكيل كقالب
+                </button>
+                <button id="loadTeamTemplateBtn" class="template-btn text-xs font-bold text-gray-400 hover:text-purple-400 bg-white/[0.02] hover:bg-purple-500/10 border border-white/5 hover:border-purple-500/30 px-4 py-2 rounded-xl transition duration-200">
+                    📂 استدعاء قالب محفوظ سابقاً
+                </button>
+            </div>
+            
+            <!-- زر العودة والملاحة -->
+            <div class="nav-buttons flex justify-start">
+                <button class="nav-btn back text-sm font-semibold text-gray-500 hover:text-gray-300 bg-black/20 hover:bg-black/40 border border-white/5 px-5 py-2 rounded-full flex items-center gap-1.5 transition" data-nav-back="student-select-page">
+                    🔙 رجوع للخلف
+                </button>
+            </div>
+            
+        </div>
+    </div>
+</div>
+        
+        <!-- صفحة إعدادات التحدي -->
+        <div id="game-settings-page" class="page hidden">
+            <h2 class="text-4xl font-bold text-center text-yellow-400 mb-6">⚙️ إعدادات التحدي</h2>
+            <div class="settings-grid">
+                <div id="settings-subject-container" class="w-full"></div>
+                <div class="settings-card"><label class="setting-label">📖 الدروس</label><button id="chooseLessonsBtn" class="w-full bg-purple-600 py-3 rounded-full font-bold">📖 اختيار الدروس</button><div id="selectedLessonsPreview" class="text-sm text-purple-300 mt-2"></div></div>
+                <div class="settings-card"><label class="setting-label">🎯 عدد خطوات الفوز</label><input type="number" id="settings-goal" class="setting-input" value="10" min="2" max="60"></div>
+                <div class="settings-card"><label class="setting-label">⏱️ وقت الإجابة (ثانية)</label><input type="number" id="settings-timer" class="setting-input" value="12" min="5" max="120"></div>
+            </div>
+            <div class="nav-buttons"><button id="backFromSettings" class="nav-btn back">🔙 رجوع</button><button id="settingsNextBtn" class="nav-btn next">التالي ➡️</button></div>
+        </div>
+
+
+        <!-- صفحة اختيار وضع اللعب -->
+        <div id="game-mode-page" class="page hidden">
+            <h2 class="text-4xl font-bold text-center text-yellow-400 mb-6">🎮 اختر وضع اللعب</h2>
+            <div class="modes-grid" id="modes-container"></div>
+            <div id="mode-settings-container" class="hidden"></div>
+            <div class="nav-buttons"><button class="nav-btn back" data-nav-back="game-settings-page">🔙 رجوع</button><button id="startRaceFromModeBtn" class="nav-btn next" disabled>🚀 بدء التحدي</button></div>
+        </div>
+
+        <!-- صفحة بنك الأسئلة -->
+        <div id="q-page" class="page hidden glass-panel p-8">
+            <h2 class="text-4xl font-bold text-center text-yellow-400 mb-6">📚 بنك الأسئلة - عرض تحليلي</h2>
+            <div class="glass-panel p-6 mb-8">
+                <div class="flex flex-wrap justify-center gap-4 items-end">
+                    <div><label class="text-purple-300">الصف الدراسي</label><select id="q-grade-sel" class="bg-black/60 border border-yellow-500 rounded-xl p-3"></select></div>
+                    <input type="file" id="smartExcelUpload" accept=".xlsx, .xls, .csv" class="bg-black/60 border border-yellow-500 rounded-xl p-3 text-white">
+                    <button data-action="uploadExcel" class="btn-3d bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold py-3 px-6 rounded-2xl text-lg">✨ رفع ذكي (Excel)</button>
+                    <button id="exportQuestionsBtn" class="btn-3d bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold py-3 px-6 rounded-2xl text-lg">📤 تصدير الأسئلة</button>
+                    <button data-action="resetBank" class="bg-red-600 px-5 py-3 rounded-xl font-bold">🗑️ تصفير كل الأسئلة</button>
+                    <button id="manualAddQuestionBtn" class="manual-add-btn">➕ إضافة سؤال يدوي</button>
+                </div>
+                <div class="text-center mt-4 text-lg"><span class="text-yellow-400">📊 إجمالي الأسئلة:</span> <span id="total-questions-bank" class="font-bold text-2xl">0</span></div>
+            </div>
+            <div id="subjects-container" class="space-y-6"></div>
+        </div>
+
+        <!-- صفحة إدارة الطلاب -->
+        <div id="st-page" class="page hidden space-y-6">
+            <div class="glass-panel p-6 grid md:grid-cols-5 gap-5 items-end">
+                <div><label>المعرف (ID)</label><input type="text" id="new-id" class="w-full mt-1 text-lg bg-black/60 rounded-xl p-2" placeholder="اختياري"></div>
+                <div><label>الاسم</label><input type="text" id="new-name" class="w-full mt-1 text-lg bg-black/60 rounded-xl p-2"></div>
+                <div><label>الصف</label><select id="new-grade" class="w-full mt-1 text-lg bg-black/60 rounded-xl p-2"></select></div>
+                <div>
+                    <label>الصورة</label>
+                    <div class="upload-avatar-wrapper cursor-pointer" onclick="document.getElementById('new-img').click()" title="اضغط لرفع صورة">
+                        <img id="img-preview" class="upload-avatar-preview hidden" src="" alt="معاينة">
+                        <div class="upload-avatar-placeholder">
+                            <span class="upload-icon">📷</span>
+                            <span class="upload-text">اختر صورة</span>
+                        </div>
+                        <input type="file" id="new-img" accept="image/*" class="hidden">
+                    </div>
+                </div>
+                <button data-action="addStudent" class="bg-purple-600 py-3 rounded-xl font-bold">➕ إضافة طالب</button>
+            </div>
+            <div class="flex justify-center mb-4">
+                <label class="text-purple-300 ml-2">تصفية حسب الصف:</label>
+                <select id="student-grade-filter" class="bg-black/60 border border-yellow-500 rounded-xl p-2 w-48">
+                    <option value="all">جميع الصفوف</option>
+                </select>
+            </div>
+            <div id="edit-list" class="student-card-grid"></div>
+        </div>
+
+        <!-- صفحة لوحة الشرف -->
+        <div id="hall-page" class="page hidden">
+            <h2 class="text-5xl font-black text-center text-yellow-500 mb-8">🏅 فرسان القمة - لوحة الشرف</h2>
+            <div class="flex justify-center mb-6 gap-4"><label class="text-lg">الصف:</label><select id="hall-grade-filter" class="bg-black/60 border border-yellow-500 rounded-xl p-2"><option value="all">جميع الصفوف</option></select></div>
+            <div id="hall-top-3" class="flex flex-wrap justify-center gap-8 mt-4 mb-12"></div>
+            <div id="hall-list" class="max-w-4xl mx-auto mt-6 space-y-3"></div>
+        </div>
+
+        <div id="stats-page" class="page hidden">
+    <div style="text-align: center; padding: 50px;">
+        <h2 style="color: #facc15;">📊 تم تحديث نظام الإحصائيات</h2>
+        <p>الرجاء استخدام الزر المخصص في شريط التنقل لفتح لوحة التحليلات المتقدمة.</p>
+    </div>
+</div>
+
+        <!-- صفحة إدارة الصفوف -->
+        <div id="grades-page" class="page hidden glass-panel p-8">
+            <h2 class="text-4xl font-bold text-center text-yellow-400 mb-6">🎓 إدارة الصفوف الدراسية</h2>
+            <div class="glass-panel p-6">
+                <p class="text-center text-purple-300 mb-4">إعادة تسمية أو حذف أو إضافة صف دراسي.</p>
+                <div class="flex justify-center gap-3 mb-6">
+                    <input type="text" id="new-grade-name" class="bg-black/60 border border-yellow-500 rounded-full px-4 py-2 text-white" placeholder="اسم الصف الجديد">
+                    <button id="add-grade-btn" class="bg-green-600 px-5 py-2 rounded-full font-bold">➕ إضافة صف</button>
+                </div>
+                <div id="grades-management-list" class="space-y-3 max-h-96 overflow-y-auto"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== واجهة السباق ========== -->
+    <div id="race-interface" class="fixed inset-0 z-[2000] bg-[#050a15] hidden flex flex-col p-2">
+        <div class="flex justify-between items-center mb-2"><button id="exitRaceBtn" class="bg-red-700 px-3 py-1 rounded-full">❌ إنهاء</button><div class="timer-large text-4xl font-bold" id="timer-text">12</div></div>
+        <div id="race-tracks-container" style="max-height: 30vh; overflow-y: auto;"></div>
+        <div class="race-question-wrapper">
+            <div id="timer-bar" class="h-1 bg-gradient-to-r from-yellow-500 to-purple-500 w-full transition-all" style="width:100%"></div>
+            <div class="question-gold-box w-full"><p class="question-text" id="question-text-display"></p></div>
+            <div id="q-area-opts" class="grid grid-cols-1 md:grid-cols-2 gap-2 w-full"></div>
+            <div id="host-observer-panel" class="hidden w-full">
+                <div class="question-gold-box w-full"><p class="text-center text-yellow-300 mb-2">🎥 أنت تشاهد اللعبة - الدور على <span id="host-observer-player-name"></span></p><p class="question-text" id="host-observer-question"></p></div>
+                <div id="host-observer-opts" class="grid grid-cols-1 md:grid-cols-2 gap-2 w-full"></div>
+                <div id="host-observer-result" class="text-center mt-2 text-yellow-400 hidden"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== نافذة تعديل الطالب ========== -->
+    <div id="edit-student-modal" class="fixed inset-0 z-[10001] hidden bg-black/90 backdrop-blur-md items-center justify-center" onclick="if(event.target===this) closeEditModal()">
+        <div class="glass-panel edit-student-modal relative">
+            <h3 class="text-xl font-bold mb-4 text-center">✏️ تعديل بيانات الطالب</h3>
+            <div class="space-y-3">
+                <div><label class="block mb-1 text-sm">الاسم</label><input id="edit-name-student" class="w-full bg-black/60 border border-yellow-500 rounded-xl p-2 text-sm"></div>
+                <div><label class="block mb-1 text-sm">الصف الدراسي</label><select id="edit-grade-student" class="w-full bg-black/60 border border-yellow-500 rounded-xl p-2 text-sm"></select></div>
+                <div class="text-center">
+                    <img id="edit-student-img-preview" class="image-preview" src="">
+                    <div class="flex gap-2 justify-center mt-2">
+                        <button id="edit-upload-img-btn" class="bg-purple-600 px-3 py-1 rounded-lg text-xs">📷 رفع صورة</button>
+                        <button id="edit-reset-img-btn" class="bg-gray-600 px-3 py-1 rounded-lg text-xs">🔄 استعادة</button>
+                    </div>
+                    <input type="file" id="edit-img-file-input" accept="image/*" class="hidden">
+                </div>
+                <div class="border-t border-yellow-500/30 pt-3">
+                    <label class="block mb-1 text-sm text-center">تعديل النقاط</label>
+                    <div class="flex justify-center gap-2">
+                        <button data-score="-10" class="adjustScoreBtn bg-red-600 px-3 py-1 rounded-xl text-sm font-bold">-10</button>
+                        <button data-score="-5" class="adjustScoreBtn bg-orange-600 px-3 py-1 rounded-xl text-sm">-5</button>
+                        <button data-score="5" class="adjustScoreBtn bg-green-600 px-3 py-1 rounded-xl text-sm">+5</button>
+                        <button data-score="10" class="adjustScoreBtn bg-green-600 px-3 py-1 rounded-xl text-sm">+10</button>
+                    </div>
+                </div>
+                <div class="flex gap-3 mt-4">
+                    <button id="saveEditStudentBtn" class="bg-green-600 flex-1 py-2 rounded-xl font-bold text-sm">💾 حفظ</button>
+                    <button onclick="closeEditModal()" class="bg-gray-600 flex-1 py-2 rounded-xl text-sm">إلغاء</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   <!-- ========== نافذة اختيار الدروس ========== -->
+    <div id="lessonsModal" class="lessons-modal hidden">
+        <div class="lessons-modal-content">
+            <h3 class="text-2xl font-bold text-yellow-400 mb-4 text-center">📖 اختر الدروس</h3>
+            <div id="lessonsList" class="lessons-grid"></div>
+            <div class="modal-actions"><button id="selectAllLessonsBtn">✅ تحديد الكل</button><button id="unselectAllLessonsBtn">❌ إلغاء الكل</button><button id="accumulativeLessonsBtn">📚 تراكمي (جميع الدروس)</button><button id="confirmLessonsBtn">تأكيد ✓</button></div>
+        </div>
+    </div>
+
+
+   
+
+    <script type="module" src="src/main.js"></script>
+
+        <!-- ========== نافذة إعدادات الصوت (نسخة محسّنة) ========== -->
+    <div id="audio-settings-modal" class="fixed inset-0 z-[200000] hidden items-center justify-center bg-black/80 backdrop-blur-md" onclick="if(event.target===this) closeAudioSettings()">
+        <div class="glass-panel p-6 rounded-3xl max-w-md w-full mx-4" style="background: rgba(10,20,35,0.95); border: 1px solid rgba(250,204,21,0.5); box-shadow: 0 0 40px rgba(139,92,246,0.2); backdrop-filter: blur(20px);">
+            
+            <!-- الرأس -->
+            <div class="flex justify-between items-center mb-6 pb-2 border-b border-white/10">
+                <h3 class="text-2xl font-bold bg-gradient-to-l from-yellow-400 to-purple-400 bg-clip-text text-transparent">🎛️ إعدادات الصوت المتقدمة</h3>
+                <button onclick="closeAudioSettings()" class="text-gray-400 hover:text-white text-2xl transition-all duration-200 hover:rotate-90">&times;</button>
+            </div>
+
+            <!-- موسيقى الخلفية -->
+            <div class="mb-6 p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-yellow-500/40 transition-all duration-300">
+                <div class="flex justify-between items-center mb-4">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl drop-shadow-lg">🎵</span>
+                        <span class="font-bold text-white text-lg">موسيقى الخلفية</span>
+                    </div>
+                    <button id="toggle-bg-music" class="px-4 py-1.5 rounded-full text-sm font-bold transition-all duration-300 shadow-md" style="background: rgba(245,158,11,0.15); border: 1px solid #facc15; color: #facc15;">
+                        🔇 إيقاف
+                    </button>
+                </div>
+                <div class="flex items-center gap-4 mt-2">
+                    <span class="text-sm text-gray-400">🔉</span>
+                    <input type="range" id="bg-music-volume" min="0" max="100" value="5" class="w-full h-2 rounded-lg appearance-none cursor-pointer bg-gray-700" style="background: linear-gradient(90deg, #facc15 5%, #4a5568 5%);">
+                    <span id="bg-music-value" class="text-sm text-yellow-400 font-mono w-12 text-center">5%</span>
+                    <span class="text-sm text-gray-400">🔊</span>
+                </div>
+                <div class="text-xs text-gray-500 mt-2 text-center">✨ اضبط مستوى الموسيقى الخلفية أثناء اللعب</div>
+            </div>
+
+            <!-- مؤثرات اللعبة -->
+            <div class="mb-6 p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-yellow-500/40 transition-all duration-300">
+                <div class="flex justify-between items-center mb-4">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl drop-shadow-lg">🎮</span>
+                        <span class="font-bold text-white text-lg">مؤثرات اللعبة</span>
+                        <span class="text-xs text-gray-500 bg-black/30 px-2 py-0.5 rounded-full">صحيح/خطأ/فوز</span>
+                    </div>
+                    <button id="toggle-sfx" class="px-4 py-1.5 rounded-full text-sm font-bold transition-all duration-300 shadow-md" style="background: rgba(16,185,129,0.15); border: 1px solid #10b981; color: #10b981;">
+                        🔊 تشغيل
+                    </button>
+                </div>
+                <div class="flex items-center gap-4 mt-2">
+                    <span class="text-sm text-gray-400">🔉</span>
+                    <input type="range" id="sfx-volume" min="0" max="100" value="70" class="w-full h-2 rounded-lg appearance-none cursor-pointer bg-gray-700" style="background: linear-gradient(90deg, #10b981 70%, #4a5568 70%);">
+                    <span id="sfx-value" class="text-sm text-emerald-400 font-mono w-12 text-center">70%</span>
+                    <span class="text-sm text-gray-400">🔊</span>
+                </div>
+                <div class="text-xs text-gray-500 mt-2 text-center">⚡ تأثيرات قوية تضفي إثارة على التحديات</div>
+            </div>
+
+            <!-- الصوت في الميكروفون (الدردشة الصوتية) -->
+            <div class="mb-6 p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-yellow-500/40 transition-all duration-300">
+                <div class="flex justify-between items-center mb-2">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl drop-shadow-lg">🎤</span>
+                        <span class="font-bold text-white text-lg">الميكروفون والدردشة</span>
+                    </div>
+                    <button id="toggle-voice" class="px-4 py-1.5 rounded-full text-sm font-bold transition-all duration-300 shadow-md" style="background: rgba(139,92,246,0.15); border: 1px solid #a855f7; color: #a855f7;">
+                        🎙️ تفعيل
+                    </button>
+                </div>
+                <div class="text-xs text-gray-500 mt-2 text-center">🔈 تمكين الصوت المباشر في الغرف الجماعية</div>
+            </div>
+
+            <!-- زر الحفظ والإغلاق -->
+            <button onclick="closeAudioSettings()" class="w-full py-3 rounded-full font-bold transition-all duration-300 transform hover:scale-[1.02] active:scale-95" style="background: linear-gradient(135deg, #8B5CF6, #6366F1); color: white; box-shadow: 0 4px 15px rgba(139,92,246,0.4);">
+                ✨ حفظ والإغلاق ✨
+            </button>
+            
+            <p class="text-center text-[11px] text-gray-500 mt-4">🎧 جودة صوت فائقة | يبدأ التشغيل بعد أول نقرة</p>
+        </div>
+    </div>
+    <!-- نافذة الرسائل (المعلم) مع إغلاق بالجافاسكريبت -->
+<div id="teacherMessagesModal" class="fixed inset-0 z-[200000] hidden items-center justify-center bg-black/80 backdrop-blur-sm">
+    <div class="bg-slate-900 border border-slate-700 w-full max-w-4xl h-[70vh] rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row relative">
+        <button id="closeMessagesModalBtn" class="absolute top-3 left-3 text-gray-400 hover:text-white text-2xl z-10 bg-black/50 rounded-full w-8 h-8 flex items-center justify-center transition">✕</button>
+        
+        <div class="w-full md:w-80 border-b md:border-b-0 md:border-r border-slate-700 bg-slate-950 flex flex-col">
+            <div class="p-4 border-b border-slate-700 flex justify-between items-center">
+                <h3 class="font-bold text-lg text-yellow-400">الرسائل</h3>
+                <button id="newMsgBtn" class="bg-yellow-500 hover:bg-yellow-600 text-slate-900 p-2 rounded-full text-xs font-bold transition">جديدة +</button>
+            </div>
+            <div id="conversationsList" class="flex-1 overflow-y-auto p-2 space-y-2"></div>
+        </div>
+
+        <div class="flex-1 flex flex-col bg-slate-900">
+            <div id="chatHeader" class="p-4 border-b border-slate-700 text-white font-bold bg-slate-800/50">اختر محادثة</div>
+            <div id="chatMessages" class="flex-1 overflow-y-auto p-6 space-y-4"></div>
+            <div id="replyArea" class="p-4 border-t border-slate-700 bg-slate-950 hidden">
+                <textarea id="replyText" rows="2" class="w-full bg-slate-800 rounded-2xl p-3 text-white focus:ring-2 focus:ring-yellow-500 outline-none" placeholder="اكتب ردك..."></textarea>
+                <div class="flex justify-end mt-2">
+                    <button id="sendReplyBtn" class="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-2 rounded-full font-bold transition">إرسال</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+            <!-- حاوية اللوبي (تظهر عند إنشاء أو انضمام إلى غرفة) -->
+<!-- حاوية اللوبي - تظهر فوق كل المحتوى -->
+<div id="lobby-container" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 99999; background: linear-gradient(135deg, #0f172a, #1e1b4b); display: none; overflow: auto;"></div>
+    <!-- ========== نظام التحكم بالصوت المتقدم ========== -->
+    <script>
+        
+
+        // متغيرات الصوت
+        let bgMusic = null;
+        let isBgMusicPlaying = false;
+        let currentBgVolume = localStorage.getItem('bgMusicVolume') ? parseInt(localStorage.getItem('bgMusicVolume')) : 5;
+        let isBgMusicEnabled = localStorage.getItem('bgMusicEnabled') !== 'false';
+        
+        let sfxEnabled = localStorage.getItem('sfxEnabled') !== 'false';
+        let currentSfxVolume = localStorage.getItem('sfxVolume') ? parseInt(localStorage.getItem('sfxVolume')) : 70;
+        let voiceEnabled = localStorage.getItem('voiceEnabled') !== 'false';
+        
+        // تحميل الموسيقى
+        function initMusic() {
+            if (bgMusic) return;
+            
+            bgMusic = new Howl({
+                src: ['sounds/lobby-music.mp3'],
+                loop: true,
+                volume: currentBgVolume / 100,
+                autoplay: false
+            });
+            
+            console.log('[Audio] تم تحميل الموسيقى');
+        }
+        
+        // تشغيل/إيقاف الموسيقى
+        function toggleBgMusic() {
+            if (!bgMusic) initMusic();
+            
+            if (isBgMusicPlaying) {
+                bgMusic.stop();
+                isBgMusicPlaying = false;
+                localStorage.setItem('bgMusicEnabled', 'false');
+            } else {
+                if (isBgMusicEnabled) {
+                    bgMusic.play();
+                    isBgMusicPlaying = true;
+                    localStorage.setItem('bgMusicEnabled', 'true');
+                }
+            }
+            updateMusicUI();
+        }
+        
+        // تغيير مستوى صوت الموسيقى
+        function setBgMusicVolume(value) {
+            currentBgVolume = value;
+            localStorage.setItem('bgMusicVolume', value);
+            if (bgMusic) {
+                bgMusic.volume(value / 100);
+            }
+            updateMusicUI();
+        }
+        
+        // تغيير مستوى صوت المؤثرات
+        function setSfxVolume(value) {
+            currentSfxVolume = value;
+            localStorage.setItem('sfxVolume', value);
+            updateMusicUI();
+            Howler.volume(currentSfxVolume / 100);
+        }
+        
+        // تشغيل/إيقاف المؤثرات
+        function toggleSfx() {
+            sfxEnabled = !sfxEnabled;
+            localStorage.setItem('sfxEnabled', sfxEnabled);
+            
+            if (sfxEnabled) {
+                Howler.volume(currentSfxVolume / 100);
+            } else {
+                Howler.volume(0);
+            }
+            updateMusicUI();
+        }
+        
+        // تشغيل/إيقاف الصوت في الميكروفون
+        function toggleVoice() {
+            voiceEnabled = !voiceEnabled;
+            localStorage.setItem('voiceEnabled', voiceEnabled);
+            
+            if (window.toggleMicrophone && voiceEnabled) {
+                window.toggleMicrophone();
+            }
+            updateMusicUI();
+        }
+        
+        // تحديث واجهة التحكم
+        function updateMusicUI() {
+            const bgMusicBtn = document.getElementById('toggle-bg-music');
+            if (bgMusicBtn) {
+                if (isBgMusicPlaying) {
+                    bgMusicBtn.innerHTML = '🔊 تشغيل';
+                    bgMusicBtn.style.background = 'rgba(16,185,129,0.2)';
+                    bgMusicBtn.style.borderColor = '#10b981';
+                    bgMusicBtn.style.color = '#10b981';
+                } else {
+                    bgMusicBtn.innerHTML = '🔇 إيقاف';
+                    bgMusicBtn.style.background = 'rgba(239,68,68,0.2)';
+                    bgMusicBtn.style.borderColor = '#ef4444';
+                    bgMusicBtn.style.color = '#ef4444';
+                }
+            }
+            
+            const bgSlider = document.getElementById('bg-music-volume');
+            const bgValue = document.getElementById('bg-music-value');
+            if (bgSlider && bgValue) {
+                bgSlider.value = currentBgVolume;
+                bgValue.innerText = currentBgVolume + '%';
+                const percent = currentBgVolume;
+                bgSlider.style.background = `linear-gradient(90deg, #facc15 0%, #facc15 ${percent}%, #4a5568 ${percent}%, #4a5568 100%)`;
+            }
+            
+            const sfxBtn = document.getElementById('toggle-sfx');
+            if (sfxBtn) {
+                if (sfxEnabled) {
+                    sfxBtn.innerHTML = '🔊 تشغيل';
+                    sfxBtn.style.background = 'rgba(16,185,129,0.2)';
+                    sfxBtn.style.borderColor = '#10b981';
+                    sfxBtn.style.color = '#10b981';
+                } else {
+                    sfxBtn.innerHTML = '🔇 إيقاف';
+                    sfxBtn.style.background = 'rgba(239,68,68,0.2)';
+                    sfxBtn.style.borderColor = '#ef4444';
+                    sfxBtn.style.color = '#ef4444';
+                }
+            }
+            
+            const sfxSlider = document.getElementById('sfx-volume');
+            const sfxValue = document.getElementById('sfx-value');
+            if (sfxSlider && sfxValue) {
+                sfxSlider.value = currentSfxVolume;
+                sfxValue.innerText = currentSfxVolume + '%';
+                const percent = currentSfxVolume;
+                sfxSlider.style.background = `linear-gradient(90deg, #facc15 0%, #facc15 ${percent}%, #4a5568 ${percent}%, #4a5568 100%)`;
+            }
+            
+            const voiceBtn = document.getElementById('toggle-voice');
+            if (voiceBtn) {
+                if (voiceEnabled) {
+                    voiceBtn.innerHTML = '🎙️ تشغيل';
+                    voiceBtn.style.background = 'rgba(16,185,129,0.2)';
+                    voiceBtn.style.borderColor = '#10b981';
+                    voiceBtn.style.color = '#10b981';
+                } else {
+                    voiceBtn.innerHTML = '🔇 إيقاف';
+                    voiceBtn.style.background = 'rgba(239,68,68,0.2)';
+                    voiceBtn.style.borderColor = '#ef4444';
+                    voiceBtn.style.color = '#ef4444';
+                }
+            }
+        }
+        
+        // فتح نافذة الإعدادات
+        function openAudioSettings() {
+            const modal = document.getElementById('audio-settings-modal');
+            if (modal) {
+                updateMusicUI();
+                modal.classList.remove('hidden');
+                modal.style.display = 'flex';
+            }
+        }
+        
+        // إغلاق نافذة الإعدادات
+        function closeAudioSettings() {
+            const modal = document.getElementById('audio-settings-modal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.style.display = 'none';
+            }
+        }
+        // دالة قفل البطولات للمجاني
+async function lockTournamentForFree() {
+    const teacherPlan = await getTeacherPlan();
+    const isFree = teacherPlan === 'free';
+    const tournamentBtn = document.getElementById('createTournamentBtn');
+    if (!tournamentBtn) return;
+    
+    if (isFree) {
+        tournamentBtn.disabled = true;
+        tournamentBtn.style.opacity = '0.6';
+        tournamentBtn.style.cursor = 'not-allowed';
+        tournamentBtn.style.position = 'relative';
+        tournamentBtn.innerHTML = `
+            <div style="font-size: 3rem; margin-bottom: 0.5rem;">🏆🔒</div>
+            <div style="font-size: 1.6rem; font-weight: 900;">بطولات (مقفلة)</div>
+            <div style="font-size: 0.85rem; color: #facc15; margin-top: 0.3rem;">⭐ متاح في الباقات المدفوعة</div>
+        `;
+        tournamentBtn.onclick = () => {
+            Swal.fire({
+                title: '🔒 ميزة غير متاحة',
+                html: '<p>البطولات واللعب الأونلاين متاحة فقط للمشتركين في الباقة <strong>الفضية أو الذهبية</strong>.</p><button class="bg-yellow-500 text-black px-4 py-2 rounded-full mt-2" onclick="window.location.href=\'index.html#pricing\'">🔓 ترقية الآن</button>',
+                icon: 'warning',
+                showConfirmButton: false,
+                showCancelButton: true,
+                cancelButtonText: 'إغلاق',
+                background: '#0f172a',
+                color: '#fff'
+            });
+        };
+    } else {
+        tournamentBtn.onclick = () => window.open('arena.html?role=teacher', '_blank');
+    }
+}
+
+// استدعاء عند تحميل الصفحة (بعد أن تصبح دوال الخطة جاهزة)
+setTimeout(() => {
+    if (typeof getTeacherPlan === 'function') lockTournamentForFree();
+}, 500);
+
+
+        // تشغيل الموسيقى بعد أول تفاعل
+// تشغيل الموسيقى بعد أول تفاعل
+let musicStarted = false;
+function startMusicOnFirstInteraction() {
+    if (musicStarted) return;
+    if (isBgMusicEnabled && !isBgMusicPlaying) {
+        if (!bgMusic) initMusic();
+        bgMusic.play();
+        isBgMusicPlaying = true;
+        updateMusicUI();
+    }
+    musicStarted = true;
+    
+    document.removeEventListener('click', startMusicOnFirstInteraction);
+    document.removeEventListener('keydown', startMusicOnFirstInteraction);
+    document.removeEventListener('scroll', startMusicOnFirstInteraction);
+    document.removeEventListener('touchstart', startMusicOnFirstInteraction);
+    
+    console.log('[Audio] تم تشغيل الموسيقى بعد أول تفاعل');
+}
+
+// عند تحميل الصفحة
+document.addEventListener('DOMContentLoaded', function() {
+    // إخفاء أزرار الصوت القديمة
+    const oldSoundBtn = document.getElementById('toggle-sound-btn');
+    if (oldSoundBtn) oldSoundBtn.style.display = 'none';
+    
+    // ربط زر الإعدادات
+    const settingsBtn = document.getElementById('settings-audio-btn');
+    if (settingsBtn) {
+        settingsBtn.onclick = openAudioSettings;
+    }
+    
+    // تهيئة Howler مع الإعدادات المحفوظة
+    Howler.volume(sfxEnabled ? currentSfxVolume / 100 : 0);
+    
+    // تحضير الموسيقى
+    initMusic();
+    
+    // ربط أحداث الشرائح
+    const bgSlider = document.getElementById('bg-music-volume');
+    if (bgSlider) {
+        bgSlider.oninput = (e) => setBgMusicVolume(parseInt(e.target.value));
+    }
+    
+    const sfxSlider = document.getElementById('sfx-volume');
+    if (sfxSlider) {
+        sfxSlider.oninput = (e) => setSfxVolume(parseInt(e.target.value));
+    }
+    
+    // ربط أزرار التبديل
+    const bgToggle = document.getElementById('toggle-bg-music');
+    if (bgToggle) bgToggle.onclick = toggleBgMusic;
+    
+    const sfxToggle = document.getElementById('toggle-sfx');
+    if (sfxToggle) sfxToggle.onclick = toggleSfx;
+    
+    const voiceToggle = document.getElementById('toggle-voice');
+    if (voiceToggle) voiceToggle.onclick = toggleVoice;
+    
+    // انتظر أول تفاعل (استخدم الدالة المصححة)
+    document.addEventListener('click', startMusicOnFirstInteraction);
+    document.addEventListener('keydown', startMusicOnFirstInteraction);
+    document.addEventListener('scroll', startMusicOnFirstInteraction);
+    document.addEventListener('touchstart', startMusicOnFirstInteraction);
+    
+    console.log('[Audio] نظام الصوت جاهز');
+});
+        // جعل الدوال عامة
+        window.openAudioSettings = openAudioSettings;
+        window.closeAudioSettings = closeAudioSettings;
+        window.toggleBgMusic = toggleBgMusic;
+        window.toggleSfx = toggleSfx;
+        window.toggleVoice = toggleVoice;
+    </script>
+
+    <!-- ========== دوال تسجيل الدخول ========== -->
+    <script>
+        window.platformAPI = {
+            loginAsTeacher: function(teacherCode) {
+                console.log('[Platform] loginAsTeacher called with code:', teacherCode);
+                if (window._loginAsTeacher) {
+                    window._loginAsTeacher(teacherCode);
+                } else {
+                    console.warn('[Platform] _loginAsTeacher not ready yet');
+                }
+            },
+            
+            loginAsStudent: function(studentId) {
+                console.log('[Platform] loginAsStudent called with id:', studentId);
+                if (window._loginAsStudent) {
+                    window._loginAsStudent(studentId);
+                } else {
+                    console.warn('[Platform] _loginAsStudent not ready yet');
+                }
+            },
+            
+            logout: function() {
+                console.log('[Platform] logout called');
+                if (window.logout) {
+                    window.logout();
+                } else {
+                    console.warn('[Platform] logout not ready yet');
+                }
+            },
+            
+            isLoggedIn: function() {
+                const isTeacher = sessionStorage.getItem('peak_teacher_logged_in') === 'true';
+                const studentId = window._getSecureStudentId ? window._getSecureStudentId() : null;
+                return { isLoggedIn: !!(isTeacher || studentId), isTeacher, studentId };
+            },
+            
+            getCurrentUser: function() {
+                if (window.getCurrentUserInfo) {
+                    return window.getCurrentUserInfo();
+                }
+                return null;
+            }
+        };
+        
+    </script>
+    <script type="module">
+
+
+    import { ADMIN_SECRET_KEY } from './src/config.js';
+    import { loginAdmin, logoutAdmin } from './src/admin/admin.js';
+    // استيرادات Firebase (مطابقة لما في admin-panel.html)
+    import { 
+        db, collection, doc, getDocs, getDoc, setDoc, updateDoc, deleteDoc, 
+        query, where, orderBy, limit, writeBatch, 
+        serverTimestamp, addDoc
+    } from './src/firebase/init.js';
+    
+    let adminAuthenticated = false;
+    
+    function isAdminAuthenticated() {
+        if (!adminAuthenticated) {
+            // التحقق من is_admin (من landing.html)
+            const isAdmin = sessionStorage.getItem('is_admin') === 'true';
+            if (isAdmin) {
+                adminAuthenticated = true;
+                return true;
+            }
+            // التحقق القديم للتوافق
+            const stored = sessionStorage.getItem('admin_authenticated');
+            const sessionTime = parseInt(sessionStorage.getItem('admin_session_time') || '0');
+            if (stored === 'true' && (Date.now() - sessionTime) < 8 * 60 * 60 * 1000) {
+                adminAuthenticated = true;
+            }
+        }
+        return adminAuthenticated;
+    }
+    function showAdminLoginForm() {
+    // إزالة أي نموذج سابق
+    const existingContainer = document.getElementById('admin-auth-container');
+    if (existingContainer) existingContainer.remove();
+    
+    const container = document.createElement('div');
+    container.id = 'admin-auth-container';
+    container.className = 'fixed inset-0 z-[100000] flex items-center justify-center bg-black/80 backdrop-blur-md';
+    container.onclick = (e) => { if (e.target === container) container.remove(); };
+    
+    container.innerHTML = `
+        <div class="glass-panel p-8 max-w-md mx-auto text-center relative">
+            <div class="text-5xl mb-4">🔐</div>
+            <h3 class="text-2xl font-bold text-yellow-400 mb-4">دخول المدير (المطور)</h3>
+            <p class="text-gray-400 mb-4">هذه الصفحة مخصصة للمطور فقط.</p>
+            <input type="password" id="admin-secret-input" class="setting-input w-full mb-4" placeholder="الرقم السري">
+            <button id="admin-login-submit" class="lobby-btn">تسجيل الدخول</button>
+            <button id="admin-login-cancel" class="lobby-btn mt-2" style="background:#6b7280;">إلغاء</button>
+        </div>
+    `;
+    document.body.appendChild(container);
+    
+    document.getElementById('admin-login-submit')?.addEventListener('click', async () => {
+        const key = document.getElementById('admin-secret-input').value;
+        const result = await window._loginAsTeacher(key);
+        if (result && result.success) {
+            adminAuthenticated = true;
+            window.open('admin-panel.html', '_blank');
+            const adminTab = document.getElementById('admin-tab-btn');
+            if (adminTab) adminTab.classList.remove('hidden');
+            window.showFloatingNotification('تم الدخول كمدير، تم فتح لوحة التحكم', 'success');
+            container.remove();
+        } else {
+            Swal.fire('خطأ', 'الرقم السري غير صحيح أو فشل الاتصال', 'error');
+        }
+    });
+    
+    document.getElementById('admin-login-cancel')?.addEventListener('click', () => {
+        container.remove();
+    });
+}
+    
+    // هذه الدالة أصبحت غير مستخدمة لأننا نفتح صفحة خارجية، لكن نتركها فارغة لتجنب الأخطاء
+    async function showAdminDashboard() {
+        // لا حاجة لعرض لوحة التحكم داخل platform.html
+        return;
+    }
+    
+    function initAdminTab() {
+        const adminTabBtn = document.getElementById('admin-tab-btn');
+        if (!adminTabBtn) return;
+      
+       adminTabBtn.addEventListener('click', async () => {
+    // عند النقر على تبويب المدير، نتحقق من المصادقة
+    if (isAdminAuthenticated()) {
+        // إذا كان مسجلاً بالفعل، نفتح الصفحة مباشرة
+                window.location.href = 'admin-panel.html';
+
+    } else {
+        showAdminLoginForm();
+    }
+});
+
+        if (isAdminAuthenticated()) {
+            adminTabBtn.classList.remove('hidden');
+        } else {
+            adminTabBtn.classList.add('hidden');
+        }
+    }
+    // دالة للتحقق من صلاحية إنشاء غرفة للطالب (تعتمد على خطة المعلم)
+async function checkStudentCanCreateRoom() {
+    const studentId = await window._getSecureStudentId();
+    if (!studentId) return { allowed: false, message: 'يجب تسجيل الدخول كطالب أولاً' };
+    
+    // الحصول على بيانات الطالب
+    const student = await getStudentById(studentId);
+    if (!student || !student.teacherId) return { allowed: false, message: 'لم يتم العثور على المعلم الخاص بك' };
+    
+    // الحصول على خطة المعلم
+    const { getTeacherSubscription } = await import('./src/services/dataService.js');
+    const sub = await getTeacherSubscription(student.teacherId);
+    const plan = sub?.plan || 'free';
+    
+    // المجاني لا يمكنه إنشاء غرف
+    if (plan === 'free') {
+        return { allowed: false, message: 'معلمك مشترك في الباقة المجانية، لا يمكنه إنشاء غرف أونلاين. يرجى التواصل معه لترقية الاشتراك.' };
+    }
+    
+    // الفضي له حد 10 مباريات شهرية
+    if (plan === 'silver') {
+        const used = sub?.onlineRoomsUsedThisMonth || 0;
+        const max = 10;
+        if (used >= max) {
+            return { allowed: false, message: `معلمك استنفد عدد المباريات الشهرية المسموحة (${max}/ شهر). سيتم التجديد الشهر القادم أو يمكنه الترقية للذهبية.` };
+        }
+        return { allowed: true, remaining: max - used };
+    }
+    
+    // ذهبي أو مطور
+    return { allowed: true };
+}
+
+// دالة لعرض رسالة الترقية للطالب
+function showUpgradeMessageForStudent(message) {
+    Swal.fire({
+        title: '🚫 ميزة غير متاحة حالياً',
+        html: `<p>${message}</p><p class="text-yellow-400 mt-2">✨ يمكن لمعلمك ترقية الاشتراك للذهبية للحصول على ميزات غير محدودة ✨</p>`,
+        icon: 'warning',
+        confirmButtonText: 'حسناً',
+        background: '#0f172a',
+        color: '#fff'
+    });
+}
+
+// تهيئة زر إنشاء الغرفة في واجهة الطالب
+async function initStudentCreateRoomButton() {
+    const btn = document.getElementById('createOnlineGameStudentBtn');
+    if (!btn) return;
+    
+    const { allowed, message } = await checkStudentCanCreateRoom();
+    const lockIcon = document.getElementById('createGameLockIcon');
+    
+    if (!allowed) {
+        btn.classList.add('opacity-50', 'cursor-not-allowed');
+        btn.disabled = true;
+        if (lockIcon) lockIcon.classList.remove('hidden');
+        // تغيير النص الأصلي للزر ليشمل القفل
+        btn.innerHTML = `<span class="text-2xl">🌐</span> إنشاء لعبة أونلاين <i class="fa-solid fa-lock mr-2"></i>`;
+        // إضافة حدث النقر لعرض رسالة الترقية
+        btn.onclick = () => showUpgradeMessageForStudent(message);
+    } else {
+        btn.disabled = false;
+        btn.classList.remove('opacity-50', 'cursor-not-allowed');
+        if (lockIcon) lockIcon.classList.add('hidden');
+        btn.innerHTML = `<span class="text-2xl">🌐</span> إنشاء لعبة أونلاين`;
+        btn.onclick = () => openCreateRoomModal(); // الدالة الأصلية
+    }
+}
+
+// استدعاء التهيئة عند تحميل الصفحة (داخل DOMContentLoaded أو عند تبديل تبويب الطالب)
+document.addEventListener('DOMContentLoaded', () => {
+    // إذا كان هناك طالب مسجل
+    if (window._getSecureStudentId) {
+        initStudentCreateRoomButton();
+    }
+});
+
+    // ===================== دوال الرسائل باستخدام Firestore =====================
+const messagesCollection = collection(db, 'messages');
+
+async function getTeacherMessages() {
+    const teacherId = sessionStorage.getItem('peak_teacher_code');
+    if (!teacherId) return [];
+    try {
+        // جلب الرسائل التي تخص المعلم (مرسلة إليه أو منه أو عامة)
+        const q = query(messagesCollection, 
+            where('to', 'in', [teacherId, 'admin', 'all']),
+            where('from', 'in', [teacherId, 'admin'])
+        );
+        const snapshot = await getDocs(q);
+        let messages = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        // ترتيب تنازلي حسب الوقت (الأحدث أولاً)
+        messages.sort((a,b) => (b.timestamp?.toMillis?.() || b.timestamp) - (a.timestamp?.toMillis?.() || a.timestamp));
+        return messages;
+    } catch (e) {
+        console.error('Error loading messages:', e);
+        return [];
+    }
+}
+
+async function sendTeacherMessage(subject, content) {
+    const teacherId = sessionStorage.getItem('peak_teacher_code');
+    const teacherName = sessionStorage.getItem('peak_teacher_name') || 'معلم';
+    if (!teacherId || !subject || !content) return false;
+    try {
+        await addDoc(messagesCollection, {
+            from: teacherId,
+            fromName: teacherName,
+            to: 'admin',
+            subject: subject,
+            content: content,
+            timestamp: serverTimestamp(),
+            read: false
+        });
+        updateUnreadCount(); // تحديث العدد بعد الإرسال
+        return true;
+    } catch (e) {
+        console.error('Error sending message:', e);
+        return false;
+    }
+}
+
+async function updateUnreadCount() {
+    const teacherId = sessionStorage.getItem('peak_teacher_code');
+    if (!teacherId) return;
+    try {
+        const q = query(messagesCollection, 
+            where('to', '==', teacherId), 
+            where('read', '==', false)
+        );
+        const snapshot = await getDocs(q);
+        const unread = snapshot.size;
+        const badge = document.getElementById('unread-badge');
+        if (badge) {
+            if (unread > 0) {
+                badge.innerText = unread > 9 ? '9+' : unread;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+    } catch (e) {
+        console.error('Error updating unread count:', e);
+    }
+}
+
+async function loadConversations() {
+    const teacherId = sessionStorage.getItem('peak_teacher_code');
+    if (!teacherId) return;
+    const messages = await getTeacherMessages();
+    const convMap = new Map();
+    messages.forEach(m => {
+        const other = m.from === teacherId ? (m.to === 'admin' ? 'admin' : m.to) : (m.from === 'admin' ? 'admin' : m.from);
+        if (!convMap.has(other)) {
+            convMap.set(other, {
+                id: other,
+                name: other === 'admin' ? 'المطور' : (m.from === teacherId ? m.toName : m.fromName) || other,
+                lastMsg: m,
+                unread: 0
+            });
+        }
+        if (!m.read && m.to === teacherId) convMap.get(other).unread++;
+    });
+    const convs = Array.from(convMap.values()).sort((a,b) => b.lastMsg.timestamp?.toMillis?.() - a.lastMsg.timestamp?.toMillis?.());
+    const container = document.getElementById('conversationsList');
+    if (container) {
+        container.innerHTML = convs.map(c => `
+            <div class="conv-item glass-card p-2 cursor-pointer ${c.unread ? 'border-yellow-400' : ''}" data-other="${c.id}">
+                <div class="font-bold">${escapeHtml(c.name)}</div>
+                <div class="text-xs text-gray-400 truncate">${escapeHtml(c.lastMsg.content?.substring(0,30) || '')}</div>
+                ${c.unread ? '<span class="text-red-400 text-xs">جديد</span>' : ''}
+            </div>
+        `).join('');
+        document.querySelectorAll('.conv-item').forEach(el => {
+            el.addEventListener('click', () => loadChat(el.dataset.other));
+        });
+    }
+}
+
+async function loadChat(otherId) {
+    const teacherId = sessionStorage.getItem('peak_teacher_code');
+    if (!teacherId) return;
+    let q;
+    if (otherId === 'admin') {
+        q = query(messagesCollection,
+            where('to', 'in', [teacherId, 'admin']),
+            where('from', 'in', [teacherId, 'admin'])
+        );
+    } else {
+        // للمعلمين الآخرين (إذا أضفنا هذه الميزة لاحقاً)
+        q = query(messagesCollection,
+            where('to', 'in', [teacherId, otherId]),
+            where('from', 'in', [teacherId, otherId])
+        );
+    }
+    const snapshot = await getDocs(q);
+    let messages = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    messages.sort((a,b) => (a.timestamp?.toMillis?.() || 0) - (b.timestamp?.toMillis?.() || 0));
+    
+    const chatContainer = document.getElementById('chatMessages');
+    const chatHeader = document.getElementById('chatHeader');
+    const replyArea = document.getElementById('replyArea');
+    
+    if (otherId === 'admin') {
+        chatHeader.innerText = 'المحادثة مع المطور';
+        replyArea.classList.remove('hidden');
+    } else {
+        chatHeader.innerText = `المحادثة مع ${messages[0]?.fromName || 'معلم'}`;
+        replyArea.classList.add('hidden');
+    }
+    
+    chatContainer.innerHTML = messages.map(m => `
+        <div class="${m.from === teacherId ? 'text-left bg-purple-500/20' : 'text-right bg-white/5'} p-2 rounded-xl">
+            <div class="text-xs text-yellow-400">${m.from === teacherId ? 'أنت' : (m.from === 'admin' ? 'المطور' : m.fromName)} - ${new Date(m.timestamp?.toMillis?.() || m.timestamp).toLocaleString()}</div>
+            <div class="font-bold">${escapeHtml(m.subject || 'بدون موضوع')}</div>
+            <div>${escapeHtml(m.content)}</div>
+        </div>
+    `).join('');
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+    
+    // تحديث حالة القراءة للمحادثة الحالية (الرسائل التي لم تقرأ)
+    const unreadMsgs = messages.filter(m => m.to === teacherId && !m.read);
+    if (unreadMsgs.length) {
+        const batch = writeBatch(db);
+        unreadMsgs.forEach(msg => {
+            const msgRef = doc(db, 'messages', msg.id);
+            batch.update(msgRef, { read: true });
+        });
+        await batch.commit();
+        updateUnreadCount();
+    }
+    window.currentChatOther = otherId;
+}
+
+async function sendReply() {
+    const content = document.getElementById('replyText').value.trim();
+    if (!content) return;
+    if (content.length > 500) {
+        Swal.fire('خطأ', 'الحد الأقصى 500 حرف', 'error');
+        return;
+    }
+    const teacherId = sessionStorage.getItem('peak_teacher_code');
+    const teacherName = sessionStorage.getItem('peak_teacher_name') || 'معلم';
+    if (!teacherId) return;
+    try {
+        await addDoc(messagesCollection, {
+            from: teacherId,
+            fromName: teacherName,
+            to: 'admin',
+            subject: 'رد على محادثة',
+            content: content,
+            timestamp: serverTimestamp(),
+            read: false
+        });
+        document.getElementById('replyText').value = '';
+        if (window.currentChatOther === 'admin') {
+            await loadChat('admin');
+        }
+        Swal.fire('تم الإرسال', '', 'success');
+    } catch (e) {
+        console.error('Error sending reply:', e);
+        Swal.fire('خطأ', 'فشل إرسال الرد', 'error');
+    }
+}
+
+async function showNewMessageModal() {
+    const { value: form } = await Swal.fire({
+        title: 'رسالة جديدة للمطور',
+        html: `<input id="msgSubject" class="swal2-input" placeholder="الموضوع" maxlength="100"><textarea id="msgContent" class="swal2-textarea" placeholder="الرسالة (الحد الأقصى 500 حرف)" maxlength="500"></textarea><div><span id="charCount">0</span>/500</div>`,
+        showCancelButton: true,
+        confirmButtonText: 'إرسال',
+        cancelButtonText: 'إلغاء',
+        preConfirm: () => {
+            const subject = document.getElementById('msgSubject').value;
+            const content = document.getElementById('msgContent').value;
+            if (!subject || !content) Swal.showValidationMessage('الموضوع والرسالة مطلوبة');
+            if (content.length > 500) Swal.showValidationMessage('الحد الأقصى 500 حرف');
+            return { subject, content };
+        },
+        didOpen: () => {
+            const textarea = document.getElementById('msgContent');
+            const counter = document.getElementById('charCount');
+            textarea.addEventListener('input', () => counter.innerText = textarea.value.length);
+        }
+    });
+    if (form && form.subject && form.content) {
+        const success = await sendTeacherMessage(form.subject, form.content);
+        if (success) {
+            Swal.fire('تم الإرسال', 'سيتم الرد قريباً', 'success');
+            await loadConversations();
+        } else {
+            Swal.fire('خطأ', 'فشل الإرسال، حاول مرة أخرى', 'error');
+        }
+    }
+}
+
+// دوال فتح وإغلاق نافذة الرسائل (تعمل مع الأحداث)
+async function openTeacherMessagesModal() {
+    const modal = document.getElementById('teacherMessagesModal');
+    if (modal) {
+        modal.classList.remove('hidden');
+        modal.style.display = 'flex';
+        await loadConversations();
+        // تعيين chatHeader و replyArea للحالة الافتراضية
+        document.getElementById('chatHeader').innerText = 'اختر محادثة';
+        document.getElementById('replyArea').classList.add('hidden');
+        document.getElementById('chatMessages').innerHTML = '';
+    }
+}
+
+function closeTeacherMessagesModal() {
+    const modal = document.getElementById('teacherMessagesModal');
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.style.display = 'none';
+    }
+}
+
+// تعريف دالة عامة لتهيئة أحداث الرسائل (لتتصل بعد تحميل DOM)
+function initMessagesEvents() {
+    const inboxBtn = document.getElementById('messages-inbox-btn');
+    if (inboxBtn) inboxBtn.onclick = openTeacherMessagesModal;
+    const newMsgBtn = document.getElementById('newMsgBtn');
+    if (newMsgBtn) newMsgBtn.onclick = showNewMessageModal;
+    const sendReplyBtn = document.getElementById('sendReplyBtn');
+    if (sendReplyBtn) sendReplyBtn.onclick = sendReply;
+    const closeBtn = document.getElementById('closeMessagesModalBtn');
+    if (closeBtn) closeBtn.onclick = closeTeacherMessagesModal;
+    const modalBg = document.getElementById('teacherMessagesModal');
+    if (modalBg) modalBg.addEventListener('click', (e) => {
+        if (e.target === modalBg) closeTeacherMessagesModal();
+    });
+    updateUnreadCount();
+    // تحديث العدد كل 30 ثانية
+    setInterval(updateUnreadCount, 30000);
+}
+
+// دالة مساعدة لترميز HTML (إذا لم تكن موجودة)
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m]));
+}
+    
+    // تهيئة التبويب عند تحميل الصفحة
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+            initAdminTab();
+            initMessagesEvents();
+        });
+    } else {
+        initAdminTab();
+        initMessagesEvents();
+    }
+    
+    function checkAdminTabVisibility() {
+        const isAdmin = sessionStorage.getItem('is_admin') === 'true';
+        const adminTab = document.getElementById('admin-tab-btn');
+        if (adminTab) {
+            adminTab.classList.toggle('hidden', !isAdmin);
+        }
+    }
+    
+    checkAdminTabVisibility();
+    window.checkAdminTabVisibility = checkAdminTabVisibility;
+    
+(function() {
+    // ========== بناء قائمة الثيمات الكاملة (الافتراضي + 40 ثيماً) ==========
+    const buildThemesList = () => {
+        const themes = [{ id: 'theme-default', name: '✨ الافتراضي (الذهبي الداكن)', icon: '👑' }];
+        for (let i = 1; i <= 40; i++) {
+            let name = `🎨 الثيم ${i}`;
+            let icon = '🎨';
+            const namesMap = {
+                1: '🌟 الذهبي المطلق', 2: '⚪️ الفضي الكلاسيكي', 3: '🔥 البرتقالي الناري',
+                4: '💙 الأزرق السماوي', 5: '🍃 الأخضر الزمردي', 6: '❤️ الأحمر القاني',
+                7: '💎 اللازوردي العميق', 8: '🌸 الوردي الفاتن', 9: '💜 البنفسجي الملكي',
+                10: '🌞 الأصفر الذهبي', 11: '🗻 الرصاصي الأنيق', 12: '🌿 الأخضر الربيعي',
+                13: '🍂 الكهرماني الدافئ', 14: '🧡 البرتقالي المحروق', 15: '🍊 اليوسفي',
+                16: '🤎 البني الكلاسيكي', 17: '💗 الزهري الخفيف', 18: '🌿 الزيتوني',
+                19: '🔮 الأرجواني الساحر', 20: '🌊 الفيروزي', 21: '⬜️ الرمادي النقي',
+                22: '🌱 النيون الأخضر', 23: '🍬 المينتي', 24: '🦩 المرجاني', 25: '💜 اللافندر',
+                26: '🍞 العاجي', 27: '🍯 العسلي', 28: '🐚 الفيروزي الباهت', 29: '🍃 الأخضر المائي',
+                30: '💖 الوردي الساخن', 31: '☁️ الأزرق الفاتح', 32: '🍷 العنابي', 33: '🔥 النحاسي',
+                34: '🌲 الأخضر الداكن', 35: '🍇 البنفسجي العميق', 36: '🌌 النيلي', 37: '🌾 البيج',
+                38: '❄️ الأبيض الثلجي', 39: '🔷 الأزرق الملكي', 40: '🍊 البرتقالي الحار'
+            };
+            if (namesMap[i]) {
+                name = namesMap[i];
+                if (i === 1) icon = '🌟'; else if (i === 2) icon = '⚪️'; else if (i === 3) icon = '🔥';
+                else if (i === 4) icon = '💙'; else if (i === 5) icon = '🍃'; else if (i === 6) icon = '❤️';
+                else if (i === 7) icon = '💎'; else if (i === 8) icon = '🌸'; else if (i === 9) icon = '💜';
+                else if (i === 10) icon = '🌞'; else if (i === 11) icon = '🗻'; else if (i === 12) icon = '🌿';
+                else if (i === 13) icon = '🍂'; else if (i === 14) icon = '🧡'; else if (i === 15) icon = '🍊';
+                else if (i === 16) icon = '🤎'; else if (i === 17) icon = '💗'; else if (i === 18) icon = '🌿';
+                else if (i === 19) icon = '🔮'; else if (i === 20) icon = '🌊'; else if (i === 21) icon = '⬜️';
+                else if (i === 22) icon = '🌱'; else if (i === 23) icon = '🍬'; else if (i === 24) icon = '🦩';
+                else if (i === 25) icon = '💜'; else if (i === 26) icon = '🍞'; else if (i === 27) icon = '🍯';
+                else if (i === 28) icon = '🐚'; else if (i === 29) icon = '🍃'; else if (i === 30) icon = '💖';
+                else if (i === 31) icon = '☁️'; else if (i === 32) icon = '🍷'; else if (i === 33) icon = '🔥';
+                else if (i === 34) icon = '🌲'; else if (i === 35) icon = '🍇'; else if (i === 36) icon = '🌌';
+                else if (i === 37) icon = '🌾'; else if (i === 38) icon = '❄️'; else if (i === 39) icon = '🔷';
+                else if (i === 40) icon = '🍊';
+            }
+            themes.push({ id: `theme-${i}`, name, icon });
+        }
+        return themes;
+    };
+
+    const ALL_THEMES = buildThemesList();
+    const savedTheme = localStorage.getItem('peak_theme') || 'theme-default';
+    document.body.classList.add(savedTheme);
+
+    const themeBtn = document.getElementById('theme-btn');
+    if (!themeBtn) return;
+
+    // استبدال الزر لتجنب تكرار المستمعات
+    const newBtn = themeBtn.cloneNode(true);
+    themeBtn.parentNode.replaceChild(newBtn, themeBtn);
+
+    // فتح النافذة المنبثقة بشبكة الثيمات
+    newBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        // إنشاء HTML لشبكة الثيمات
+        const gridHtml = `
+            <div style="max-height: 60vh; overflow-y: auto; padding: 0.5rem;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 0.8rem;">
+                    ${ALL_THEMES.map(theme => `
+                        <div class="theme-option-card" data-theme="${theme.id}" style="
+                            background: rgba(255,255,255,0.05);
+                            border: 2px solid rgba(139,92,246,0.3);
+                            border-radius: 20px;
+                            padding: 0.8rem 0.5rem;
+                            text-align: center;
+                            cursor: pointer;
+                            transition: all 0.2s ease;
+                            backdrop-filter: blur(4px);
+                        ">
+                            <div style="font-size: 2rem; margin-bottom: 0.3rem;">${theme.icon}</div>
+                            <div style="font-size: 0.85rem; font-weight: bold; color: #e2e8f0;">${theme.name}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+
+        Swal.fire({
+            title: '🎨 اختر ثيم المنصة',
+            html: gridHtml,
+            showConfirmButton: false,
+            showCancelButton: true,
+            cancelButtonText: 'إغلاق',
+            cancelButtonColor: '#6b7280',
+            background: '#0f172a',
+            color: '#fff',
+            customClass: {
+                popup: 'rounded-3xl border border-purple-500/30',
+                cancelButton: 'bg-gray-700 hover:bg-gray-600 px-6 py-2 rounded-full'
+            },
+            didOpen: () => {
+                // إضافة حدث النقر لكل بطاقة ثيم
+                document.querySelectorAll('.theme-option-card').forEach(card => {
+                    card.addEventListener('click', () => {
+                        const themeId = card.dataset.theme;
+                        // تطبيق الثيم الجديد
+                        const allThemeClasses = ALL_THEMES.map(t => t.id);
+                        document.body.classList.remove(...allThemeClasses);
+                        document.body.classList.add(themeId);
+                        localStorage.setItem('peak_theme', themeId);
+                        // إغلاق نافذة SweetAlert
+                        Swal.close();
+                        // إشعار نجاح
+                        if (typeof window.showFloatingNotification === 'function') {
+                            window.showFloatingNotification(`✅ تم تطبيق ثيم ${card.querySelector('div:last-child')?.innerText || themeId}`, 'success');
+                        } else {
+                            Swal.fire('تم التغيير', '', 'success');
+                        }
+                    });
+                    // تأثير hover إضافي
+                    card.addEventListener('mouseenter', () => {
+                        card.style.transform = 'translateY(-3px)';
+                        card.style.borderColor = '#facc15';
+                        card.style.boxShadow = '0 8px 20px rgba(139,92,246,0.4)';
+                    });
+                    card.addEventListener('mouseleave', () => {
+                        card.style.transform = 'translateY(0)';
+                        card.style.borderColor = 'rgba(139,92,246,0.3)';
+                        card.style.boxShadow = 'none';
+                    });
+                });
+            }
+        });
+    });
+})();
+</script>
+<script type="module">
+    // ========== فحص صلاحية الاشتراك فور تحميل الصفحة ==========
+    (async function checkSubscriptionOnLoad() {
+        const teacherCode = sessionStorage.getItem('peak_teacher_code');
+        const teacherLogged = sessionStorage.getItem('peak_teacher_logged_in') === 'true';
+        
+        if (!teacherCode || !teacherLogged) return;
+        
+        try {
+            const { checkTeacherAccess, refreshTeacherSession } = await import('./src/services/subscriptionGuard.js');
+            
+            const access = await checkTeacherAccess(teacherCode);
+            if (!access.allowed) {
+                console.warn('[Platform] Subscription expired on page load');
+                const modal = document.getElementById('expired-subscription-modal');
+                if (modal) {
+                    modal.classList.remove('hidden');
+                    modal.style.display = 'flex';
+                    document.body.style.pointerEvents = 'none';
+                    document.body.style.opacity = '0.8';
+                } else {
+                    Swal.fire({
+                        title: '⚠️ انتهت صلاحية الاشتراك',
+                        text: access.message,
+                        icon: 'error',
+                        confirmButtonText: 'تسجيل الخروج',
+                        allowOutsideClick: false
+                    }).then(() => {
+                        if (typeof window.logout === 'function') window.logout();
+                        else window.location.href = 'index.html';
+                    });
+                }
+                return;
+            }
+            
+            await refreshTeacherSession(teacherCode);
+            
+        } catch (err) {
+            console.error('[Platform] Subscription check error:', err);
+        }
+    })();
+    
+    // زر الساحة العالمية
+    document.getElementById('global-arena-btn')?.addEventListener('click', async () => {
+        window.location.href = 'arena.html';
+    });
+    
+    // ربط زر تسجيل الخروج في نافذة انتهاء الاشتراك
+    const expiredModal = document.getElementById('expired-subscription-modal');
+    const expiredLogoutBtn = document.getElementById('expired-logout-btn');
+    if (expiredLogoutBtn && typeof window.logout === 'function') {
+        expiredLogoutBtn.onclick = () => {
+            if (window._subscriptionCheckInterval) clearInterval(window._subscriptionCheckInterval);
+            window.logout();
+        };
+    }
+    
+    if (expiredModal) {
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                    if (expiredModal.classList.contains('hidden')) {
+                        document.body.style.pointerEvents = '';
+                        document.body.style.opacity = '';
+                    } else {
+                        document.body.style.pointerEvents = 'none';
+                        document.body.style.opacity = '0.8';
+                    }
+                }
+            });
+        });
+        observer.observe(expiredModal, { attributes: true });
+    }
+    
+    // وضع الصيانة
+    import { isMaintenanceActive, watchMaintenance, canBypassMaintenance } from './src/services/maintenanceService.js';
+    
+    const teacherCode = sessionStorage.getItem('peak_teacher_code');
+    const isDeveloper = teacherCode === "29910141300038" || sessionStorage.getItem('is_admin') === 'true';
+    const bypass = await canBypassMaintenance(teacherCode);
+    
+    if (!bypass && await isMaintenanceActive()) {
+        const data = await (await import('./src/services/maintenanceService.js')).getMaintenanceData();
+        await Swal.fire({
+            title: '🛠️ المنصة تحت الصيانة',
+            html: `<p>${data.message}</p><p class="text-red-400">سيتم تسجيل خروجك خلال 30 ثانية.</p>`,
+            icon: 'warning',
+            confirmButtonText: 'تسجيل الخروج الآن',
+            allowOutsideClick: false,
+            background: '#0f172a',
+            color: '#fff',
+            timer: 30000,
+            timerProgressBar: true
+        });
+        if (typeof window.logout === 'function') window.logout();
+        else window.location.href = 'index.html';
+    } else if (!bypass) {
+        watchMaintenance(({ enabled, message, forceLogout }) => {
+            if (enabled && forceLogout) {
+                Swal.fire({
+                    title: '🛠️ دخلت المنصة في وضع الصيانة',
+                    text: message || 'سيتم تسجيل خروجك الآن.',
+                    icon: 'warning',
+                    confirmButtonText: 'حسناً',
+                    allowOutsideClick: false
+                }).then(() => {
+                    if (typeof window.logout === 'function') window.logout();
+                    else window.location.href = 'index.html';
+                });
+            }
+        }, isDeveloper);
+    }
+    
+    import { RaceSessionManager } from './src/core/raceSession.js';
+    import { startRaceWithSettings, exitRaceImmediate } from './src/core/raceEngine/lifecycle.js';
+    import { renderTracks } from './src/core/raceUI.js';
+    
+    // كشف وضع السباق من رابط الصفحة
+    const urlParams = new URLSearchParams(window.location.search);
+    const raceMode = urlParams.get('race');
+    const sessionId = urlParams.get('sessionId');
+    
+    window.showFloatingNotification = window.showFloatingNotification || function(msg, type) {
+        if (type === 'error') Swal.fire({ title: '❌', text: msg, icon: 'error', timer: 2000, showConfirmButton: false });
+        else if (type === 'success') Swal.fire({ title: '✅', text: msg, icon: 'success', timer: 1500, showConfirmButton: false });
+        else console.log(msg);
+    };
+    
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]));
+    }
+    
+    window.raceTotalTime = 12;
+    window.raceGoal = 10;
+    window.isMyTurnFlag = false;
+    window.currentSessionId = null;
+    window.stopPlayerControllerFn = null;
+    
+    function updateRaceQuestion(question) {
+        const questionText = document.getElementById('question-text-display');
+        const optionsContainer = document.getElementById('q-area-opts');
+        if (!questionText || !optionsContainer) return;
+        
+        questionText.innerText = question.text;
+        window.raceTotalTime = question.timeLimit || window.raceTotalTime;
+        
+        optionsContainer.innerHTML = '';
+        question.options.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.innerText = opt;
+            btn.className = 'bg-purple-600/50 hover:bg-purple-500 text-white p-3 rounded-xl text-right transition disabled:opacity-50';
+            btn.onclick = () => {
+                if (window.isMyTurnFlag && window.submitAnswerFn) {
+                    const isCorrect = (idx === question.correctIndex);
+                    window.submitAnswerFn(window.currentSessionId, idx, isCorrect);
+                    document.querySelectorAll('#q-area-opts button').forEach(b => b.disabled = true);
+                } else {
+                    window.showFloatingNotification('ليس دورك الآن!', 'warning');
+                }
+            };
+            optionsContainer.appendChild(btn);
+        });
+    }
+    
+    let activeTimerInterval = null;
+    function updateRaceTurn(isMyTurn, timeLeft) {
+        window.isMyTurnFlag = isMyTurn;
+        const opts = document.querySelectorAll('#q-area-opts button');
+        opts.forEach(btn => btn.disabled = !isMyTurn);
+        
+        if (activeTimerInterval) clearInterval(activeTimerInterval);
+        if (isMyTurn && timeLeft !== undefined && timeLeft > 0) {
+            let remaining = timeLeft;
+            const timerSpan = document.getElementById('timer-text');
+            const timerBar = document.getElementById('timer-bar');
+            const updateTimerDisplay = () => {
+                if (timerSpan) timerSpan.innerText = Math.ceil(remaining);
+                if (timerBar && window.raceTotalTime) {
+                    const percent = (remaining / window.raceTotalTime) * 100;
+                    timerBar.style.width = `${Math.max(0, percent)}%`;
+                }
+            };
+            updateTimerDisplay();
+            activeTimerInterval = setInterval(() => {
+                remaining -= 0.2;
+                if (remaining <= 0) {
+                    clearInterval(activeTimerInterval);
+                    remaining = 0;
+                }
+                updateTimerDisplay();
+            }, 200);
+        } else {
+            const timerSpan = document.getElementById('timer-text');
+            if (timerSpan) timerSpan.innerText = '0';
+        }
+    }
+    
+    function updateRacePlayers(players) {
+        const container = document.getElementById('race-tracks-container');
+        if (!container) return;
+        if (players && players.length) {
+            window.raceGoal = players[0]?.goal || window.raceGoal;
+        }
+        container.innerHTML = (players || []).map(p => `
+            <div class="flex items-center justify-between p-2 bg-white/5 rounded-lg">
+                <span>${escapeHtml(p.name)}</span>
+                <span>🏁 ${p.pos || 0} / ${window.raceGoal}</span>
+            </div>
+        `).join('');
+    }
+    
+    function handleRaceEnd(result) {
+        if (activeTimerInterval) clearInterval(activeTimerInterval);
+        if (result.winnerName) {
+            Swal.fire({
+                title: '🏆 فوز 🏆',
+                text: `الفائز: ${result.winnerName}`,
+                icon: 'success',
+                confirmButtonText: 'العودة للمنصة',
+                background: '#0f172a',
+                color: '#fff'
+            }).then(() => {
+                const returnUrl = sessionStorage.getItem('race_return_url') || 'platform.html';
+                window.location.href = returnUrl;
+            });
+        } else {
+            Swal.fire('انتهى السباق', 'تم إنهاء السباق', 'info').then(() => {
+                window.location.href = sessionStorage.getItem('race_return_url') || 'platform.html';
+            });
+        }
+    }
+    
+    function updateRaceTimer(timeLeft) {
+        const timerSpan = document.getElementById('timer-text');
+        if (timerSpan) timerSpan.innerText = Math.ceil(timeLeft);
+        const timerBar = document.getElementById('timer-bar');
+        if (timerBar && window.raceTotalTime) {
+            const percent = (timeLeft / window.raceTotalTime) * 100;
+            timerBar.style.width = `${Math.max(0, percent)}%`;
+        }
+    }
+    
+    if (raceMode === 'participant' && sessionId) {
+        window.currentSessionId = sessionId;
+        document.getElementById('teacher-home')?.classList.add('hidden');
+        document.getElementById('student-home')?.classList.add('hidden');
+        document.querySelectorAll('.page').forEach(page => page.classList.add('hidden'));
+        document.getElementById('navbar')?.classList.add('hidden');
+        
+        const raceInterface = document.getElementById('race-interface');
+        if (raceInterface) raceInterface.classList.remove('hidden');
+        
+        sessionStorage.setItem('race_return_url', window.location.pathname);
+        
+        import('./src/online/race/playerController.js').then(({ startPlayerController, submitAnswer }) => {
+            window.submitAnswerFn = submitAnswer;
+            startPlayerController(
+                sessionId,
+                (question) => updateRaceQuestion(question),
+                ({ isMyTurn, timeLeft }) => updateRaceTurn(isMyTurn, timeLeft),
+                (players) => updateRacePlayers(players),
+                (result) => handleRaceEnd(result)
+            ).then((stopFn) => {
+                window.stopPlayerControllerFn = stopFn;
+            });
+        }).catch(err => console.error('Failed to load playerController:', err));
+    }
+    else if (raceMode === 'spectator' && sessionId) {
+        document.getElementById('teacher-home')?.classList.add('hidden');
+        document.getElementById('student-home')?.classList.add('hidden');
+        document.querySelectorAll('.page').forEach(page => page.classList.add('hidden'));
+        document.getElementById('navbar')?.classList.add('hidden');
+        
+        const raceInterface = document.getElementById('race-interface');
+        if (raceInterface) raceInterface.classList.remove('hidden');
+        
+        import('./src/online/race/raceListeners.js').then(({ listenToRace }) => {
+            listenToRace(sessionId, {
+                onQuestionUpdate: (question) => updateRaceQuestion(question),
+                onPlayersUpdate: (players, activeId) => updateRacePlayers(players),
+                onTimerUpdate: (timeLeft) => updateRaceTimer(timeLeft),
+                onTurnUpdate: (activeId, activeName) => {
+                    document.getElementById('host-observer-player-name').innerText = activeName;
+                },
+                onRaceEnded: (winnerId, winnerName) => handleRaceEnd({ winnerId, winnerName })
+            });
+        });
+    }
+    
+    const exitBtn = document.getElementById('exitRaceBtn');
+    if (exitBtn) {
+        exitBtn.onclick = () => {
+            if (activeTimerInterval) clearInterval(activeTimerInterval);
+            if (window.stopPlayerControllerFn) window.stopPlayerControllerFn();
+            const returnUrl = sessionStorage.getItem('race_return_url') || 'platform.html';
+            sessionStorage.removeItem('race_return_url');
+            window.location.href = returnUrl;
+        };
+    }
+    
+    (function() {
+        const arenaBtn = document.getElementById('global-arena-btn');
+        if (arenaBtn) {
+            const newBtn = arenaBtn.cloneNode(true);
+            arenaBtn.parentNode.replaceChild(newBtn, arenaBtn);
+            
+            newBtn.addEventListener('click', async function(e) {
+                e.preventDefault();
+                try {
+                    const module = await import('./src/online/globalArenaMenu.js');
+                    if (module.showGlobalArenaMenu) {
+                        await module.showGlobalArenaMenu();
+                    } else {
+                        console.error('showGlobalArenaMenu not found');
+                        Swal.fire('خطأ', 'تعذر تحميل القائمة', 'error');
+                    }
+                } catch (err) {
+                    console.error('Error loading arena menu:', err);
+                    Swal.fire({
+                        title: '🌍 الساحة العالمية',
+                        text: 'اختر وجهتك',
+                        icon: 'question',
+                        showCancelButton: true,
+                        confirmButtonText: 'دخول كمعلم',
+                        cancelButtonText: 'دخول كطالب',
+                        background: '#0f172a',
+                        color: '#fff'
+                    }).then(result => {
+                        if (result.isConfirmed) window.open('arena.html?role=teacher', '_blank');
+                        else if (result.dismiss === Swal.DismissReason.cancel) window.open('arena.html?role=student', '_blank');
+                    });
+                }
+            });
+            console.log('✅ زر الساحة العالمية تم ربطه بنجاح');
+        } else {
+            console.warn('⚠️ زر الساحة العالمية غير موجود في الصفحة');
+        }
+    })();
+    
+    // ========== ⭐ إضافة زر "إضافة سؤال يدوي" - حل مباشر وقوي ⭐ ==========
+    (function initManualAddButton() {
+        function bindButton() {
+            const btn = document.getElementById('manualAddQuestionBtn');
+            if (!btn) {
+                console.warn('manualAddQuestionBtn not found, retrying in 500ms');
+                setTimeout(bindButton, 500);
+                return;
+            }
+            const newBtn = btn.cloneNode(true);
+            btn.parentNode.replaceChild(newBtn, btn);
+            newBtn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                const gradeSelect = document.getElementById('q-grade-sel');
+                const grade = gradeSelect?.value;
+                if (!grade) {
+                    Swal.fire('تنبيه', 'اختر الصف أولاً', 'warning');
+                    return;
+                }
+                if (typeof window.showAddQuestionModal === 'function') {
+                    await window.showAddQuestionModal(grade);
+                } else {
+                    try {
+                        const module = await import('./src/questions/bank.js');
+                        if (module.showAddQuestionModal) {
+                            window.showAddQuestionModal = module.showAddQuestionModal;
+                            await module.showAddQuestionModal(grade);
+                        } else {
+                            Swal.fire('خطأ', 'لم يتم العثور على دالة إضافة السؤال', 'error');
+                        }
+                    } catch(err) {
+                        console.error(err);
+                        Swal.fire('خطأ', 'فشل تحميل وحدة الأسئلة', 'error');
+                    }
+                }
+            });
+            console.log('✅ زر إضافة سؤال يدوي مرتبط بنجاح');
+        }
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', bindButton);
+        } else {
+            bindButton();
+        }
+    })();
+</script>

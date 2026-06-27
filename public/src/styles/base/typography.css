@@ -1,0 +1,107 @@
+/* ============================================
+   typography.css - أنماط النصوص والعناوين
+   ============================================ */
+
+body {
+    line-height: 1.5;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+/* عنوان المنصة العملاق */
+.platform-title {
+    font-size: clamp(4rem, 10vw, 10rem);
+    margin: 0.5rem 0;
+    cursor: default;
+    transition: transform 0.3s ease, text-shadow 0.3s ease;
+    animation: glowPulse 2s infinite alternate;
+    font-family: 'Tajawal', sans-serif;
+    font-weight: 900;
+}
+.platform-title:hover {
+    transform: scale(1.05);
+    text-shadow: 0 0 40px #ffd700, 0 0 80px #ffaa00;
+}
+
+#main-platform-title {
+    font-family: 'Tajawal', sans-serif;
+    font-size: clamp(4rem, 10vw, 8rem);
+    font-weight: 900;
+    margin: 0 0 0.3rem 0;
+    cursor: pointer;
+    color: var(--title-color, var(--text-glow, #facc15));
+    text-shadow: 0 0 30px var(--title-glow, var(--text-glow, #facc15)), 0 0 60px var(--title-glow, var(--text-glow-strong, #ffd700));
+    transition: all 0.3s ease;
+}
+#main-platform-title:hover {
+    color: var(--title-hover-color, var(--text-glow-strong, #ffd966));
+    text-shadow: 0 0 60px var(--title-hover-glow, var(--text-glow-strong, #ffd700)), 0 0 90px var(--title-hover-glow, var(--text-glow-strong, #ffd700));
+    transform: scale(1.02) translateY(-3px) !important;
+}
+
+/* اسم المعلم المضيء */
+#teacher-display-name {
+    background: rgba(250, 204, 21, 0.06);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(250, 204, 21, 0.5);
+    border-radius: 60px;
+    padding: 0.7rem 2.2rem;
+    display: inline-block;
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: #facc15;
+    text-shadow: 0 0 10px rgba(250, 204, 21, 0.5);
+    box-shadow: 0 0 20px rgba(250, 204, 21, 0.25), inset 0 0 12px rgba(250, 204, 21, 0.1);
+    margin-bottom: 2rem;
+    transition: all 0.3s ease;
+    letter-spacing: 1px;
+}
+#teacher-display-name:hover {
+    border-color: #facc15;
+    box-shadow: 0 0 30px rgba(250, 204, 21, 0.5), inset 0 0 15px rgba(250, 204, 21, 0.2);
+    transform: scale(1.02);
+}
+
+/* النصوص الذهبية والملونة */
+.gold, .text-yellow-400, .text-yellow-500, .text-yellow-600 {
+    color: var(--text-glow) !important;
+}
+.text-purple-300, .text-purple-400, .text-purple-500 {
+    color: #a78bfa !important;
+}
+.text-cyan-400, .text-cyan-500 {
+    color: #06b6d4 !important;
+}
+.text-emerald-400, .text-emerald-500 {
+    color: #10b981 !important;
+}
+
+/* أسماء الطلاب والفرق */
+.student-name, .team-name, .player-name {
+    font-weight: bold;
+}
+
+/* المؤقت */
+.timer-large, .timer-fire {
+    font-family: monospace;
+    font-weight: bold;
+}
+
+/* مستطيل اسم المعلم */
+#teacher-display-name {
+    /* معرّف بالفعل أعلاه */
+}
+
+/* شارة المستوى */
+.level-badge {
+    font-size: 0.9rem;
+    background: rgba(255,215,0,0.2);
+    border-radius: 20px;
+    padding: 2px 8px;
+    margin-right: 8px;
+    display: inline-block;
+}

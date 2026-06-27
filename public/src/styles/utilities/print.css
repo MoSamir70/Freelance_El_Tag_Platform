@@ -1,0 +1,30 @@
+/* ============================================
+   print.css - أنماط الطباعة
+   ============================================ */
+
+@media print {
+    #navbar, #dev-footer, .nav-buttons, .chat-container, .student-actions, .floating-contact, #floating-contact {
+        display: none !important;
+    }
+    body {
+        background: white;
+        color: black;
+    }
+    .glass-panel, .student-card, .modal, .bet-overlay, .surprise-glass-overlay {
+        background: transparent !important;
+        border: 1px solid #ccc !important;
+        box-shadow: none !important;
+        backdrop-filter: none !important;
+    }
+    .question-gold-box, .option-btn {
+        border: 1px solid #000 !important;
+        background: #f0f0f0 !important;
+        color: #000 !important;
+        box-shadow: none !important;
+    }
+    .correct-ans, .wrong-ans {
+        background: #eee !important;
+        border: 1px solid #aaa !important;
+        color: #000 !important;
+    }
+}

@@ -1,0 +1,131 @@
+/* ============================================
+   race-interface.css - واجهة السباق الرئيسية
+   ============================================ */
+
+#race-interface {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+#race-interface .flex.justify-between {
+    flex-shrink: 0;
+}
+
+.race-question-wrapper {
+    flex-shrink: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    margin-top: -20px;
+    padding-top: 20px !important;
+    box-sizing: border-box;
+}
+
+#race-tracks-container {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-height: 0;
+}
+
+/* تحسين زر الرجوع في السباق */
+.nav-btn.back {
+    font-size: 0.9rem;
+    padding: 0.4rem 1.2rem;
+    margin-top: -10px;
+    background: rgba(100,100,100,0.8);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.3);
+    z-index: 100;
+    position: relative;
+}
+
+/* إخفاء الفوتر أثناء السباق */
+body.racing #dev-footer {
+    display: none !important;
+}
+
+/* شاشة الاستعداد (دور اللاعب) */
+#turn-overlay {
+    text-align: center;
+    font-family: 'Cairo', sans-serif;
+}
+#overlay-player-name {
+    font-size: 4rem !important;
+    font-weight: 900;
+    background: linear-gradient(135deg, #facc15, #ffd700);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 30px rgba(250,204,21,0.6);
+    margin-top: 0.5rem;
+    margin-bottom: 0.8rem !important;
+}
+#overlay-team-name {
+    font-size: 2rem !important;
+    font-weight: bold;
+    color: #c084fc;
+    text-shadow: 0 0 15px #a855f7;
+    background: rgba(0,0,0,0.3);
+    display: inline-block;
+    padding: 0.3rem 2rem !important;
+    border-radius: 40px;
+    margin-bottom: 1rem !important;
+}
+#turn-overlay img {
+    width: 180px !important;
+    height: 180px !important;
+    border: 6px solid #facc15 !important;
+    border-radius: 50%;
+    box-shadow: 0 0 40px rgba(250,204,21,0.6);
+    animation: avatarPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    margin-bottom: 1.5rem !important;
+}
+#turn-overlay > div:nth-of-type(3) {
+    font-size: 3rem !important;
+}
+#turn-overlay > div:nth-of-type(4) {
+    font-size: 1.8rem !important;
+}
+@keyframes avatarPop {
+    from { transform: scale(0.5); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+/* عند تفعيل السباق (نضيف class 'racing' على body) */
+body.racing {
+    overflow: hidden !important;
+    height: 100vh !important;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+}
+
+/* حاوية قائمة اللاعبين تصبح قابلة للتمرير عمودياً عند الحاجة */
+#race-tracks-container {
+    overflow-y: auto !important;
+    max-height: calc(100vh - 180px); /* يترك مساحة للسؤال والمؤقت */
+    padding-right: 6px; /* مساحة لشريط التمرير */
+    scrollbar-width: thin;
+}
+
+/* تخصيص شكل شريط التمرير (اختياري) */
+#race-tracks-container::-webkit-scrollbar {
+    width: 6px;
+}
+#race-tracks-container::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.3);
+    border-radius: 10px;
+}
+#race-tracks-container::-webkit-scrollbar-thumb {
+    background: #facc15;
+    border-radius: 10px;
+}

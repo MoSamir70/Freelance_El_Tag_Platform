@@ -1,0 +1,252 @@
+/* ============================================
+   question.css - عرض السؤال والخيارات
+   ============================================ */
+
+
+
+.question-gold-box {
+    background: var(--question-bg, rgba(0, 0, 0, 0.25)) !important; /* أكثر شفافية */
+    backdrop-filter: blur(16px) !important;
+    border: var(--question-border, 3px solid rgba(250, 204, 21, 0.5)) !important;
+    box-shadow: 0 0 40px var(--text-glow, rgba(250,204,21,0.3)), 0 0 80px rgba(250,204,21,0.1) !important;
+    border-radius: 60px; /* تم التخفيض من 80px إلى 60px */
+    padding: 1.2rem 1.5rem; /* تم التخفيض من 2rem 1.5rem */
+    margin: 0.5rem 0;
+}
+/* توهج أقوى عند التمرير على السؤال (اختياري) */
+.question-gold-box:hover {
+    border-color: var(--glass-border-hover, rgba(250,204,21,0.6)) !important;
+    box-shadow: 0 0 60px var(--text-glow-strong, rgba(250,204,21,0.5)) !important;
+}
+
+#question-text-display {
+    font-size: 1.8rem !important; /* تم التخفيض من 2.09rem */
+    font-weight: 800;
+    line-height: 1.4; /* تم التخفيض من 1.5 */
+    text-align: center;
+    padding: 0.8rem 1rem !important; /* تم التخفيض من 1.2rem */
+    color: var(--question-text, #ffffff);
+    text-shadow: var(--question-text-shadow, 0 0 15px rgba(250,204,21,0.4));
+    background: rgba(0,0,0,0.2);
+    border-radius: 40px;
+}
+
+#q-area-opts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem; /* تم التخفيض من 0.75rem */
+}
+
+/* تعديل خلفية الأزرار */
+.option-btn {
+    background: var(--opt-bg, rgba(0, 0, 0, 0.4)) !important;  /* شفافة قليلاً */
+    border: 2px solid rgba(250, 204, 21, 0.8) !important;
+    border-radius: 20px;
+    padding: 1.14rem 0.76rem !important;
+    font-weight: bold !important;
+    font-size: 1.43rem !important;
+    color: #f0f0f0 !important;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    text-align: center;
+    backdrop-filter: blur(4px);
+    position: relative;
+}
+.option-btn:hover:not(:disabled) {
+    background: var(--opt-bg-hover, rgba(250, 204, 21, 0.25)) !important;
+    border-color: var(--opt-border-hover, #ffd700) !important;
+    transform: scale(1.03) translateY(-4px) !important;
+    box-shadow: 0 0 25px var(--opt-glow, rgba(250, 204, 21, 0.6)),
+                0 8px 20px rgba(0, 0, 0, 0.3) !important;
+    color: var(--opt-text-hover, #ffffff) !important;
+    transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+}
+option-btn:active:not(:disabled) {
+    transform: scale(0.98) translateY(2px) !important;
+    transition: 0.05s linear;
+}
+.option-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* أيقونات الأرقام داخل الخيارات */
+.option-btn span.number-badge {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.5);
+    border-radius: 24px;
+    width: 24px;
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    color: #facc15;
+    border: 1px solid #facc15;
+    box-shadow: 0 0 4px #facc15;
+    font-size: 0.75rem;
+}
+
+/* حركية ظهور الخيارات */
+#q-area-opts .option-btn {
+    animation: fadeInUp 0.4s ease backwards;
+}
+#q-area-opts .option-btn:nth-child(1) { animation-delay: 0.05s; }
+#q-area-opts .option-btn:nth-child(2) { animation-delay: 0.15s; }
+#q-area-opts .option-btn:nth-child(3) { animation-delay: 0.25s; }
+#q-area-opts .option-btn:nth-child(4) { animation-delay: 0.35s; }
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* الإجابات الصحيحة والخاطئة (نسخة السباق النهائية) */
+.correct-ans {
+    background: linear-gradient(135deg, #00cc44, #009933) !important;
+    border: 3px solid #aaffcc !important;
+    color: white !important;
+    font-weight: 900 !important;
+    text-shadow: 0 0 8px rgba(0,0,0,0.6), 0 0 12px #00ff66 !important;
+    box-shadow: 0 0 25px #00ff66, 0 0 40px #00cc44, inset 0 0 12px rgba(255,255,255,0.5) !important;
+    transform: scale(1.02) !important;
+    animation: correctPulse 0.6s ease-out 2;
+}
+/* أيقونة الإجابة الصحيحة - تتجاوب مع الثيم */
+.correct-ans::before {
+    content: "✓ " !important;
+    font-size: 1.8rem !important;
+    font-weight: 900 !important;
+    margin-left: 12px !important;
+    display: inline-block !important;
+    vertical-align: middle !important;
+    color: var(--text-glow, #ffffff) !important;
+    text-shadow: 0 0 8px currentColor !important;
+    filter: drop-shadow(0 0 4px currentColor);
+}
+
+@keyframes correctPulse {
+    0% { box-shadow: 0 0 15px #00ff66; }
+    100% { box-shadow: 0 0 45px #00ff66, 0 0 60px #33ff88; }
+}
+
+.wrong-ans {
+    background: linear-gradient(135deg, #ff2222, #cc0000) !important;
+    border: 3px solid #ffaaaa !important;
+    color: white !important;
+    font-weight: 900 !important;
+    text-shadow: 0 0 8px rgba(0,0,0,0.6), 0 0 12px #ff4444 !important;
+    box-shadow: 0 0 25px #ff3333, 0 0 40px #ff0000, inset 0 0 12px rgba(255,255,255,0.4) !important;
+    transform: scale(0.99) !important;
+    animation: wrongShake 0.4s ease-out;
+}
+
+.shake-screen {
+    animation: none !important;
+}
+/* أيقونة الإجابة الخاطئة - تتجاوب مع الثيم */
+.wrong-ans::before {
+    content: "✗ " !important;
+    font-size: 1.8rem !important;
+    font-weight: 900 !important;
+    margin-left: 12px !important;
+    display: inline-block !important;
+    vertical-align: middle !important;
+    color: var(--text-glow, #ffffff) !important;
+    text-shadow: 0 0 8px currentColor !important;
+    filter: drop-shadow(0 0 4px currentColor);
+}
+@keyframes wrongShake {
+    0%,100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+}
+.option-btn.correct-ans, 
+.option-btn.wrong-ans {
+    backdrop-filter: none !important;
+    opacity: 1 !important;
+}
+/* تأثير العلامة الكبيرة */
+.big-feedback {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 8rem;
+    font-weight: 900;
+    z-index: 20000;
+    opacity: 0;
+    pointer-events: none;
+    animation: feedbackPop 0.8s ease-out forwards;
+    text-shadow: 0 0 20px currentColor;
+    filter: drop-shadow(0 0 10px rgba(0,0,0,0.5));
+}
+
+.big-feedback.correct {
+    color: #00ff66;
+    content: "✓";
+}
+
+.big-feedback.wrong {
+    color: #ff4444;
+    content: "✗";
+}
+
+@keyframes feedbackPop {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.5);
+    }
+    20% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.2);
+    }
+    80% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+        visibility: hidden;
+    }
+}/* تحسين إلزامي لألوان الإجابات الصحيحة والخاطئة */
+.option-btn.correct-ans,
+.option-btn.correct-ans:active,
+.option-btn.correct-ans:focus,
+.option-btn.correct-ans:hover {
+    background: linear-gradient(135deg, #00e676, #00b248) !important;
+    border: 3px solid #a5ffb0 !important;
+    box-shadow: 0 0 30px #00ff66, 0 0 50px #00cc44, inset 0 0 15px rgba(255,255,255,0.5) !important;
+    color: white !important;
+    text-shadow: 0 0 10px rgba(0,0,0,0.6) !important;
+    transform: scale(1.02) !important;
+    backdrop-filter: none !important;
+}
+
+.option-btn.wrong-ans,
+.option-btn.wrong-ans:active,
+.option-btn.wrong-ans:focus,
+.option-btn.wrong-ans:hover {
+    background: linear-gradient(135deg, #ff5555, #cc0000) !important;
+    border: 3px solid #ffaaaa !important;
+    box-shadow: 0 0 30px #ff3333, 0 0 50px #ff0000, inset 0 0 15px rgba(255,255,255,0.3) !important;
+    color: white !important;
+    text-shadow: 0 0 10px rgba(0,0,0,0.6) !important;
+    transform: scale(0.99) !important;
+    backdrop-filter: none !important;
+}.option-btn:hover span.number-badge {
+    background: #00ffff !important;        /* سماوي نيون */
+    color: #000000 !important;
+    border-color: #ffffff !important;
+    box-shadow: 0 0 20px #00ffff, 0 0 30px #00ccff, 0 0 40px #0099ff !important;
+    transform: translateY(-50%) scale(1.3);
+    transition: all 0.25s ease;
+}/* تضخم بسيط لمربع الإجابة عند التمرير */
+.option-btn:hover:not(:disabled) {
+    transform: translateY(-2px) scale(1.04) !important;
+    /* scale(1.02) تعني تكبير 2% فقط، يمكنك زيادتها إلى 1.05 إذا أردت تضخماً أكبر */
+    transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1) !important;
+}

@@ -1,0 +1,36 @@
+/* ============================================
+   withdraw.css - نافذة الانسحاب
+   ============================================ */
+
+.swal2-popup.withdraw-popup {
+    border: 2px solid var(--text-glow, #facc15) !important;
+    border-radius: 48px !important;
+    box-shadow: 0 0 40px var(--text-glow, rgba(250,204,21,0.5)) !important;
+    backdrop-filter: blur(16px) !important;
+    background: var(--glass-bg, rgba(15,25,45,0.95)) !important;
+    color: var(--text-primary, #fff) !important;
+}
+.withdraw-title {
+    color: var(--text-glow, #facc15) !important;
+    font-size: 1.8rem !important;
+    font-weight: bold !important;
+}
+.withdraw-confirm-btn {
+    background: #ef4444 !important;
+    color: white !important;
+    border-radius: 40px !important;
+    padding: 0.6rem 1.2rem !important;
+    font-weight: bold !important;
+    margin: 0.5rem !important;
+    border: none !important;
+    box-shadow: 0 4px 0 0 #991b1b !important;
+}
+.withdraw-cancel-btn {
+    background: var(--btn-secondary-bg, #6b7280) !important;
+    color: white !important;
+    border-radius: 40px !important;
+    padding: 0.6rem 1.2rem !important;
+    font-weight: bold !important;
+    margin: 0.5rem !important;
+    border: none !important;
+}

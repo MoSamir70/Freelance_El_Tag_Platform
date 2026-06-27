@@ -1,0 +1,62 @@
+/* ============================================
+   main.css - تجميع جميع الأنماط (للتطوير)
+   ============================================ */
+
+/* Base */
+@import url('./base/reset.css');
+@import url('./base/variables.css');
+@import url('./base/typography.css');
+
+/* Components */
+@import url('./components/glass.css');
+@import url('./components/buttons.css');
+@import url('./components/forms.css');
+@import url('./components/cards.css');
+@import url('./components/modal.css');
+@import url('./components/tables.css');
+
+/* Layouts */
+@import url('./layouts/navbar.css');
+@import url('./layouts/sidebar.css');
+@import url('./layouts/footer.css');
+
+/* Pages */
+@import url('./pages/landing.css');
+@import url('./pages/platform.css');
+@import url('./pages/admin.css');
+@import url('./pages/student.css');
+@import url('./pages/tournament.css');
+@import url('./pages/stats.css');
+
+/* Race */
+@import url('./race/race-interface.css');
+@import url('./race/tracks.css');
+@import url('./race/timer.css');
+@import url('./race/question.css');
+@import url('./race/countdown.css');
+@import url('./race/withdraw.css');
+@import url('./race/bet-overlay.css');
+@import url('./race/surprise-overlay.css');
+
+/* Themes */
+@import url('./themes/themes.css');
+
+/* Utilities */
+@import url('./utilities/animations.css');
+@import url('./utilities/responsive.css');
+@import url('./utilities/print.css');
+
+
+@keyframes fade-in-up {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.animate-fade-in-up {
+    animation: fade-in-up 0.3s ease-out;
+}

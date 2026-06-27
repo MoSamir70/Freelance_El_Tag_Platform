@@ -1,0 +1,425 @@
+/* ============================================
+   stats.css - صفحة الإحصائيات والتحليلات
+   ============================================ */
+
+/* -------------------------------
+   1. لوحة الإحصائيات الرئيسية
+   ------------------------------- */
+
+.stats-dashboard {
+    max-width: 100%;
+    padding: 1.5rem 2rem;
+}
+.time-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+.time-tab {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,215,0,0.3);
+    color: #ccc;
+    border-radius: 50px;
+    padding: 0.5rem 2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.time-tab.active, .time-tab:hover {
+    background: rgba(250,204,21,0.2);
+    border-color: #facc15;
+    color: #facc15;
+    box-shadow: 0 0 15px rgba(250,204,21,0.4);
+}
+
+/* -------------------------------
+   2. بطاقات KPI
+   ------------------------------- */
+
+.kpi-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+.kpi-card {
+    background: rgba(15, 25, 45, 0.7);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 24px;
+    padding: 1.8rem 1rem;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3), inset 0 0 15px rgba(74,158,255,0.1);
+    transition: 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+.kpi-card:hover {
+    transform: translateY(-5px);
+    border-color: #4a9eff;
+    box-shadow: 0 0 30px rgba(74,158,255,0.4), inset 0 0 20px rgba(74,158,255,0.2);
+}
+.kpi-card::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, rgba(250,204,21,0.1), rgba(250,204,21,0.4), rgba(250,204,21,0.1), rgba(168,85,247,0.4), rgba(250,204,21,0.1));
+    background-size: 400% 400%;
+    border-radius: 26px;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: -1;
+    animation: borderGlowKPI 3s linear infinite;
+}
+.kpi-card:hover::before {
+    opacity: 1;
+}
+.kpi-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(250,204,21,0.2) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+    border-radius: 24px;
+}
+.kpi-card:hover::after {
+    opacity: 1;
+}
+.kpi-icon {
+    font-size: 2.8rem;
+    margin-bottom: 0.5rem;
+    filter: drop-shadow(0 0 8px #4a9eff);
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+.kpi-card:hover .kpi-icon {
+    transform: scale(1.2) rotate(-5deg);
+    filter: drop-shadow(0 0 10px var(--text-glow, #facc15));
+}
+.kpi-value {
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: #facc15;
+    text-shadow: 0 0 10px #facc15;
+    font-family: 'Tajawal', sans-serif;
+    transition: all 0.3s ease;
+}
+.kpi-card:hover .kpi-value {
+    transform: scale(1.05);
+    text-shadow: 0 0 25px var(--text-glow-strong, #ffd700);
+}
+.kpi-value.updated {
+    animation: kpiPulse 0.4s ease-out;
+}
+@keyframes kpiPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); box-shadow: 0 0 30px rgba(250,204,21,0.6); }
+    100% { transform: scale(1); }
+}
+@keyframes borderGlowKPI {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+.kpi-label {
+    font-size: 0.9rem;
+    color: #94a3b8;
+    margin-top: 0.3rem;
+}
+
+/* -------------------------------
+   3. الصفوف الوسطى والسفلية
+   ------------------------------- */
+
+.middle-row {
+    display: grid;
+    grid-template-columns: 70% 30%;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+.bottom-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+.chart-placeholder {
+    position: relative;
+    overflow: hidden;
+    min-height: 280px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(15,25,45,0.7);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 24px;
+    box-shadow: inset 0 0 20px rgba(74,158,255,0.1);
+}
+.chart-neon-lines {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0.3;
+}
+.neon-line {
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #4a9eff, #a855f7, transparent);
+    animation: moveLine 3s linear infinite;
+}
+.line1 { top: 30%; animation-delay: 0s; }
+.line2 { top: 50%; animation-delay: 0.8s; }
+.line3 { top: 70%; animation-delay: 1.6s; }
+@keyframes moveLine {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+.chart-text {
+    position: relative;
+    z-index: 1;
+    font-size: 1.5rem;
+    color: #facc15;
+    text-shadow: 0 0 15px #facc15;
+}
+.live-feed {
+    padding: 1.5rem;
+}
+.feed-title {
+    color: #facc15;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+.feed-item {
+    padding: 0.6rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 0.9rem;
+    color: #cbd5e1;
+}
+.feed-item span {
+    color: #facc15;
+    font-weight: bold;
+}
+.bottom-card {
+    padding: 1.5rem;
+}
+.card-title {
+    color: #facc15;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+.top-list {
+    list-style: none;
+    padding: 0;
+}
+.top-list li {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.top-list img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid #facc15;
+}
+.top-list .score {
+    margin-right: auto;
+    color: #facc15;
+    font-weight: bold;
+}
+.warning li {
+    color: #ffaaaa;
+}
+.difficulty-map {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.diff-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.diff-bar span {
+    width: 60px;
+    color: #ccc;
+}
+.diff-bar .bar {
+    flex: 1;
+    height: 12px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+}
+.diff-bar .bar::after {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; height: 100%;
+    width: var(--width, 0%);
+    background: linear-gradient(90deg, #4a9eff, #a855f7);
+    border-radius: 10px;
+    box-shadow: 0 0 8px #4a9eff;
+    transition: width 1.2s ease;
+}
+.second-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+.heatmap-card {
+    background: rgba(15, 25, 45, 0.7) !important;
+    backdrop-filter: blur(16px) !important;
+    border: 1px solid rgba(250, 204, 21, 0.4) !important;
+    border-radius: 24px !important;
+}
+.heatmap-grid span {
+    transition: transform 0.2s ease;
+}
+.heatmap-grid span:hover {
+    transform: scale(1.8);
+    box-shadow: 0 0 12px currentColor !important;
+    z-index: 2;
+}
+.chart-card {
+    height: 280px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+canvas {
+    background: #0a0f1e;
+    border-radius: 20px;
+    padding: 5px;
+}
+.index-badge {
+    font-size: 0.75rem;
+    padding: 2px 10px;
+    border-radius: 20px;
+    color: #fff;
+    margin-right: auto;
+    font-weight: bold;
+}
+
+/* -------------------------------
+   4. إخفاء القوائم المنسدلة القديمة
+   ------------------------------- */
+
+#studentAnalyticsSelect,
+#analytics-grade-select {
+    display: none !important;
+}
+
+/* -------------------------------
+   5. أنماط إضافية للتحليل
+   ------------------------------- */
+
+.analysis-glass-container {
+    background: rgba(10, 20, 40, 0.95) !important;
+    border: 2px solid var(--primary-glow) !important;
+}
+.glow-indicators-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+}
+.category-glow-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(0,0,0,0.4);
+    border-radius: 60px;
+    padding: 0.6rem 1.2rem;
+    border: 1px solid rgba(250,204,21,0.3);
+    transition: all 0.2s;
+}
+.category-glow-item:hover {
+    border-color: #facc15;
+    box-shadow: 0 0 20px rgba(250,204,21,0.5);
+}
+.glow-progress-ring {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: conic-gradient(#facc15 0deg calc(var(--percent) * 3.6deg), #333 calc(var(--percent) * 3.6deg) 360deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 15px rgba(250,204,21,calc(var(--percent)/200));
+}
+.glow-progress-inner {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #0f172a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: #facc15;
+}
+.analytics-sidebar {
+    position: relative;
+    top: -100px;
+}
+#analysis-details {
+    display: flex;
+    flex-direction: column;
+}
+#analysis-details .analysis-stat-card:has(canvas),
+#analysis-details div:has(canvas) {
+    order: 999 !important;
+    margin-top: 1.5rem !important;
+    width: 100% !important;
+    background: rgba(0, 0, 0, 0.2) !important;
+    border: 1px solid rgba(250, 204, 21, 0.3) !important;
+    border-radius: 24px !important;
+    padding: 1rem !important;
+}
+#analysis-details canvas {
+    width: 100% !important;
+    height: auto !important;
+    max-height: 260px !important;
+    background: rgba(0, 0, 0, 0.25) !important;
+    border-radius: 20px !important;
+    padding: 10px !important;
+    display: block;
+    margin: 0 auto;
+}
+
+/* -------------------------------
+   6. استعلامات الاستجابة للشاشات
+   ------------------------------- */
+
+@media (max-width: 900px) {
+    .kpi-row {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .middle-row {
+        grid-template-columns: 1fr;
+    }
+    .bottom-row {
+        grid-template-columns: 1fr;
+    }
+}
+@media (max-width: 768px) {
+    .kpi-card .kpi-value {
+        font-size: 1.5rem;
+    }
+    .kpi-card .kpi-icon {
+        font-size: 2rem;
+    }
+}

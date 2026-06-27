@@ -1,0 +1,112 @@
+/* ============================================
+   landing.css - الصفحة التسويقية الرئيسية (index.html)
+   ============================================ */
+
+/* القسم الرئيسي للترحيب */
+#home {
+    position: relative; /* لضمان احتواء الجزيئات والعناصر المطلقة */
+    height: calc(100vh - 80px);
+    min-height: 600px; /* لضمان عدم تداخل العناصر في الشاشات الصغيرة */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    margin: 0;
+    padding: 80px 20px 0 20px; /* دمج الـ padding ومنع الـ !important */
+    box-sizing: border-box;
+}
+
+/* خلفية النجوم والفضاء */
+.star-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    background: radial-gradient(ellipse at bottom, #0a0f1e, #03050b);
+    overflow: hidden;
+}
+
+.star {
+    position: absolute;
+    background: #ffffff;
+    border-radius: 50%;
+    opacity: 0.4;
+    width: 2px;
+    height: 2px;
+}
+
+/* الشهب المتحركة */
+.shooting-star {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: linear-gradient(45deg, #ffffff, rgba(255, 215, 0, 0.8));
+    border-radius: 50%;
+    box-shadow: 0 0 8px #ffd700;
+    animation: shoot 4s linear infinite;
+}
+
+@keyframes shoot {
+    0% { 
+        transform: translate(0, 0); 
+        opacity: 1; 
+    }
+    100% { 
+        transform: translate(-300px, 300px); 
+        opacity: 0; 
+    }
+}
+
+/* عنوان المنصة العملاق */
+.platform-title {
+    font-family: 'Tajawal', sans-serif;
+    font-weight: 900;
+    font-size: clamp(3rem, 8vw, 8rem); /* تعديل النسب لتناسب الهواتف بشكل أفضل */
+    margin: 0.5rem 0;
+    cursor: default;
+    transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), text-shadow 0.3s ease;
+    animation: glowPulse 2s infinite alternate;
+}
+
+.platform-title:hover {
+    transform: scale(1.05);
+    text-shadow: 0 0 40px #ffd700, 0 0 80px #ffaa00;
+}
+
+@keyframes glowPulse {
+    from { text-shadow: 0 0 20px #facc15, 0 0 40px #f59e0b; }
+    to { text-shadow: 0 0 35px #ffd966, 0 0 70px #facc15; }
+}
+
+/* جزيئات ذهبية حول العنوان */
+.title-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* الأزرار التفاعلية الكبيرة */
+.big-action-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 40px; /* نسب أكثر تناسقاً للأزرار الكبيرة */
+    border-radius: 36px;
+    border: 2px solid transparent;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.big-action-btn:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 20px 35px rgba(0, 0, 0, 0.4), 0 0 30px rgba(250, 204, 21, 0.4);
+    border-color: #facc15;
+}

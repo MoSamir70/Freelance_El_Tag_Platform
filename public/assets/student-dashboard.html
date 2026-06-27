@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="theme-color" content="#060b18">
+    <title>منصة التاج – لوحة الطالب القتالية</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Cairo', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            background: radial-gradient(circle at center, #0f192e 0%, #050814 100%);
+            color: #f1f5f9;
+            height: 100vh;
+            height: -webkit-fill-available;
+            overflow: hidden;
+            position: relative;
+        }
+        body::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(6, 11, 24, 0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(6, 11, 24, 0.4) 1px, transparent 1px);
+            background-size: 20px 20px;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .pubg-panel {
+            background: linear-gradient(135deg, rgba(16, 24, 48, 0.85) 0%, rgba(8, 13, 28, 0.9) 100%);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(245, 158, 11, 0.25);
+            box-shadow: inset 0 0 12px rgba(245, 158, 11, 0.08), 0 8px 32px rgba(0, 0, 0, 0.6);
+            border-radius: 14px;
+            transition: all 0.25s;
+        }
+        .pubg-nav-btn {
+            position: relative;
+            transition: all 0.2s;
+            color: #94a3b8;
+            font-weight: 700;
+        }
+        .pubg-nav-btn.active {
+            color: #facc15;
+            text-shadow: 0 0 8px rgba(250, 204, 21, 0.6);
+            transform: scale(1.05);
+        }
+        .pubg-nav-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 3px;
+            background: #facc15;
+            border-radius: 2px;
+        }
+        .lobby-sidebar {
+            width: 320px;
+            transition: transform 0.3s cubic-bezier(0.77, 0, 0.175, 1);
+            z-index: 45;
+        }
+        .lobby-sidebar.collapsed {
+            transform: translateX(-100%);
+        }
+        html[dir="rtl"] .lobby-sidebar.collapsed {
+            transform: translateX(100%);
+        }
+        @media (max-width: 1024px) {
+            .lobby-sidebar {
+                position: fixed;
+                top: 0;
+                bottom: 0;
+                height: 100vh;
+                width: 85%;
+                max-width: 330px;
+                transform: translateX(-100%);
+            }
+            .lobby-sidebar.collapsed {
+                transform: translateX(-100%);
+            }
+            .lobby-sidebar.open {
+                transform: translateX(0);
+            }
+        }
+        .online-status {
+            width: 8px;
+            height: 8px;
+            background: #06b6d4;
+            border-radius: 50%;
+            animation: pubgPulse 1.5s infinite;
+        }
+        @keyframes pubgPulse {
+            0% { transform: scale(0.9); opacity: 0.6; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(0.9); opacity: 0.6; }
+        }
+        .pubg-btn-primary {
+            background: linear-gradient(180deg, #facc15 0%, #d97706 100%);
+            color: #050814;
+            font-weight: 900;
+            text-transform: uppercase;
+            border: 1px solid #fef08a;
+            transition: all 0.2s;
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .online-user-card {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.2s;
+        }
+        .online-user-card:hover {
+            background: rgba(250, 204, 21, 0.1);
+            border-color: rgba(250, 204, 21, 0.3);
+            transform: translateX(-3px);
+        }
+        .leaderboard-table th, .leaderboard-table td {
+            padding: 8px 4px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .leaderboard-row {
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .leaderboard-row:hover {
+            background: rgba(250, 204, 21, 0.1);
+        }
+        .chat-widget {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 320px;
+            max-width: calc(100% - 40px);
+            background: rgba(10, 15, 30, 0.98);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            border: 1px solid rgba(250, 204, 21, 0.4);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .chat-widget.open {
+            display: flex;
+        }
+        .chat-header {
+            background: rgba(250, 204, 21, 0.2);
+            padding: 8px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(250,204,21,0.3);
+        }
+        .chat-messages {
+            height: 250px;
+            overflow-y: auto;
+            padding: 8px;
+            font-size: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .chat-input-area {
+            display: flex;
+            padding: 8px;
+            gap: 6px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .progress-bar {
+            height: 4px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #facc15, #eab308);
+            width: 0%;
+        }
+    </style>
+</head>
+<body class="select-none text-slate-200 flex flex-col h-screen">
+
+<div id="overlay-blur" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 hidden"></div>
+
+<!-- شات مصغر -->
+<div id="chat-widget" class="chat-widget">
+    <div class="chat-header">
+        <span id="chat-user-name" class="font-bold text-amber-400 text-sm">المحادثة</span>
+        <button id="close-chat-btn" class="text-gray-400 hover:text-white text-lg">&times;</button>
+    </div>
+    <div id="chat-messages-list" class="chat-messages"></div>
+    <div class="chat-input-area">
+        <input type="text" id="chat-input" placeholder="اكتب رسالتك..." class="flex-1 bg-slate-800 border border-white/10 rounded-full px-3 py-1.5 text-xs">
+        <button id="send-chat-msg-btn" class="bg-amber-500 text-black px-3 py-1.5 rounded-full text-xs font-bold">إرسال</button>
+    </div>
+</div>
+
+<!-- الهيدر -->
+<div class="w-full bg-slate-950/80 border-b border-amber-500/20 px-3 flex justify-between items-center h-14 z-20 flex-shrink-0">
+    <div class="flex items-center gap-2 bg-slate-900/60 px-3 py-1 border-r-2 border-amber-500 rounded-l-md">
+        <i class="fa-solid fa-shield-halved text-amber-500 text-sm animate-pulse"></i>
+        <div>
+            <h2 class="text-xs font-black text-white tracking-wider flex items-center gap-1">
+                منصة التاج <span class="text-[9px] bg-amber-500/20 text-amber-400 px-1 py-0.2 rounded font-normal">BATTLE LOBBY</span>
+            </h2>
+        </div>
+    </div>
+    <div class="flex items-center gap-2 bg-slate-900 px-3 py-1 rounded-full border border-white/5">
+        <i class="fa-solid fa-trophy text-yellow-400 text-xs"></i>
+        <span id="student-top-wins" class="text-xs font-black text-yellow-400">0</span>
+        <span class="text-slate-600 text-[10px]">|</span>
+        <i class="fa-solid fa-star text-amber-400 text-xs"></i>
+        <span id="student-top-score" class="text-xs font-black text-slate-200">0</span>
+    </div>
+    <div class="flex items-center gap-1.5">
+        <button id="toggle-sidebar-btn" class="bg-slate-800/80 hover:bg-slate-700 text-slate-300 w-8 h-8 rounded-lg border border-white/5" title="طي الشريط الجانبي">
+            <i class="fa-solid fa-chevron-right text-xs"></i>
+        </button>
+        <button id="fullscreen-btn" class="bg-slate-800/80 hover:bg-slate-700 text-slate-300 w-8 h-8 rounded-lg border border-white/5">
+            <i class="fa-solid fa-expand text-xs"></i>
+        </button>
+        <button id="mobile-menu-toggle" class="lg:hidden bg-amber-500/20 text-amber-400 w-8 h-8 rounded-lg border border-amber-500/30">
+            <i class="fa-solid fa-users-viewfinder text-xs"></i>
+        </button>
+        <button id="logoutBtn" class="bg-red-950/30 hover:bg-red-950/60 border border-red-500/20 text-red-400 w-8 h-8 lg:w-auto lg:px-3 rounded-lg text-xs font-black flex items-center justify-center gap-1">
+            <i class="fa-solid fa-power-off text-xs"></i> <span class="hidden lg:inline">انسحاب</span>
+        </button>
+    </div>
+</div>
+
+<!-- المحتوى الرئيسي -->
+<div class="w-full flex-1 max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-4 p-3 overflow-hidden" style="min-height: 0;">
+    <div class="lg:col-span-8 xl:col-span-9 h-full min-w-0 flex flex-col overflow-hidden">
+        <div class="w-full h-full overflow-hidden relative">
+            <!-- تبويب الملف الشخصي -->
+            <div id="student-tab-profile" class="student-tab-panel h-full overflow-y-auto no-scrollbar space-y-3 pr-1">
+                <div class="pubg-panel p-3 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 bg-yellow-500 text-black text-[9px] font-black px-3 py-0.5 uppercase tracking-widest transform -rotate-45 -translate-x-3 translate-y-1 shadow-md">LEVEL MAX</div>
+                    <div class="flex items-center gap-3">
+                        <img id="student-dashboard-img" src="" class="w-16 h-16 rounded-xl border border-amber-500 bg-slate-950 p-0.5 object-cover shadow-xl">
+                        <div class="flex-1">
+                            <h2 id="student-dashboard-name" class="text-base font-black text-white truncate">---</h2>
+                            <p id="student-dashboard-grade" class="text-amber-400 text-[11px] font-bold mt-0.5 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-full inline-block"></p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-2 mt-3">
+                        <div class="bg-slate-950/50 p-2 rounded-xl text-center">
+                            <span id="student-dashboard-score" class="text-lg font-black text-yellow-400 block">0</span>
+                            <span class="text-[9px] uppercase text-slate-400">مجموع النقاط</span>
+                        </div>
+                        <div class="bg-slate-950/50 p-2 rounded-xl text-center">
+                            <span id="student-level-name" class="text-[10px] font-black text-emerald-400 block">مبتدئ</span>
+                            <div class="progress-bar mt-1"><div id="level-progress" class="progress-fill" style="width:0%"></div></div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-3 gap-2 mt-3">
+                        <div class="bg-slate-950/40 p-1.5 rounded-xl border-b-2 border-emerald-500 text-center">
+                            <div id="student-correct" class="text-emerald-400 text-base font-black">0</div>
+                            <div class="text-[9px]">✅ صحيحة</div>
+                        </div>
+                        <div class="bg-slate-950/40 p-1.5 rounded-xl border-b-2 border-red-500 text-center">
+                            <div id="student-wrong" class="text-red-400 text-base font-black">0</div>
+                            <div class="text-[9px]">❌ خاطئة</div>
+                        </div>
+                        <div class="bg-slate-950/40 p-1.5 rounded-xl border-b-2 border-yellow-500 text-center">
+                            <div id="student-wins" class="text-yellow-400 text-base font-black">0</div>
+                            <div class="text-[9px]">🏆 انتصارات</div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-2 mt-3">
+                        <div class="bg-slate-950/50 p-2 rounded-xl text-center">
+                            <div class="text-cyan-400 text-sm font-black"><span id="student-accuracy">0</span>%</div>
+                            <div class="text-[9px]">🎯 الدقة</div>
+                        </div>
+                        <div class="bg-slate-950/50 p-2 rounded-xl text-center">
+                            <div class="text-purple-400 text-sm font-black"><span id="student-total-matches">0</span></div>
+                            <div class="text-[9px]">🎮 إجمالي المباريات</div>
+                        </div>
+                        <div class="bg-slate-950/50 p-2 rounded-xl text-center">
+                            <div class="text-orange-400 text-sm font-black"><span id="student-best-streak">0</span></div>
+                            <div class="text-[9px]">⚡ أفضل سلسلة</div>
+                        </div>
+                        <div class="bg-slate-950/50 p-2 rounded-xl text-center">
+                            <div class="text-green-400 text-sm font-black"><span id="student-avg-speed">0</span> ث</div>
+                            <div class="text-[9px]">⏱️ متوسط السرعة</div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-slate-950/30 p-2 rounded-xl text-center text-[10px] text-slate-400">
+                        <i class="fa-regular fa-star text-amber-400"></i> إنجازات قادمة
+                    </div>
+                </div>
+            </div>
+
+            <!-- باقي التبويبات -->
+            <div id="student-tab-rooms" class="student-tab-panel hidden h-full overflow-y-auto no-scrollbar space-y-3 pr-1">
+                <div class="pubg-panel p-2.5">
+                    <div class="flex gap-1.5">
+                        <div class="relative flex-1">
+                            <span class="absolute inset-y-0 right-0 pr-2.5 flex items-center text-slate-500 text-xs"><i class="fa-solid fa-key"></i></span>
+                            <input type="text" id="join-private-code-input" placeholder="أدخل رمز الغرفة السرية..." class="w-full bg-slate-950/80 border border-white/10 rounded-xl pr-8 pl-2 py-2 text-xs">
+                        </div>
+                        <button id="joinPrivateRoomBtn" class="pubg-btn-primary px-4 py-2 rounded-xl text-xs flex-shrink-0">إنزال فوري</button>
+                    </div>
+                </div>
+                <div id="public-rooms-list" class="flex flex-col gap-2 overflow-y-auto no-scrollbar" style="max-height: calc(100vh - 200px);"></div>
+                <button id="refresh-public-rooms-btn" class="w-full bg-slate-900 hover:bg-slate-800 text-amber-400 border border-amber-500/20 font-bold rounded-xl py-2.5 text-xs transition-all flex items-center justify-center gap-1.5 flex-shrink-0">
+                    <i class="fa-solid fa-rotate text-xs"></i> مسح الرادار للغرف المتاحة
+                </button>
+            </div>
+
+            <div id="student-tab-tournaments" class="student-tab-panel hidden h-full overflow-y-auto no-scrollbar space-y-2 pr-1">
+                <div class="pubg-panel p-2 bg-gradient-to-r from-amber-500/10 to-transparent border-r-4 border-amber-500">
+                    <h3 class="text-xs font-black text-white"><i class="fa-solid fa-trophy text-amber-400"></i> جدول البطولات النشطة</h3>
+                </div>
+                <div id="tournaments-container" class="space-y-2"></div>
+            </div>
+
+            <div id="student-tab-friends" class="student-tab-panel hidden h-full overflow-y-auto no-scrollbar pr-1">
+                <div id="friends-list" class="grid grid-cols-1 sm:grid-cols-2 gap-2"></div>
+            </div>
+
+            <div id="student-tab-leaderboard" class="student-tab-panel hidden h-full flex flex-col overflow-hidden space-y-2">
+                <div class="pubg-panel p-2.5 flex flex-col flex-1 overflow-hidden">
+                    <div class="flex flex-wrap gap-1 justify-center border-b border-white/5 pb-2">
+                        <button id="leaderboardGlobalBtn" class="bg-amber-500 text-black font-black px-3 py-1.5 rounded-lg text-[10px]">🌍 عالمي</button>
+                        <button id="leaderboardTeacherBtn" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold px-3 py-1.5 rounded-lg text-[10px]">👨‍🏫 معلمي</button>
+                        <button id="leaderboardGradeBtn" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold px-3 py-1.5 rounded-lg text-[10px]">📚 صفي</button>
+                    </div>
+                    <div class="flex justify-between items-center my-2 px-1">
+                        <h3 class="text-xs font-bold text-yellow-400"><i class="fa-solid fa-crown"></i> المتصدرين</h3>
+                        <button id="jump-to-my-rank-btn" class="bg-slate-800 border border-amber-500/30 text-amber-400 text-[10px] font-bold px-2 py-0.5 rounded hover:bg-amber-500 hover:text-black transition">🎯 ترتيبي</button>
+                    </div>
+                    <div id="global-leaderboard-container" class="flex-1 overflow-y-auto no-scrollbar text-xs"></div>
+                    <div class="bg-gradient-to-r from-amber-500 to-yellow-500 text-black p-2 rounded-xl flex justify-between items-center mt-2 font-black text-xs shadow-xl flex-shrink-0">
+                        <div><i class="fa-solid fa-crosshairs"></i> ترتيبك الحالي: <span id="my-sticky-rank" class="bg-black text-white px-2 py-0.5 rounded-md">#--</span></div>
+                        <span id="my-sticky-score" class="tracking-tight">-- نقطة</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="student-tab-global" class="student-tab-panel hidden h-full overflow-y-auto no-scrollbar space-y-2 pr-1">
+                <div class="pubg-panel p-3 h-full flex flex-col overflow-hidden">
+                    <h3 class="font-black text-amber-400 mb-2 text-xs"><i class="fa-solid fa-satellite-dish"></i> رادار استكشاف المحاربين</h3>
+                    <div id="global-environment-container" class="flex-1 overflow-y-auto no-scrollbar flex flex-col gap-2"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- الشريط الجانبي -->
+    <div id="lobby-sidebar" class="lobby-sidebar lg:col-span-4 xl:col-span-3 bg-slate-950/98 lg:bg-transparent border-l border-amber-500/20 lg:border-none p-3 lg:p-0 flex flex-col h-[100vh] lg:h-full fixed lg:sticky top-0 bottom-0 left-0 lg:top-0 z-40">
+        <div class="pubg-panel p-3 flex flex-col h-full overflow-hidden bg-slate-900/90 border border-white/5 rounded-2xl">
+            <div class="flex justify-between items-center mb-2">
+                <div class="flex gap-1 bg-slate-950 p-1 rounded-xl border border-white/5">
+                    <button class="side-tab-btn active flex-1 text-center py-1.5 text-[11px] font-black rounded-lg" data-side-tab="classmates">👥 زملاء الكتيبة</button>
+                    <button class="side-tab-btn flex-1 text-center py-1.5 text-[11px] font-bold rounded-lg text-slate-400" data-side-tab="allstudents">🌍 كل المقاتلين</button>
+                </div>
+                <button id="collapse-sidebar-btn" class="text-slate-400 hover:text-amber-400 text-sm px-1" title="طي الشريط">◀</button>
+            </div>
+            <div class="flex justify-between items-center mb-2 px-1 flex-shrink-0">
+                <h4 class="text-amber-400 text-[11px] font-black flex items-center gap-1.5">
+                    <span class="online-status"></span> <span id="side-tab-title">زملاء الكتيبة</span>
+                </h4>
+                <div class="relative">
+                    <i class="fa-regular fa-comment-dots text-amber-400 text-lg cursor-pointer hover:scale-110 transition" id="global-msg-icon"></i>
+                    <span id="unread-messages-badge" class="absolute -top-1.5 -right-1.5 bg-red-600 text-white text-[8px] font-bold rounded-full w-3.5 h-3.5 hidden items-center justify-center">0</span>
+                </div>
+            </div>
+            <div class="relative mb-2 flex-shrink-0">
+                <span class="absolute inset-y-0 right-0 pr-2.5 flex items-center text-slate-500 text-[11px]"><i class="fa-solid fa-magnifying-glass"></i></span>
+                <input type="text" id="search-friends-input" placeholder="تحديد موقع صديق في الرادار..." class="w-full bg-slate-950 border border-white/10 rounded-xl pr-8 pl-2 py-1.5 text-[11px] focus:outline-none focus:border-amber-400">
+            </div>
+            <div id="online-users-list" class="space-y-1.5 flex-1 overflow-y-auto no-scrollbar pr-0.5"></div>
+            <button id="close-mobile-panel" class="lg:hidden w-full mt-3 bg-slate-950 text-slate-400 text-[11px] py-2 rounded-xl border border-white/10 font-bold flex-shrink-0">
+                <i class="fa-solid fa-circle-xmark ml-1"></i> إغلاق الرادار
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- شريط التنقل السفلي -->
+<div class="w-full h-16 bg-slate-950/90 backdrop-blur-xl border-t border-amber-500/20 px-2 py-1 flex justify-around items-center z-30 shadow-[0_-8px_24px_rgba(0,0,0,0.8)] lg:max-w-[650px] lg:mx-auto lg:rounded-t-2xl lg:mb-1.5 lg:border-x flex-shrink-0">
+    <button class="pubg-nav-btn active flex flex-col items-center justify-center gap-0.5 w-12 h-12 rounded-xl" data-tab="profile"><i class="fa-solid fa-user-ninja text-base"></i><span class="text-[9px] font-bold">ملفي</span></button>
+    <button class="pubg-nav-btn flex flex-col items-center justify-center gap-0.5 w-12 h-12 rounded-xl" data-tab="rooms"><i class="fa-solid fa-gamepad text-base"></i><span class="text-[9px] font-bold">الغرف</span></button>
+    <button class="pubg-nav-btn flex flex-col items-center justify-center gap-0.5 w-12 h-12 rounded-xl" data-tab="tournaments"><i class="fa-solid fa-award text-base"></i><span class="text-[9px] font-bold">البطولات</span></button>
+    <button class="pubg-nav-btn flex flex-col items-center justify-center gap-0.5 w-12 h-12 rounded-xl" data-tab="friends"><i class="fa-solid fa-user-group text-base"></i><span class="text-[9px] font-bold">الأصدقاء</span></button>
+    <button class="pubg-nav-btn flex flex-col items-center justify-center gap-0.5 w-12 h-12 rounded-xl" data-tab="leaderboard"><i class="fa-solid fa-ranking-star text-base"></i><span class="text-[9px] font-bold">الشرف</span></button>
+    <button class="pubg-nav-btn flex flex-col items-center justify-center gap-0.5 w-12 h-12 rounded-xl" data-tab="global"><i class="fa-solid fa-earth-americas text-base"></i><span class="text-[9px] font-bold">البيئة</span></button>
+</div>
+
+<button id="createOnlineGameStudentBtn" style="display: none;"></button>
+
+<script type="module">
+    import { initStudentDashboard } from './src/student/dashboard.js';
+    initStudentDashboard();
+
+    const Toast = Swal.mixin({
+        customClass: { popup: 'bg-slate-900 text-white rounded-2xl border-2 border-amber-500 shadow-2xl' },
+        buttonsStyling: false,
+        confirmButtonClass: 'pubg-btn-primary text-black px-5 py-2 rounded-lg text-xs font-black',
+        cancelButtonClass: 'bg-slate-800 text-white px-5 py-2 rounded-lg text-xs'
+    });
+    window.Swal = Toast;
+
+    const fullscreenBtn = document.getElementById('fullscreen-btn');
+    fullscreenBtn?.addEventListener('click', () => {
+        if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+        else document.exitFullscreen();
+    });
+    document.addEventListener('fullscreenchange', () => {
+        fullscreenBtn.innerHTML = document.fullscreenElement ? '<i class="fa-solid fa-compress"></i>' : '<i class="fa-solid fa-expand"></i>';
+    });
+
+    const sidebar = document.getElementById('lobby-sidebar');
+    const toggleSidebarBtn = document.getElementById('toggle-sidebar-btn');
+    const collapseSidebarBtn = document.getElementById('collapse-sidebar-btn');
+    const isSidebarCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+    if (isSidebarCollapsed && window.innerWidth >= 1024) {
+        sidebar.classList.add('collapsed');
+    }
+    const toggleSidebar = () => {
+        sidebar.classList.toggle('collapsed');
+        localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed'));
+    };
+    toggleSidebarBtn?.addEventListener('click', toggleSidebar);
+    collapseSidebarBtn?.addEventListener('click', toggleSidebar);
+
+    const mobileToggle = document.getElementById('mobile-menu-toggle');
+    const overlay = document.getElementById('overlay-blur');
+    const closeMobile = document.getElementById('close-mobile-panel');
+    const openSidebar = () => { sidebar.classList.add('open'); overlay.classList.remove('hidden'); document.body.style.overflow = 'hidden'; };
+    const closeSidebar = () => { sidebar.classList.remove('open'); overlay.classList.add('hidden'); document.body.style.overflow = ''; };
+    mobileToggle?.addEventListener('click', openSidebar);
+    closeMobile?.addEventListener('click', closeSidebar);
+    overlay?.addEventListener('click', closeSidebar);
+
+    const navBtns = document.querySelectorAll('.pubg-nav-btn');
+    const panels = document.querySelectorAll('.student-tab-panel');
+    navBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            navBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const tab = btn.dataset.tab;
+            panels.forEach(panel => {
+                panel.classList.toggle('hidden', panel.id !== `student-tab-${tab}`);
+            });
+            window.dispatchEvent(new CustomEvent('studentTabChanged', { detail: { tab } }));
+        });
+    });
+
+    const syncSideTab = (val) => {
+        document.querySelectorAll('.side-tab-btn').forEach(btn => {
+            const active = btn.dataset.sideTab === val;
+            btn.classList.toggle('active', active);
+            if(active) btn.classList.add('bg-amber-500', 'text-black');
+            else btn.classList.remove('bg-amber-500', 'text-black');
+        });
+        document.getElementById('side-tab-title').innerText = val === 'classmates' ? 'زملاء الكتيبة' : 'كل المقاتلين';
+        window.dispatchEvent(new CustomEvent('sideTabChanged', { detail: { tab: val } }));
+    };
+    document.querySelectorAll('.side-tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => syncSideTab(btn.dataset.sideTab));
+    });
+
+    const searchInput = document.getElementById('search-friends-input');
+    const triggerSearch = (val) => {
+        const list = document.getElementById('online-users-list');
+        if (!list) return;
+        const term = val.toLowerCase();
+        Array.from(list.children).forEach(el => {
+            const name = el.querySelector('.font-medium')?.innerText.toLowerCase() || '';
+            el.style.display = name.includes(term) ? 'flex' : 'none';
+        });
+    };
+    searchInput?.addEventListener('input', (e) => triggerSearch(e.target.value));
+    window.triggerSearch = triggerSearch;
+
+    window.updateOnlineUsersUI = (html) => {
+        const target = document.getElementById('online-users-list');
+        if (target) target.innerHTML = html;
+        if (searchInput?.value) triggerSearch(searchInput.value);
+        document.querySelectorAll('.msg-icon:not(#global-msg-icon)').forEach(icon => {
+            icon.removeEventListener('click', window.handleMessageIcon);
+            icon.addEventListener('click', window.handleMessageIcon);
+        });
+    };
+
+    const updateHeaderStats = () => {
+        const score = document.getElementById('student-dashboard-score')?.innerText || '0';
+        const wins = document.getElementById('student-wins')?.innerText || '0';
+        document.getElementById('student-top-score') && (document.getElementById('student-top-score').innerText = score);
+        document.getElementById('student-top-wins') && (document.getElementById('student-top-wins').innerText = wins);
+    };
+    const observer = new MutationObserver(updateHeaderStats);
+    const profilePanel = document.getElementById('student-tab-profile');
+    if(profilePanel) observer.observe(profilePanel, { childList: true, subtree: true, characterData: true });
+    updateHeaderStats();
+</script>
+</body>
+</html>

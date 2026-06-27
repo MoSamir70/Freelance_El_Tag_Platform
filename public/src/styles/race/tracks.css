@@ -1,0 +1,198 @@
+/* ============================================
+   tracks.css - مضامير السباق
+   ============================================ */
+
+.race-lane {
+    position: relative;
+    background: rgba(10, 20, 40, 0.4) !important;
+    backdrop-filter: blur(6px);
+    border-radius: 36px;
+    margin: 0 0 4px 0;
+    padding: 4px 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 40px;
+    border: 1px solid rgba(100, 150, 255, 0.2) !important;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3) !important;
+    overflow: visible;
+    transition: all 0.3s ease;
+    opacity: 0.6;
+    filter: grayscale(0.2);
+}
+
+.race-lane.active-turn {
+    background: rgba(15, 35, 65, 0.95) !important;
+    border: 2px solid #facc15 !important;
+    border-radius: 36px;
+    box-shadow: 0 0 15px rgba(250, 204, 21, 0.6), 0 4px 12px rgba(0,0,0,0.3) !important;
+    opacity: 1 !important;
+    filter: grayscale(0) !important;
+    transform: translateY(0) scale(1.01);
+    z-index: 5; /* تقليل z-index لتجنب التداخل العلوي */
+    margin-top: 4px;
+    margin-bottom: 8px;
+    backdrop-filter: blur(8px);
+    transition: all 0.2s ease;
+}
+
+.race-lane.affected-player {
+    border-left: 4px solid #ef4444 !important;
+    background: linear-gradient(90deg, rgba(239, 68, 68, 0.1), rgba(0,0,0,0.3)) !important;
+    filter: drop-shadow(0 0 6px #ef4444);
+}
+.race-lane.affected-player .team-name {
+    color: #fca5a5;
+    text-shadow: 0 0 5px #ef4444;
+}
+.race-lane.affected-player .moving-avatar {
+    border-color: #ef4444;
+    box-shadow: 0 0 15px #ef4444;
+    animation: pulseRed 1.2s infinite;
+}
+.race-lane.affected-player .team-name::after {
+    content: " ⚠️";
+    font-size: 0.8rem;
+    filter: drop-shadow(0 0 4px red);
+}
+@keyframes pulseRed {
+    0% { box-shadow: 0 0 5px #ef4444; }
+    50% { box-shadow: 0 0 20px #ef4444; }
+    100% { box-shadow: 0 0 5px #ef4444; }
+}
+
+.race-lane.shielded-player {
+    border-left: 4px solid #3b82f6 !important;
+    background: linear-gradient(90deg, rgba(59,130,246,0.1), rgba(0,0,0,0.3)) !important;
+}
+.race-lane.shielded-player .team-name {
+    color: #93c5fd;
+}
+.race-lane.shielded-player .moving-avatar {
+    border-color: #3b82f6;
+    box-shadow: 0 0 12px #3b82f6;
+}
+.race-lane.shielded-player .team-name::after {
+    content: " 🛡️";
+}
+
+.lane-track {
+    position: relative;
+    flex: 1;
+    height: 8px;
+    background: rgba(70, 150, 255, 0.1) !important;
+    border-radius: 20px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.5) !important;
+    transition: all 0.3s ease;
+    overflow: visible;
+}
+.race-lane.active-turn .lane-track {
+    animation: neonPulse 0.8s infinite alternate ease-in-out;
+    background: rgba(70, 150, 255, 0.45) !important;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.3), 0 0 8px #facc15 !important;
+}
+
+@keyframes neonPulse {
+    from { box-shadow: 0 0 4px #facc15; }
+    to { box-shadow: 0 0 12px #facc15; }
+}
+
+.moving-avatar {
+    position: absolute;
+    bottom: -6px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid rgba(100, 150, 255, 0.6);
+    background: #0a0f1e;
+    object-fit: cover;
+    z-index: 10;
+    box-shadow: 0 0 5px rgba(100, 150, 255, 0.3);
+    transition: left 1.2s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.3s, box-shadow 0.3s, transform 0.5s;
+    left: 0%;
+    filter: brightness(0.7);
+}
+.race-lane.active-turn .moving-avatar {
+    border-color: #ffd700 !important;
+    box-shadow: 0 0 12px #facc15, 0 0 20px #ffaa00 !important;
+    filter: brightness(1);
+    transform: scale(1.05);
+    transition: all 0.2s;
+}
+@keyframes avatarGlowPulse {
+    from { box-shadow: 0 0 15px #facc15; }
+    to { box-shadow: 0 0 35px #facc15, 0 0 55px #ffd700; }
+}
+
+.moving-avatar.on-fire {
+    border-color: #ff4500 !important;
+    box-shadow: 0 0 25px #ff4500, 0 0 50px #ff6600, 0 0 70px #ff0000 !important;
+    animation: firePulse 0.6s infinite alternate, flameFlicker 0.2s infinite;
+}
+@keyframes firePulse {
+    from { box-shadow: 0 0 20px #ff4500, 0 0 40px #ff6600; }
+    to { box-shadow: 0 0 35px #ff6600, 0 0 60px #ff0000, 0 0 80px #ffaa00; }
+}
+@keyframes flameFlicker {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.team-name {
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: var(--name-color, #d0e0ff);
+    text-shadow: 0 0 6px var(--name-glow, #4a9eff);
+    min-width: 80px;
+    transition: color 0.3s, text-shadow 0.3s;
+}
+.race-lane.active-turn .team-name {
+    color: var(--name-active-color, #ffffff);
+    text-shadow: 0 0 15px var(--name-active-glow, #ffea00), 0 0 30px var(--name-active-glow);
+}
+.team-avatars-container img.team-member-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.team-member-avatar.active-member {
+    border-color: #ffd700 !important;
+    box-shadow: 0 0 12px gold, 0 0 20px gold !important;
+    transform: scale(1.1);
+    transition: all 0.2s ease;
+}
+#race-tracks-container {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0; /* ضروري لضمان الانكماش */
+    /* إزالة أي max-height */
+}
+
+.race-lane.active-turn {
+    position: relative;
+    isolation: isolate; /* يمنع تأثير الظلال على العناصر المجاورة */
+}
+#race-tracks-container {
+    max-height: calc(5 * 78px); /* 76px تقريبًا ارتفاع الحارة */
+    overflow-y: auto;
+}/* إخفاء شريط التمرير لقائمة اللاعبين مع الاحتفاظ بالتمرير */
+#race-tracks-container {
+    overflow-y: auto;
+    scrollbar-width: thin;      /* فايرفوكس: شريط رفيع */
+    scrollbar-color: transparent transparent; /* فايرفوكس: شفاف */
+}
+
+/* لمتصفحات WebKit (Chrome, Safari, Edge) */
+#race-tracks-container::-webkit-scrollbar {
+    width: 4px;
+    background: transparent;
+}
+#race-tracks-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+#race-tracks-container::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 10px;
+}

@@ -1,0 +1,122 @@
+/* ============================================
+   variables.css - جميع متغيرات CSS العامة
+   ============================================ */
+
+:root {
+    
+--opt-bg: rgba(25, 40, 65, 0.85);
+--opt-border: rgba(250, 204, 21, 0.7);
+--opt-bg-hover: rgba(250, 204, 21, 0.25);
+--opt-border-hover: #ffd700;
+--opt-glow: rgba(250, 204, 21, 0.6);
+--opt-text: #f0f0f0;
+--opt-text-hover: #ffffff;
+    /* الخلفيات والزجاج */
+    --body-bg: linear-gradient(145deg, #0a0f1e 0%, #0c1222 100%);
+    --glass-bg: rgba(15, 25, 45, 0.75);
+    --glass-bg-hover: rgba(15, 25, 45, 0.85);
+    --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+    --glass-border-hover: 1px solid rgba(250, 204, 21, 0.3);
+
+    /* النصوص */
+    --text-primary: #ffffff;
+    --text-secondary: #94a3b8;
+    --text-glow: #facc15;
+    --text-glow-strong: #ffd700;
+
+    /* الأزرار الرئيسية */
+    --btn-primary-bg: #facc15;
+    --btn-primary-hover: #ffd966;
+    --btn-primary-color: #000000;
+    --btn-primary-shadow: 0 4px 0 #b45309;
+
+    --btn-danger-bg: #ef4444;
+    --btn-danger-hover: #dc2626;
+    --btn-danger-shadow: 0 4px 0 #991b1b;
+
+    --btn-secondary-bg: rgba(168, 85, 247, 0.6);
+    --btn-secondary-hover: #a855f7;
+
+    /* مضمار السباق */
+    --track-bg: rgba(10, 20, 40, 0.7);
+    --track-border: 1px solid rgba(100, 180, 255, 0.3);
+    --track-glow: rgba(70, 150, 255, 0.4);
+    --track-active-bg: rgba(70, 150, 255, 0.2);
+    --track-active-glow: rgba(70, 150, 255, 0.9);
+    --track-bar-bg: rgba(70, 150, 255, 0.15);
+
+    /* الأفاتار */
+    --avatar-border: #4a9eff;
+    --avatar-glow: #4a9eff;
+    --avatar-active-border: #ffea00;
+    --avatar-active-glow: #ffea00;
+
+    /* أسماء اللاعبين */
+    --name-color: #d0e0ff;
+    --name-glow: #4a9eff;
+    --name-active-color: #ffffff;
+    --name-active-glow: #ffea00;
+
+    /* شريط التنقل والتذييل */
+    --navbar-bg: rgba(10, 20, 40, 0.85);
+    --navbar-border: 2px solid rgba(100, 180, 255, 0.4);
+    --navbar-text: #d0e0ff;
+    --footer-bg: rgba(10, 15, 30, 0.75);
+    --footer-text: #cccccc;
+    --footer-link: #c084fc;
+
+    /* الأسئلة والخيارات */
+    --question-bg: rgba(10, 15, 25, 0.65);
+    --question-border: 3px solid rgba(250, 204, 21, 0.5);
+    --question-text: #ffffff;
+    --question-text-shadow: 0 0 15px rgba(250, 204, 21, 0.4);
+
+    --opt-bg: rgba(255, 255, 255, 0.03);
+    --opt-border: 2px solid rgba(250, 204, 21, 0.3);
+    --opt-text: #e2e8f0;
+    --opt-bg-hover: rgba(250, 204, 21, 0.08);
+    --opt-border-hover: #facc15;
+    --opt-glow: rgba(250, 204, 21, 0.4);
+    --opt-text-hover: #ffffff;
+
+    --correct-bg: rgba(16, 185, 129, 0.25);
+    --correct-border: #10b981;
+    --correct-glow: rgba(16, 185, 129, 0.5);
+
+    --wrong-bg: rgba(239, 68, 68, 0.25);
+    --wrong-border: #ef4444;
+    --wrong-glow: rgba(239, 68, 68, 0.5);
+
+    /* بطاقات اللاعبين */
+    --player-card-bg: rgba(15, 25, 45, 0.85);
+    --player-card-border: 1px solid rgba(250, 204, 21, 0.3);
+    --player-card-hover-border: #facc15;
+    --player-name-color: #facc15;
+
+    /* الإشعارات والنوافذ */
+    --notif-bg: rgba(15, 25, 45, 0.92);
+    --notif-error-bg: rgba(40, 10, 10, 0.92);
+    --notif-error-border: rgba(239, 68, 68, 0.6);
+    --notif-success-border: rgba(34, 197, 94, 0.5);
+    --notif-info-border: rgba(59, 130, 246, 0.5);
+
+    /* سكرول بار */
+    --scrollbar-track: #0a0f1e;
+    --scrollbar-thumb: #4a9eff;
+
+    /* مؤقت */
+    --timer-color: linear-gradient(135deg, #ff6600, #ff3300);
+    --timer-glow: 0 0 8px #ff9900, 0 0 12px #ff3300;
+
+    /* misc */
+    --gradient-primary: linear-gradient(145deg, #0a0f1e 0%, #0c1222 100%);
+    --gradient-gold: linear-gradient(135deg, #facc15, #eab308);
+    --gradient-purple: linear-gradient(135deg, #7c3aed, #a855f7);
+    
+    /* الثيمات الأساسية (للمراكز) */
+    --gold: #ffcf1b;
+    --silver: #e2e8f0;
+    --bronze: #ff8c42;
+    --glass: rgba(255, 255, 255, 0.07);
+    --glass-border: rgba(255, 255, 255, 0.15);
+}

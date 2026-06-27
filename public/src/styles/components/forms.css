@@ -1,0 +1,193 @@
+/* ============================================
+   forms.css - حقول الإدخال والقوائم المنسدلة
+   ============================================ */
+
+/* الحقول الأساسية */
+.setting-input,
+#settings-subject,
+.comment-input,
+.login-input {
+    width: 100%;
+    background: rgba(0,0,0,0.5);
+    border: 1px solid rgba(250,204,21,0.5);
+    border-radius: 60px;
+    padding: 0.7rem 1rem;
+    color: white;
+    transition: all 0.2s;
+}
+.setting-input:focus,
+#settings-subject:focus,
+.comment-input:focus,
+.login-input:focus {
+    outline: none;
+    border-color: #facc15;
+    box-shadow: 0 0 10px rgba(250,204,21,0.5);
+    background: rgba(0,0,0,0.7);
+}
+
+/* حقل إدخال اسم الفريق */
+.team-name-input {
+    background: rgba(0,0,0,0.6);
+    border: 1px solid #facc15;
+    border-radius: 40px;
+    padding: 0.3rem 1rem;
+    color: white;
+    font-weight: bold;
+    font-size: 1rem;
+    width: auto;
+    min-width: 120px;
+    text-align: center;
+}
+
+/* حقل الشات */
+.chat-input {
+    flex: 1;
+    background: rgba(0,0,0,0.6);
+    border: 1px solid rgba(250,204,21,0.4);
+    border-radius: 40px;
+    padding: 0.6rem 1rem;
+    color: white;
+    font-size: 0.9rem;
+    outline: none;
+}
+.chat-input:focus {
+    border-color: #facc15;
+    box-shadow: 0 0 10px rgba(250,204,21,0.3);
+}
+
+/* القوائم المنسدلة (select) */
+select,
+.setting-input,
+#settings-subject,
+#student-grade-filter,
+#analytics-grade-select,
+#hall-grade-filter,
+#new-grade,
+.edit-grade-student,
+.room-grade-select,
+.room-subject-select,
+.room-game-system,
+.room-game-mode,
+#num-teams-select,
+.assign-team-select {
+    background-color: rgba(10, 15, 30, 0.85) !important;
+    backdrop-filter: blur(12px) !important;
+    border: 2px solid rgba(250, 204, 21, 0.5) !important;
+    border-radius: 40px !important;
+    color: #fff !important;
+    padding: 0.7rem 2.5rem 0.7rem 1rem !important;
+    font-weight: bold !important;
+    font-size: 0.9rem !important;
+    transition: all 0.3s ease !important;
+    cursor: pointer !important;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23facc15' d='M6 8L1 3h10z'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: left 1rem center !important;
+    line-height: 1.4 !important;
+}
+select:hover,
+.setting-input:hover,
+#settings-subject:hover {
+    border-color: #ffd966 !important;
+    box-shadow: 0 0 20px rgba(250, 204, 21, 0.4) !important;
+    background-color: rgba(20, 30, 50, 0.9) !important;
+}
+select:focus,
+.setting-input:focus,
+#settings-subject:focus {
+    outline: none !important;
+    border-color: #facc15 !important;
+    box-shadow: 0 0 30px rgba(250, 204, 21, 0.7) !important;
+    background-color: rgba(30, 40, 60, 0.95) !important;
+}
+select option {
+    background: #0f172a !important;
+    color: white !important;
+}
+
+/* تحسين القوائم المنسدلة بشكل عام */
+select {
+    background: rgba(15, 25, 45, 0.85) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(250, 204, 21, 0.5) !important;
+    border-radius: 40px !important;
+    color: #facc15 !important;
+    padding: 0.5rem 1rem !important;
+    font-weight: bold !important;
+}
+select option {
+    background: #1e293b !important;
+    color: #facc15 !important;
+}
+
+/* منطقة رفع الصورة */
+.upload-avatar-wrapper {
+    width: 85px;
+    height: 85px;
+    border-radius: 50%;
+    background: rgba(15, 25, 45, 0.5);
+    border: 2px dashed rgba(250, 204, 21, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    margin-top: 0.5rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+.upload-avatar-wrapper:hover {
+    border-color: #facc15;
+    border-style: solid;
+    background: rgba(250,204,21,0.15);
+    box-shadow: 0 0 25px rgba(250,204,21,0.3);
+    transform: scale(1.05);
+}
+.upload-avatar-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    pointer-events: none;
+}
+.upload-icon {
+    font-size: 2rem;
+}
+.upload-text {
+    font-size: 0.65rem;
+    font-weight: bold;
+    color: #facc15;
+    text-shadow: 0 0 5px rgba(250,204,21,0.5);
+}
+.upload-avatar-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: 2px solid #facc15;
+    box-shadow: 0 0 15px rgba(250,204,21,0.4);
+}
+.upload-avatar-preview:not(.hidden) ~ .upload-avatar-placeholder {
+    display: none;
+}
+
+/* مدخلات نافذة تعديل الطالب */
+.edit-student-modal input,
+.edit-student-modal select {
+    font-size: 0.9rem;
+    padding: 0.5rem 0.8rem;
+}
+.swal2-popup .swal2-input {
+    background: rgba(0,0,0,0.6);
+    border: 1px solid #facc15;
+    color: white;
+    border-radius: 40px;
+}

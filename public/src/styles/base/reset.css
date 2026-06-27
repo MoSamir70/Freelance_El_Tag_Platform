@@ -1,0 +1,77 @@
+/* ============================================
+   reset.css - إعادة تعيين الأنماط الافتراضية
+   ============================================ */
+
+/* تعيين الخط الأساسي لكل العناصر */
+* {
+    font-family: 'Cairo', sans-serif !important;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: var(--body-bg, linear-gradient(145deg, #0a0f1e 0%, #0c1222 100%));
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: auto;
+    min-height: 100vh;
+    transition: all 0.3s;
+    display: flex;
+    flex-direction: column;
+    color: var(--text-primary, #ffffff);
+    margin: 0;
+}
+
+/* إزالة الزخارف من القوائم */
+ul, ol, li {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* إزالة الزخارف من الروابط */
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* تحسين صندوق الحواف للصور ووسائط العرض */
+img, picture, video, canvas, svg {
+    display: block;
+    max-width: 100%;
+}
+
+/* إعادة تعيين الأزرار */
+button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* إخفاء العناصر */
+.hidden {
+    display: none !important;
+}
+
+/* منع السكرول المزدوج في بعض الحالات */
+body.no-scroll {
+    overflow-y: auto !important;
+}
+
+/* إزالة النقاط من شاشة الاستعداد */
+.countdown-overlay ul,
+.countdown-overlay li,
+.countdown-overlay ol {
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+.countdown-overlay li::before,
+.countdown-overlay li::after {
+    display: none !important;
+}

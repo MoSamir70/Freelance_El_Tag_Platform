@@ -1,0 +1,172 @@
+/* ============================================
+   countdown.css - شاشة العد التنازلي
+   ============================================ */
+
+.countdown-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 21000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background: #000000 !important;
+    font-family: 'Cairo', sans-serif;
+    user-select: none;
+    overflow: hidden;
+}
+
+.countdown-title {
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: var(--text-glow, #facc15) !important;
+    text-shadow: 0 0 30px var(--text-glow-strong, #ffd700), 0 0 60px var(--text-glow, #facc15) !important;
+    margin-bottom: 2rem;
+    text-align: center;
+    letter-spacing: 2px;
+    animation: fadeInDown 1s ease-out;
+}
+
+.countdown-players-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    padding: 0 1rem;
+}
+.countdown-player-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    background: transparent !important;
+    border: none !important;
+}
+.countdown-player-item img {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    border: 3px solid var(--text-glow, #facc15) !important;
+    object-fit: cover;
+    box-shadow: 0 0 20px rgba(250,204,21,0.5);
+    transition: transform 0.2s ease;
+}
+.countdown-player-item img:hover {
+    transform: scale(1.05);
+}
+.countdown-player-name {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #ffffff;
+    text-shadow: 0 0 5px rgba(0,0,0,0.5);
+    text-align: center;
+}
+.countdown-vs-sword {
+    font-size: 2rem;
+    color: #ffaa00;
+    filter: drop-shadow(0 0 5px #ff5500);
+    margin: 0 0.5rem;
+}
+
+.countdown-number-area {
+    min-height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.countdown-number {
+    font-size: 6rem;
+    font-weight: 900;
+    color: var(--text-glow, #facc15) !important;
+    text-shadow: 0 0 50px var(--text-glow-strong, #ffd700), 0 0 90px var(--text-glow, #facc15) !important;
+    animation: countPop 0.3s ease-out;
+}
+.countdown-go-text {
+    font-size: 4rem;
+    font-weight: 900;
+    color: var(--text-glow-strong, #ffd966) !important;
+    text-shadow: 0 0 60px var(--text-glow-strong, #ffd700), 0 0 120px var(--text-glow, #facc15) !important;
+    animation: countPop 0.3s ease-out;
+}
+@keyframes countPop {
+    from { transform: scale(0.5); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.countdown-teams-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    margin: 20px 0;
+}
+.countdown-team-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 150px;
+}
+.countdown-team-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #facc15;
+    margin-bottom: 10px;
+    text-shadow: 0 0 10px rgba(250,204,21,0.7);
+}
+.countdown-members-row {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+.countdown-member-card {
+    text-align: center;
+    background: transparent !important;
+}
+.countdown-member-card img {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    border: 3px solid #facc15;
+    object-fit: cover;
+    box-shadow: 0 0 15px rgba(250,204,21,0.5);
+}
+.countdown-member-card .member-name {
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: #ffffff;
+    margin-top: 0.5rem;
+}
+.countdown-vs {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    margin: 0 15px;
+    font-size: 2.5rem;
+    color: #facc15;
+    filter: drop-shadow(0 0 6px #facc15);
+    animation: swordPulse 1.5s infinite;
+}
+@keyframes swordPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+/* إزالة الأنماط القديمة */
+.countdown-team-card,
+.countdown-team-members,
+.countdown-team-name,
+.swords,
+.vs-text {
+    display: none !important;
+}
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-40px); }
+    to { opacity: 1; transform: translateY(0); }
+}

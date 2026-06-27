@@ -1,0 +1,67 @@
+/* ============================================
+   footer.css - تذييل الصفحة
+   ============================================ */
+
+#dev-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.35) !important;
+    backdrop-filter: blur(12px) !important;
+    border-top: 1px solid rgba(255, 215, 0, 0.3) !important;
+    z-index: 9999;
+    padding: 0.5rem 1rem !important;
+    text-align: center;
+    font-size: 0.85rem;
+    color: #e0e0e0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    letter-spacing: 0.3px;
+    transition: all 0.3s ease;
+}
+
+/* الروابط داخل الفوتر */
+#dev-footer a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 40px;
+    padding: 0.1rem 0.8rem;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+#dev-footer a:hover {
+    background: rgba(255, 215, 0, 0.25);
+    border-color: #ffd700;
+    transform: translateY(-2px);
+    box-shadow: 0 0 12px rgba(255, 215, 0, 0.5);
+}
+
+/* اسم المطور */
+#dev-footer .developer-name {
+    color: #ffffff !important;
+    text-shadow: 0 0 8px #ffffff, 0 0 12px #ffd700 !important;
+    font-weight: 900;
+    background: transparent !important;
+    padding: 0 0.3rem;
+}
+
+/* أيقونات التواصل */
+.footer-icon {
+    font-size: 1.1rem;
+    filter: drop-shadow(0 0 2px currentColor);
+}
+
+/* إخفاء الفوتر أثناء السباق */
+body.racing #dev-footer {
+    display: none !important;
+}

@@ -1,0 +1,383 @@
+/* ============================================
+   buttons.css - جميع الأزرار
+   ============================================ */
+
+/* الزر ثلاثي الأبعاد */
+.btn-3d {
+    transition: all 0.2s ease;
+    box-shadow: 0 6px 0 rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+}
+.btn-3d:active {
+    transform: translateY(3px);
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* الأزرار الرئيسية في اللوحات */
+.btn-main, button[data-action] {
+    transition: border-color 0.1s ease, background-color 0.1s ease;
+    border-radius: 40px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.btn-main:hover, button[data-action]:hover {
+    transform: none;
+    box-shadow: none;
+    background: rgba(168,85,247,0.2);
+    border-color: #facc15;
+}
+
+/* زر التحدي */
+.challenge-btn {
+    background: #facc15;
+    color: black;
+    border: none;
+    border-radius: 40px;
+    padding: 0.3rem 1rem;
+    font-weight: bold;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: 0.2s;
+    box-shadow: 0 2px 0 #b45309;
+    margin-right: auto;
+}
+.challenge-btn:hover {
+    background: #ffd966;
+    transform: translateY(-1px);
+}
+
+/* أزرار اللوبي */
+.lobby-btn {
+    padding: 0.8rem 2rem;
+    background: #facc15;
+    color: black;
+    border: none;
+    border-radius: 60px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    cursor: pointer;
+    margin: 0.5rem;
+    transition: 0.3s;
+    box-shadow: 0 4px 0 #b45309;
+}
+.lobby-btn:hover {
+    background: #ffd966;
+    transform: translateY(-2px);
+}
+.lobby-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* أزرار التنقل بين الصفحات (next/back) */
+.nav-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+.nav-btn {
+    background: rgba(168,85,247,0.6);
+    border: none;
+    border-radius: 60px;
+    padding: 0.8rem 2rem;
+    font-weight: bold;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.nav-btn:hover {
+    background: #a855f7;
+    transform: translateY(-2px);
+}
+.nav-btn.back {
+    background: rgba(100,100,100,0.6);
+    font-size: 0.9rem;
+    padding: 0.4rem 1.2rem;
+    margin-top: -10px;
+    position: relative;
+    z-index: 100;
+}
+.nav-btn.next {
+    background: #facc15;
+    color: black;
+}
+
+/* أزرار الرهان */
+.bet-options .bet-btn {
+    background: #facc15;
+    color: black;
+    font-weight: bold;
+    font-size: 1.5rem;
+    padding: 0.5rem 1.2rem;
+    border-radius: 60px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.bet-btn:hover {
+    transform: scale(1.1);
+    background: #ffd966;
+}
+.bet-skip {
+    background: gray;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 40px;
+    cursor: pointer;
+}
+
+/* زر الانضمام لغرفة عامة */
+.public-room-join-btn {
+    background: #facc15;
+    color: black;
+    border: none;
+    border-radius: 40px;
+    padding: 0.5rem 1.3rem;
+    font-weight: bold;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: 0.2s;
+    box-shadow: 0 3px 0 #b45309;
+}
+.public-room-join-btn:hover {
+    background: #ffd966;
+    transform: translateY(-1px);
+}
+
+/* زر الميكروفون */
+.mic-toggle-btn {
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(250,204,21,0.5);
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #facc15;
+    font-size: 1rem;
+}
+.mic-toggle-btn.muted {
+    background: rgba(239,68,68,0.3);
+    border-color: #ef4444;
+    color: #ef4444;
+}
+.mic-toggle-btn:hover {
+    transform: scale(1.1);
+    background: rgba(250,204,21,0.2);
+}
+
+/* زر اختيار الثيم */
+.theme-icon-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.3);
+}
+.theme-icon-btn:hover {
+    transform: translateY(-2px) scale(1.1);
+    box-shadow: 0 6px 0 rgba(0,0,0,0.3), 0 0 15px rgba(250,204,21,0.4);
+}
+.theme-icon-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 rgba(0,0,0,0.3);
+}
+
+/* زر نسخ المعرف */
+.copy-id-btn {
+    background: rgba(250,204,21,0.2);
+    border: 1px solid rgba(250,204,21,0.5);
+    border-radius: 12px;
+    padding: 2px 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.7rem;
+    color: #facc15;
+}
+.copy-id-btn:hover {
+    background: rgba(250,204,21,0.4);
+    border-color: #facc15;
+}
+.copy-id-btn.copied {
+    background: #10b981;
+    border-color: #10b981;
+    color: white;
+}
+
+/* زر الانسحاب */
+.withdraw-btn {
+    background: rgba(239,68,68,0.2);
+    border: 1px solid #ef4444;
+    border-radius: 40px;
+    padding: 2px 10px;
+    font-size: 0.7rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+.withdraw-btn:hover {
+    background: rgba(239,68,68,0.6);
+    color: white;
+}
+
+/* أزرار إغلاق النوافذ */
+.close-lessons-modal,
+.close-popup {
+    background: rgba(239,68,68,0.85);
+    border: none;
+    color: white;
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.close-lessons-modal:hover,
+.close-popup:hover {
+    background: #ef4444;
+    transform: scale(1.05) rotate(90deg);
+    box-shadow: 0 0 12px rgba(239,68,68,0.6);
+}
+.close-lessons-modal:active {
+    transform: scale(0.95);
+}
+
+/* أزرار تسجيل الدخول */
+.login-btn {
+    width: 100%;
+    padding: 1.1rem 1.6rem;
+    background: transparent;
+    color: #facc15;
+    border: 2px solid #facc15;
+    border-radius: 60px;
+    font-weight: bold;
+    font-size: 1.4rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 0 25px rgba(250,204,21,0.5), 0 0 50px rgba(250,204,21,0.25);
+    margin-top: 0.7rem;
+    backdrop-filter: blur(4px);
+}
+.login-btn:hover {
+    background: rgba(250,204,21,0.1);
+    border-color: #ffd966;
+    box-shadow: 0 0 40px rgba(250,204,21,0.8), 0 0 70px rgba(250,204,21,0.4);
+    transform: scale(1.02);
+    color: #fff;
+}
+.login-btn:active {
+    transform: scale(0.98);
+    box-shadow: 0 0 20px rgba(250,204,21,0.6);
+}
+
+/* زر إلغاء الإشعارات */
+.dismiss-all-notifs {
+    background: rgba(239,68,68,0.85);
+    color: white;
+    border: none;
+    border-radius: 40px;
+    padding: 0.4rem 0.9rem;
+    font-size: 0.8rem;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    transition: all 0.2s;
+    pointer-events: auto;
+}
+.dismiss-all-notifs:hover {
+    background: rgba(220,38,38,1);
+    transform: translateY(-1px);
+}
+
+/* زر إرسال في الشات */
+.chat-send-btn {
+    background: #facc15;
+    color: black;
+    border: none;
+    border-radius: 40px;
+    padding: 0.6rem 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+    box-shadow: 0 3px 0 #b45309;
+}
+.chat-send-btn:hover {
+    background: #ffd966;
+    transform: translateY(-1px);
+}
+
+/* أزرار القوالب */
+.template-btn {
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(250,204,21,0.4);
+    border-radius: 40px;
+    padding: 0.4rem 1.2rem;
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: #facc15;
+    transition: 0.2s;
+}
+.template-btn:hover {
+    background: rgba(250,204,21,0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 0 10px rgba(250,204,21,0.4);
+}
+
+/* زر إضافة سؤال يدوي */
+.manual-add-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #8b5cf6, #a855f7);
+    border: none;
+    border-radius: 40px;
+    padding: 0.5rem 1.2rem;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 2px 8px rgba(139,92,246,0.3);
+}
+.manual-add-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(139,92,246,0.5);
+}
+
+/* أزرار اختيار نسبة الألغام */
+.mined-chance-btn {
+    background: rgba(255,255,255,0.05);
+    border: 2px solid rgba(250,204,21,0.3);
+    border-radius: 40px;
+    padding: 0.6rem 1.4rem;
+    color: #facc15;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 1rem;
+}
+.mined-chance-btn:hover {
+    background: rgba(250,204,21,0.15);
+    border-color: #facc15;
+    transform: translateY(-2px);
+}
+.mined-chance-btn.active {
+    background: rgba(250,204,21,0.25);
+    border-color: #facc15;
+    box-shadow: 0 0 15px rgba(250,204,21,0.4);
+}

@@ -1,0 +1,102 @@
+/* ============================================
+   student.css - لوحة الطالب
+   ============================================ */
+
+.student-dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: right;
+    align-items: start;
+}
+.student-main-col {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.student-side-col {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+@media (max-width: 768px) {
+    .student-dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+    .student-main-col, .student-side-col {
+        max-width: 100%;
+    }
+}
+
+/* تبويبات الطالب */
+.student-tabs-nav {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    background: rgba(0,0,0,0.25);
+    border-radius: 60px;
+    padding: 0.3rem;
+}
+.student-tab-btn {
+    background: rgba(15,25,45,0.6);
+    border: 1px solid rgba(250,204,21,0.3);
+    border-radius: 40px;
+    padding: 0.5rem 1.2rem;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+}
+.student-tab-btn:hover {
+    background: rgba(250,204,21,0.15);
+    border-color: #facc15;
+}
+.student-tab-btn.active {
+    background: rgba(250,204,21,0.25);
+    border-color: #facc15;
+    box-shadow: 0 0 15px rgba(250,204,21,0.3);
+}
+
+/* ملف الطالب الشخصي */
+#student-tab-profile .glass-panel:first-child {
+    box-shadow: 0 0 30px rgba(250,204,21,0.4);
+    animation: profileGlow 2s infinite alternate;
+}
+#student-dashboard-img {
+    transition: transform 0.3s;
+}
+#student-dashboard-img:hover {
+    transform: scale(1.05);
+}
+
+/* أزرار إنشاء غرفة للطالب */
+#createOnlineGameStudentBtn {
+    transition: 0.2s;
+}
+#createOnlineGameStudentBtn:hover {
+    background: rgba(250,204,21,0.2);
+    border-color: #facc15;
+    transform: translateY(-2px);
+}
+
+/* معلومات الاشتراك */
+#subscription-info {
+    font-size: 0.85rem;
+    background: rgba(0,0,0,0.5);
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 30px;
+}
+
+/* صفحة الطالب - تحسينات إضافية */
+#student-home .student-card {
+    transition: all 0.2s;
+}
+#student-home .student-card:hover {
+    box-shadow: 0 0 20px rgba(250,204,21,0.3);
+    transform: translateY(-2px);
+}
